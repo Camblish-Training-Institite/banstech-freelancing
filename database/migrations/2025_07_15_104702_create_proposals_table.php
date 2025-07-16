@@ -21,12 +21,12 @@ return new class extends Migration
             $table->timestamps();
            
 
-            $table->forign('user_id')
+            $table->foreign('user_id')
             ->references('id')
             ->on('users')
             ->onDelete('cascade');
             
-            $table->forign('job_id')
+            $table->foreign('job_id')
             ->references('id')
             ->on('jobs')
             ->onDelete('cascade');
