@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('reporter_id');
             $table->text('reason');
             $table->enum('status', ['open', 'in_progress', 'resolved', 'closed'])->default('open');
-            $table->unsignedBigInteger('resolved_by')->nullable();
+            $table->unsignedBigInteger('admin_id')->nullable();
             $table->timestamps();
 
             $table->foreign('contract_id')
@@ -29,7 +29,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('users');
 
-            $table->foreign('resolved_by')
+            $table->foreign('admin_id')
             ->references('id')
                 ->on('users');
         });

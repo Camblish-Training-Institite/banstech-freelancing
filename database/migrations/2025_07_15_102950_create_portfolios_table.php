@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('portfolios', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('title')->nullable();
+            $table->string('title', 255);
             $table->text('description')->nullable();
             $table->string('file_url',255)->nullable();
+            $table->string('imageURL', 255) -> nullable();
             $table->timestamps();
           
            $table->forign('user_id')->references('id')->on('users')->onDelete('cascade');

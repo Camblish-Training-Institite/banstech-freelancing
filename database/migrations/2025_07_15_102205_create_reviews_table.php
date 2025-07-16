@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('contract_id');
             $table->unsignedBigInteger('job_id');
             $table->unsignedBigInteger('user_id');
-            $table->int('rating')->default(0);
+            $table->int('rating')->default(1);
             $table->text('comment')->nullable();
             $table->timestamps();
 
