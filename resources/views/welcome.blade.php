@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="{{asset('pictures/logo.png') }}">
+    <link rel="icon" type="image/png" href="{{asset('storage/pictures/logo.png') }}">
     <title>Banstech</title>
     
     <!-- Bootstrap Icons -->
