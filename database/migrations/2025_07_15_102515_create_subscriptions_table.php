@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('user_id');
-            // $table->enum('plan_type', ['Basic', 'Pro', 'Premium']) -> default('basic');
+            $table->unsignedBigInteger('user_id');
+            // $table->enum('plan_type', ['Basic', 'Pro', 'Premium']) -> default('basic'); --> possible future options
             $table->timestamp('start_date');
-            $table->timestamp('end_date');
+            $table->timestamp('end_date') -> nullable();
             $table->boolean('is_active') -> default(true);
             $table->string('payment_method', 50);
             

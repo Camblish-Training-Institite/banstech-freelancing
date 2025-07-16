@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('bid_amount',10,2);
             $table->text('cover_letter')->nullable();
             $table->enum('status',['pending','accepted','rejected'])->default('pending');
-            $table->timestamp('submitted_at')->useCurrent();
             $table->timestamps();
            
 

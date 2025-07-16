@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('admin_id');
-            $table->enum('type', ['financial', 'user_activity', 'job_activity', 'other']);
+            $table->unsignedBigInteger('user_id');
+            $table->enum('type', ['financial_analytics', 'user_analytics', 'job_analytics', 'other']);
+            $table->json('data') -> nullable();
             $table->timestamps();
 
-            $table->foreign('admin_id')
+            $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
