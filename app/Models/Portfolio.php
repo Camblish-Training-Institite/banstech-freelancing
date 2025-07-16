@@ -17,4 +17,5 @@ class Portfolio extends Model
         'description',
         'file_url',
     ];
+    
 }
