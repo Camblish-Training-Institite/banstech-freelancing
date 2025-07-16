@@ -1,0 +1,424 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+/* ;;;;;;;;;;;;;;;;;;;;;;;;;;
+       Section 1
+;;;;;;;;;;;;;;;;;;;;;;;;;;; */
+
+/* Logo */
+.logoimage{
+  width: 150px;
+  height: auto;
+}
+.logo{
+  display: flex;
+  align-items: center;
+}
+
+/* Navigation Link Styles */
+.links {
+  color: black;
+  text-decoration: none;
+}
+
+.links:hover{
+  color: #0056b3;
+}
+
+.navbar {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030; /* Ensures it stays on top */
+}
+@media (max-width: 991px) {
+  .navbar-collapse {
+    position:static;
+    top: 100%;
+    left: 0;
+    background-color: #343a40; /* Ensures visibility */
+    z-index: 1000;
+  }
+
+  .navbar-nav .nav-link {
+    text-align:right;
+    padding: 10px;
+  }
+}
+.nav-link {
+  color: white !important;
+  text-decoration: none !important;
+  margin-right: 35px;
+}
+
+.nav-link:hover {
+  color: #FFC107 !important;
+}
+
+.nav-link.active {
+  color: #FFC107; /* Highlight active link */
+  font-weight: bold;
+  text-decoration: underline; /* Add underline for active link */
+}
+/*-------------------------------------------------
+              section 2
+------------------------------------------------- */
+
+/* General Content Styling */
+.content {
+  text-align: left !important; 
+  margin-left: 20px; /* Adjust spacing from the left */
+  justify-content: flex-end;
+}
+
+ul {
+  padding-left: 20px; /* Indent unordered lists */
+}
+
+/* Button Styles */
+.button-container {
+  margin-top: 25px; 
+  text-align: left; /* Align buttons to the left */
+  justify-content: flex-end;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none; /* Remove underline */
+  border-radius: 5px; /* Rounded corners */
+  margin: 10px 0; /* Spacing between buttons */
+  justify-content: flex-end;
+}
+
+.btn-primary {
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.btn-secondary {
+  background-color: #28a745; /* Green background */
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+/* Headings */
+h2 {
+  margin-bottom: 20px; /* Add spacing below the heading */
+}
+
+/* Background Transparency */
+.bg-transparent {
+  background-color: rgba(0, 0, 0, 0.8) !important; /* Semi-transparent dark background */
+}
+
+/* Section Spacing */
+section {
+  padding: 60px 0; /* Top and bottom padding for sections */
+}
+
+/* Hero Section Styling */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 80vh; /* Full screen height */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align content to the left */
+  text-align: start;
+  color: #fff; /* White text for contrast */
+  overflow: hidden; /* Hide overflow content */
+}
+
+.hero-section .background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cover the entire section */
+  z-index: -1; /* Place video behind other elements */
+}
+
+.hero-section .content {
+  position: relative;
+  z-index: 1; /* Place content above background */
+  border-radius: 8px; /* Rounded corners for content box */
+}
+
+/*-------------------------------------------------
+              section 3
+------------------------------------------------- */
+
+
+.companies {
+  background-image: url('storage/pictures/bg-pic.png');
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.firstheading {
+text-align: center;
+width: 80px;
+}
+.list-unstyled li {
+margin-bottom: 8px; 
+}
+
+.arrow-icon {
+    font-size: 2rem; 
+    transform: rotate(0deg); /* Right direction */
+    transition: transform 0.3s ease; 
+  }
+  
+  /* Arrow points down on smaller screens */
+  @media (max-width: 767px) {
+    .arrow-icon {
+      transform: rotate(90deg); /* Down direction */
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .arrow-icon {
+      font-size: 2.5rem; /* Larger arrow size for tablets and above */
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .arrow-icon {
+      font-size: 3rem; /* Largest arrow size for desktops */
+    }
+  }
+  
+  .features-cards .feature-box i {
+    font-size: 44px;
+    display: inline-block;
+    line-height: 0;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+  }
+  
+  .features-cards .feature-box h4 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+  }
+  
+  .features-cards .feature-box p {
+    font-size: 15px;
+    margin-bottom: 0;
+  }
+/*-------------------------
+Section 4
+-------------------------- */
+  .service{
+    background: linear-gradient(to right, rgb(151, 149, 163), rgb(220, 219, 226), rgb(139, 139, 143));
+    background-size: cover;
+    }
+    
+  .service-item {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+
+  .service-item .icon {
+    flex-shrink: 0;
+    background: #4e73df;
+    color: white;
+    border-radius: 50%;
+    padding: 15px;
+    margin-right: 20px;
+    display: inline-block;
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .service-item .icon i {
+    font-size: 36px;
+  }
+
+  .service-item .title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffff;
+    margin-bottom: 10px;
+  }
+
+  .service-item .description {
+    color: #ffff;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Hover effect for the title link */
+  .service-item .title a {
+    text-decoration: none;
+    color: #4e73df;
+    transition: color 0.3s ease;
+  }
+
+  .service-item .title a:hover {
+    color: #1d5bb9;
+  }
+
+  .row {
+    margin-bottom: 30px;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 992px) {
+    .service-item {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .service-item .icon {
+      margin-bottom: 15px;
+    }
+  }
+
+/*--------------------------------------------------------------
+# Testimonials Section 5
+--------------------------------------------------------------*/
+
+.section5{
+  background-color: rgb(241, 239, 222);
+}
+
+.testimonials .testimonial-item {
+  background-color: var(--surface-color); /* Use a variable for theme consistency */
+  box-shadow: 0px 0 20px rgba(0, 0, 0, 0.1);
+  box-sizing: content-box;
+  padding: 30px;
+  margin: 40px 30px; /* Adds spacing around each testimonial */
+  min-height: 320px; /* Ensures uniform height */
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonials .testimonial-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.2);
+}
+
+.testimonials .testimonial-item .stars {
+  margin-bottom: 15px; /* Space below stars */
+}
+
+.testimonials .testimonial-item .stars i {
+  color: #096d1a; /* green star color */
+  margin: 0 1px; /* Small gap between stars */
+}
+
+.testimonials .testimonial-item .testimonial-img {
+  width: 90px;
+  height: 90px; /* Ensures a square image */
+  border-radius: 50%; 
+  border: 4px solid var(--background-color);
+  margin: 0 auto 20px; /* Center-align and add space below */
+}
+
+.testimonials .testimonial-item h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0 5px 0;
+}
+
+.testimonials .testimonial-item h4 {
+  font-size: 14px;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+  margin: 0;
+}
+
+.testimonials .testimonial-item p {
+  font-style: italic;
+  margin: 0 auto 15px auto; /* Center-align text with spacing below */
+}
+
+.testimonials .swiper-wrapper {
+  height: auto; /* Adjust height dynamically */
+}
+
+.testimonials .swiper-pagination {
+  margin-top: 20px;
+  position: relative;
+}
+
+.testimonials .swiper-pagination .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background-color: #ddd;
+  opacity: 1;
+}
+
+.testimonials .swiper-pagination .swiper-pagination-bullet-active {
+  background-color: rgb(76, 76, 197)
+  }
+
+.testimonials .swiper-slide {
+  opacity: 0.3; /* Faded non-active slides */
+}
+
+@media (max-width: 1199px) {
+  .testimonials .swiper-slide-active {
+    opacity: 1;
+  }
+
+  .testimonials .swiper-pagination {
+    margin-top: 0;
+  }
+
+  .testimonials .testimonial-item {
+    margin: 40px 20px; /* Adjust margins for smaller screens */
+  }
+}
+
+@media (min-width: 1200px) {
+  .testimonials .swiper-slide-next {
+    opacity: 1;
+    transform: scale(1.12); /* Slightly enlarges next slide */
+  }
+}
+/* ----------------------------------
+Section 7
+---------------------------------- 
+ .subscribe {
+   background-color: #c3d1de;  /A line that separete section 6 and 7 /
+  padding: 0.5px;
+  } */
+  
+
+/* footer {
+    background-color: #343a40;
+    color: white;
+    padding: 40px 0;
+}
+
+footer a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+} */
