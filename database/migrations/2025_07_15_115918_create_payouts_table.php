@@ -17,7 +17,11 @@ return new class extends Migration
             $table->unsignedBigInteger('freelancer_id');
             $table->decimal('amount', 10, 2);
             $table->enum('status', ['pending', 'processed', 'failed']) -> default('pending');
+<<<<<<< HEAD
+            $table->timestamp('requested_at') -> nullable();
+=======
             $table->timestamp('requested_at')->nullable();
+>>>>>>> 87e7cb90781e557b2aa2c43cfa7eb9a46bb45507
             $table->timestamp('processed_at') -> nullable();
 
             $table->foreign('freelancer_id') -> references('id') -> on('users') -> onDelete('cascade');
