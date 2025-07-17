@@ -16,11 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             // $table->enum('plan_type', ['Basic', 'Pro', 'Premium']) -> default('basic'); --> possible future options
-<<<<<<< HEAD
-            $table->timestamp('start_date') -> nullable();
-=======
             $table->timestamp('start_date')->nullable();
->>>>>>> 87e7cb90781e557b2aa2c43cfa7eb9a46bb45507
             $table->timestamp('end_date') -> nullable();
             $table->boolean('is_active') -> default(true);
             $table->string('payment_method', 50);
