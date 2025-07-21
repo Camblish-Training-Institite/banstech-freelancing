@@ -38,6 +38,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/login/google', [SocialiteController::class, 'redirectToGoogle'])
         ->name('auth.google');
     Route::get('/login/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
+    
+    Route::get('/login/facebook', [SocialiteController::class, 'redirectToFacebook'])
+        ->name('auth.facebook');
+    Route::get('/login/facebook/callback', [SocialiteController::class, 'handleFacebookCallback']);
 });
 
 Route::middleware('auth')->group(function () {
