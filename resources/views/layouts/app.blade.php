@@ -7,6 +7,9 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- imported styles -->
+        @stack('styles')
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -28,8 +31,17 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
+            <main style="
+                min-height:100vh;
+                height:100%;
+                width:100%;
+                display:flex;
+                flex-direction:column;
+                align-items:center;
+                justify-content:center; 
+            ">
+                {{-- {{ $slot }} --}}
+                @yield('content')
             </main>
         </div>
     </body>
