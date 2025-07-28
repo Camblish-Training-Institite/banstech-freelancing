@@ -1,0 +1,174 @@
+        .main-container{
+            display: flex;
+            height: 100%;
+            width: 80%;
+            align-items: flex-start;
+            justify-content: center;
+            flex-direction: column;
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+
+        .form-title{
+            font-size: 2rem;
+            font-weight: bold; 
+            margin:1rem;
+        }
+
+        .form{
+            display:flex; 
+            height: wrap; 
+            width: 100%; 
+            flex-direction: column; 
+            justify-content:center; 
+            align-items: center; 
+            border: solid rgb(75, 75, 75);
+            border-radius: 1rem;
+            padding: 2rem 4.2rem;
+        }
+
+        .title-container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            width:100%;
+            height: 10%;
+        }
+
+        .form-content{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width:100%;
+            height: 90%;
+        }
+
+        .content-container{
+            display: flex; 
+            flex-direction: row;
+            width: 100%;
+            justify-content: center;
+            align-items: center;    
+            padding: 1rem;
+        }
+
+        .frm-input{
+            width: 100%;
+            border-radius: 0.3rem;
+            border: solid #555 2px;
+        }
+        .frm-label{
+            width: 20%;
+        }
+        .frm-check{
+            border-radius: 0.25rem;
+            border: solid #555 2px;
+        }
+        .frm-txtArea{
+            width: 100%;
+            border-radius: 0.25rem;
+            border: solid #555 2px;
+        }
+
+
+        .btn-submit{
+            display:flex;
+            width:100%;
+            align-items:center;
+            justify-content:center;
+            padding:0.5rem 1rem;
+            background-color:rgb(20,100,190);
+            color:#fff;
+            border-radius: 0.25rem;
+            margin: 0.25rem 0rem;
+        }
+        .btn-submit:hover{
+            opacity: 0.7;
+        }
+
+
+        .facilities-container {
+            max-width: 70rem;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        #skill-input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .dropdown-list {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-top: none;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-list li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .dropdown-list li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .selected-skills {
+            margin-top: 20px;
+            margin-bottom: 7px;
+        }
+
+        #selected-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #selected-list li {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        #save-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #save-button:hover {
+            background-color: #0056b3;
+        }
+
+        .suggestion{
+            padding: 0.5rem;
+        }
+
+        .suggestion:hover{
+            background-color: #ddd;
+            cursor: pointer;
+        }
