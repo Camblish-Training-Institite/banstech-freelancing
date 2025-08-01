@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Job extends Model
 {
+    use CrudTrait;
     /** @use HasFactory<\Database\Factories\JobFactory> */
     use HasFactory;
 
@@ -18,4 +20,9 @@ class Job extends Model
         'status',
         'deadline',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

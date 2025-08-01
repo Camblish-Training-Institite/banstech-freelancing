@@ -9,7 +9,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboards.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -17,9 +17,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('admin/dashboard', function() {
-    return view('dashboards.admin-dashboard');
-})->name('admin.dashboard');
+// Route::get('admin/dashboard', function() {
+//     return view('admin.admin-dashboard');
+// })->name('admin.dashboard');
 
 Route::get('project-manager/dashboard', function() {
     return view('dashboards.manager-dashboard');
@@ -28,3 +28,4 @@ Route::get('project-manager/dashboard', function() {
 
 require __DIR__.'/auth.php';
 require __DIR__.'/jobs/jobRoutes.php';
+require __DIR__.'/admin/project-manager.php';
