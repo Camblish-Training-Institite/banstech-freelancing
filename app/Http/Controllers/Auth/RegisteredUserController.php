@@ -22,6 +22,11 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
+    public function createAdmin(): View
+    {
+        return view('admin.auth.register');
+    }
+
     /**
      * Handle an incoming registration request.
      *
@@ -35,6 +40,8 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'user_type' => ['required','string', 'max:255'],
         ]);
+
+        // dd($request->user_type);
 
         $user = User::create([
             'name' => $request->name,
