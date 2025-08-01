@@ -16,8 +16,8 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return view('dashboards.dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -52,5 +52,11 @@ Route::get('/freelancer/active-jobs', [JobController::class, 'activeJobs'])
         ->name('freelancer.earnings');
 });
 
+Route::get('project-manager/dashboard', function() {
+    return view('dashboards.manager-dashboard');
+})->name('manager.dashboard');
+
+
 require __DIR__.'/auth.php';
 require __DIR__.'/jobs/jobRoutes.php';
+require __DIR__.'/admin/project-manager.php';

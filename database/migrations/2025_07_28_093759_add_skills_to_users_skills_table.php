@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_types', function (Blueprint $table) {
-            $table->id();
-            $table->enum('role', ['user', 'admin', 'project manager'])->default('user');
-            $table->timestamps();
+        Schema::table('user_skills', function (Blueprint $table) {
+            $table->string('skills')->nullable();
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_types');
+        Schema::table('user_skills', function (Blueprint $table) {
+            //
+        });
     }
 };
