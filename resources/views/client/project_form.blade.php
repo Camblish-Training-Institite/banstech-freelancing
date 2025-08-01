@@ -2,108 +2,89 @@
 
 @section('content')
 
-    <div class="main-container">
-        <form method="{{ $method }}" action="{{ $actionURL }}" class="form" id="create_form" enctype="multipart/form-data">
-            @csrf
+<div class="main-container">
+    <form method="{{ $method }}" action="{{ $actionURL }}" class="form" id="create_form" enctype="multipart/form-data">
+        @csrf
 
-            <div class="title-container">
-                <h2 class="form-title">Create job</h2>
+        <div class="title-container">
+            <h2 class="form-title">Create job</h2>
+        </div>
+        @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+
+
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        <div class="form-content">
+            <div class="content-container">
+                <div class="flex flex-col w-full items-start">
+                    <label class="frm-label" for="title">Job title: </label>
+                    <input type="text" name="title" id="title" value="{{old('title') ?? $job->title}}" class="frm-input"
+                        required>
+                </div>
             </div>
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-            
-            
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
-            <div class="form-content">
-                    <div class="content-container">
-                        <div class="flex flex-col w-full items-start">
-                            <label class="frm-label" for="title">Job title: </label>
-                            <input 
-                                type="text" 
-                                name="title" 
-                                id="title"
-                                value="{{old('title') ?? $job->title}}"
-                                class="frm-input"
-                                required>
-                        </div>
-                    </div>
-
-                    <div class="content-container">
-                        <div class="flex flex-col w-full items-start">
-                            <label class="frm-label" for="budget">Job Description: </label>
-                            <textarea name="description" id="description" class="frm-txtArea" cols="30" rows="10">
+            <div class="content-container">
+                <div class="flex flex-col w-full items-start">
+                    <label class="frm-label" for="budget">Job Description: </label>
+                    <textarea name="description" id="description" class="frm-txtArea" cols="30" rows="10">
                                 {{old('description') ?? $job->description}}
                             </textarea>
-                        </div>
-                    </div>
-
-                    <div class="content-container" style="flex-direction:column;">
-                        <div class="flex flex-col w-full items-start">
-                            <label class="frm-label" for="deadline">job Completion Date: </label>
-                            <input 
-                                style="margin-bottom: 1.5rem;"
-                                type="date" 
-                                name="deadline" 
-                                id="deadline"
-                                value="{{old('deadline') ?? $job->deadline}}"
-                                class="frm-input"
-                                required
-                            >
-                        </div>
-
-                        <div class="flex flex-col w-full items-start">
-                            <label class="frm-label" for="budget">job Budget: </label>
-                            <input 
-                                style="margin-bottom: 1.5rem;"
-                                type="text" 
-                                name="budget" 
-                                id="budget"
-                                {{-- value="{{old('budget') ?? $job->budget}}" --}}
-                                class="frm-input"
-                                required
-                            >
-                        </div>
-                    </div>
-
-                    <div class="content-container">
-                        <div class="flex flex-col w-full items-start">
-                            <h2>Desired Skills</h2>
-
-                            <!-- Selected Facilities -->
-                            <div id="selected-skills" class="selected-skills">
-                                <ul id="selected-list"></ul>
-                            </div>
-
-                            <!-- Input Field -->
-                            <div class="input-group">
-                                <input type="text" id="skill-input" placeholder="Enter facility name..." />
-                                <ul id="suggestions" class="dropdown-list"></ul>
-                            </div>
-
-                            <input type="hidden" name="job_skills" id="job_skills" value="">
-
-                            <!-- Save Button -->
-                            <button id="save-button">Save</button>
-                        </div>
-                    </div>  
                 </div>
-        </form>
-    </div>
+            </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+            <div class="content-container" style="flex-direction:column;">
+                <div class="flex flex-col w-full items-start">
+                    <label class="frm-label" for="deadline">job Completion Date: </label>
+                    <input style="margin-bottom: 1.5rem;" type="date" name="deadline" id="deadline"
+                        value="{{old('deadline') ?? $job->deadline}}" class="frm-input" required>
+                </div>
+
+                <div class="flex flex-col w-full items-start">
+                    <label class="frm-label" for="budget">job Budget: </label>
+                    <input style="margin-bottom: 1.5rem;" type="text" name="budget" id="budget" {{--
+                        value="{{old('budget') ?? $job->budget}}" --}} class="frm-input" required>
+                </div>
+            </div>
+
+            <div class="content-container">
+                <div class="flex flex-col w-full items-start">
+                    <h2>Desired Skills</h2>
+
+                    <!-- Selected Facilities -->
+                    <div id="selected-skills" class="selected-skills">
+                        <ul id="selected-list"></ul>
+                    </div>
+
+                    <!-- Input Field -->
+                    <div class="input-group">
+                        <input type="text" id="skill-input" placeholder="Enter facility name..." />
+                        <ul id="suggestions" class="dropdown-list"></ul>
+                    </div>
+
+                    <input type="hidden" name="job_skills" id="job_skills" value="">
+
+                    <!-- Save Button -->
+                    <button id="save-button">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
             const inputField = document.getElementById('facility-input');
             const suggestionsList = document.getElementById('suggestions');
             const selectedList = document.getElementById('selected-list');
@@ -219,10 +200,10 @@
 
                 });
             });
-    </script>
+</script>
 
-    @push('styles')
-        <link rel="stylesheet" href="{{ asset('pages_css/forms.css') }}">
-    @endpush
-            
+@push('styles')
+<link rel="stylesheet" href="{{ asset('pages_css/forms.css') }}">
+@endpush
+
 @endsection

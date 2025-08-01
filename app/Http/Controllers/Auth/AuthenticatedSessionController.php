@@ -19,6 +19,11 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
+    public function createAdmin(): View
+    {
+        return view('admin.auth.login');
+    }
+
     /**
      * Handle an incoming authentication request.
      */
@@ -28,8 +33,20 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        if(auth()->user()->hasRole('admin')){
+            return redirect()->back()->with('log in from admin panel!');
+        }
+        else if(auth()->user()->hasRole('project-manager')){
+            return redirect()->intended(route('pm.dashboard', absolute: false));
+        }
+        else if(auth()->user()->hasRole('freelancer-client') && $request->user_type == 'freelancer-client'){
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+        else{
+            return redirect()->back()->with('error', 'something went wrong');
+        }
     }
+
 
     /**
      * Destroy an authenticated session.
@@ -37,10 +54,6 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
 
         return redirect('/');
     }
