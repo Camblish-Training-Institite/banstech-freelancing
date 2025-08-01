@@ -22,6 +22,11 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
+    public function createAdmin(): View
+    {
+        return view('admin.auth.register');
+    }
+
     /**
      * Handle an incoming registration request.
      *
@@ -33,18 +38,39 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'user_type' => ['required','string', 'max:255'],
         ]);
+
+        // dd($request->user_type);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'user_type' => $request->user_type,
         ]);
+
+        // Assign the role based on user type
+        if ($request->user_type === 'admin') {
+            $user->assignRole('admin');
+        } elseif ($request->user_type === 'project-manager') {
+            $user->assignRole('project-manager');
+        } elseif ($request->user_type === 'freelancer-client') {
+            $user->assignRole('freelancer-client');
+        }
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        if($request->user_type == 'admin'){
+            return redirect()->intended(route('admin.dashboard', absolute: false));
+        }
+        else if($request->user_type == 'project-manager'){
+            return redirect()->intended(route('manager.dashboard', absolute: false));
+        }
+        else if($request->user_type == 'freelancer-client'){
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
     }
 }
