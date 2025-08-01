@@ -609,7 +609,7 @@
 
             <div class="dashboard-body">
                 {{-- Welcome message is first --}}
-                <div class="welcome-message">Welcome back, John! 👋</div>
+                <div class="welcome-message">Welcome back, {{Auth::User()->name}}! 👋</div>
 
                 {{-- Navigation tabs are second --}}
                 <nav class="main-nav-tabs">
