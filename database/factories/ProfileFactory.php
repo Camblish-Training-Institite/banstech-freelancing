@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Profile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,15 +10,23 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ProfileFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Profile::class;
+
     public function definition(): array
     {
         return [
-            //
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'bio' => fake()->paragraph(),
+            'address' => fake()->streetAddress(),
+            'city' => fake()->city(),
+            'zip_code' => fake()->postcode(),
+            'state' => fake()->state(),
+            'country' => fake()->country(),
+            'company' => fake()->company(),
+            'location' => fake()->city() . ', ' . fake()->country(),
+            'timezone' => 'America/New_York',
+            'avatar' => 'avatars/avatar.jpg',
         ];
     }
 }

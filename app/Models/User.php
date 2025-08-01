@@ -65,6 +65,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    
+
     /**
      * Get the attributes that should be cast.
      *
@@ -78,6 +80,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+  
     public function canAccessBackpack(): bool
     {
         // Option 1: Using user_type

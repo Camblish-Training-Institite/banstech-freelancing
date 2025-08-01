@@ -43,7 +43,7 @@
                 align-items:center;
                 justify-content:center; 
             ">
-                {{-- {{ $slot }} --}}
+                {{ $slot }}
                 @yield('content')
             </main>
         </div>
