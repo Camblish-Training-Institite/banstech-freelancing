@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.freelancer')
 
 @section('content')
 
@@ -30,99 +30,32 @@
         html, body {
             margin: 0;
             padding: 0;
-            height: 100%; /* Ensure html and body take full height */
-            width: 100%;  /* Ensure html and body take full width */
-            overflow: hidden; /* Prevent body scroll if dashboard is designed to scroll internally */
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden; /* Prevent body scroll if dashboard is designed to scroll internally */
         }
 
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f2f5; /* Light grey background - though it should be fully covered */
+            background-color: #f0f2f5; /* Light grey background */
             display: flex; /* Use flexbox for body */
             min-height: 100vh; /* Ensure full viewport height */
+            min-width: 100vw; /* Ensure full viewport width */
         }
 
         .dashboard-container {
+            flex-grow: 1;
             display: flex;
-            width: 100vw; /* Take full viewport width */
-            height: 100vh; /* Take full viewport height */
-            max-width: none; /* Remove any max-width limits */
-            box-shadow: none; /* Remove shadow for a clean full-screen look */
-            background-color: #fff; /* Main background, should be covered by sections */
-            margin: 0; /* No external margins */
-            border-radius: 0; /* No rounded corners */
-            overflow: hidden; /* Important for containing internal scrolls and preventing external overflow */
+            flex-grow: 1; /* Allows the dashboard to take up remaining space */
+            flex-direction: column; /* Stack content vertically */
+            height: 100vh; /* Full viewport height */
+            width: 100%;
+            background-color: #fff; /* Match the sidebar width to push the content */
+            box-sizing: border-box; /* Include padding and border in the width calculation */
+            overflow: hidden; /* Important for containing internal scrolls */
         }
 
-        /* Sidebar Styles */
-        .sidebar {
-            width: 250px; /* Fixed width for the sidebar */
-            background-color: #2c2c2c; /* Dark background */
-            color: #f0f0f0;
-            padding: 20px 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* Re-added to push content to top/bottom */
-            flex-shrink: 0; /* Prevent sidebar from shrinking */
-            overflow-y: auto; /* Allow sidebar to scroll if content overflows */
-        }
-
-        .sidebar-header {
-            text-transform: uppercase;
-            font-size: 0.8em;
-            color: #888;
-            padding: 15px 20px 5px;
-            margin-top: 15px;
-        }
-
-        .sidebar-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar-nav ul li a {
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            color: #f0f0f0;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-
-        .sidebar-nav ul li a:hover {
-            background-color: #444;
-        }
-
-        .sidebar-nav ul li a i {
-            margin-right: 10px;
-            font-size: 1.1em;
-        }
-
-        /* New styles for the pushed-down Logout link */
-        .sidebar-logout {
-            padding: 20px; /* Matches previous footer padding, creates space */
-            border-top: 1px solid #444; /* Optional: Adds a separator line */
-            margin-bottom: 40px; /* Pushes it up further from the very bottom */
-        }
-
-        .sidebar-logout a {
-            display: flex;
-            align-items: center;
-            padding: 12px 0px; /* Adjusted padding to fit into new container */
-            color: #f0f0f0;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-
-        .sidebar-logout a:hover {
-            background-color: #444; /* Match hover of other menu items */
-        }
-
-        .sidebar-logout a i {
-            margin-right: 10px;
-            font-size: 1.1em;
-        }
+        
 
 
         /* Main Content Area */
@@ -130,6 +63,7 @@
             flex-grow: 1; /* Allows this section to take up remaining space */
             display: flex;
             flex-direction: column;
+            width:100%;
             overflow: hidden; /* Important to control scrolling within main content */
         }
 
@@ -329,8 +263,8 @@
             text-align: center; /* Centers content within the box */
             display: flex;
             flex-direction: column;
-            align-items: center; /* Centers items horizontally within the flex container */
-            justify-content: center; /* Centers items vertically within the flex container */
+            align-items: flex-start; /* Centers items horizontally within the flex container */
+            justify-content: flex-start; /* Centers items vertically within the flex container */
             min-height: 400px; /* Example height, adjust as needed */
             margin-bottom: 30px; /* Space below the box */
             /* The box itself will naturally align left within dashboard-body padding */
@@ -340,6 +274,9 @@
            as the h3 is now a separate element. */
 
         .no-projects-message {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
             text-align: center; /* Ensures the icon, text, and button are centered within this div */
         }
 
@@ -425,25 +362,8 @@
             .dashboard-container {
                 flex-direction: column; /* Stack elements vertically */
                 height: auto; /* Auto height when stacked, to allow scrolling */
+                width: 100%;
                 min-height: 100vh; /* Ensure it still takes at least full viewport height */
-            }
-
-            .sidebar {
-                width: 100%; /* Full width for sidebar when stacked */
-                border-radius: 0; /* No border-radius when stacked */
-                box-shadow: none; /* No shadow when stacked */
-            }
-
-            .sidebar-logout {
-                margin-top: 15px; /* Adjust margin for mobile */
-                padding: 10px 20px; /* Adjust padding for mobile */
-                border-top: none; /* No top border when stacked on mobile */
-            }
-            .sidebar-logout a {
-                justify-content: center; /* Center content when stacked */
-            }
-            .sidebar-logout a span {
-                display: none; /* Hide text on small screens if desired */
             }
 
 
@@ -495,23 +415,6 @@
         }
 
         @media (max-width: 768px) {
-            .sidebar-nav ul li a {
-                justify-content: center;
-                padding: 10px 0;
-            }
-            .sidebar-nav ul li a span {
-                display: none;
-            }
-            .sidebar-header {
-                text-align: center;
-            }
-
-            .sidebar-logout a {
-                 justify-content: center;
-            }
-            .sidebar-logout a span {
-                display: none;
-            }
 
             .header .dashboard-title {
                 width: 100%;
@@ -563,30 +466,6 @@
     </style>
 
     <div class="dashboard-container">
-        <aside class="sidebar">
-            <div> {{-- This div now wraps all top content to be pushed up --}}
-                <div class="sidebar-header">Main Menu</div>
-                <nav class="sidebar-nav">
-                    <ul>
-                        <li><a href="#"><i class="fas fa-briefcase"></i> <span>Services</span></a></li>
-                        <li><a href="#"><i class="fas fa-tasks"></i> <span>Project Manager</span></a></li>
-                        <li><a href="#"><i class="fas fa-inbox"></i> <span>Inbox</span></a></li>
-                        <li><a href="#"><i class="fas fa-dollar-sign"></i> <span>Earnings</span></a></li>
-                    </ul>
-                    <div class="sidebar-header">Preference</div>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-user-circle"></i> <span>Profile Management</span></a></li>
-                        <li><a href="#"><i class="fas fa-hands-helping"></i> <span>Support & Assistance</span></a></li>
-                        <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
-                    </ul>
-                </nav>
-            </div>
-            {{-- NEW: Log Out button now in its own div, pushed to bottom --}}
-            <div class="sidebar-logout">
-                <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Log Out</span></a>
-            </div>
-        </aside>
-
         <div class="main-content">
             <header class="header">
                 <div class="dashboard-title">Freelancer Dashboard</div>
@@ -608,34 +487,7 @@
             </header>
 
             <div class="dashboard-body">
-                {{-- Welcome message is first --}}
-                <div class="welcome-message">Welcome back, {{Auth::User()->name}}! 👋</div>
-
-                {{-- Navigation tabs are second --}}
-                <nav class="main-nav-tabs">
-                    <ul>
-                        <li class="active"><a href="#">My Jobs</a></li>
-                        <li><a href="#">Proposals</a></li>
-                        <li><a href="#">Contest</a></li>
-                        <li><a href="#">Completed Projects</a></li>
-                        <li><a href="#">Contest</a></li>
-                    </ul>
-                </nav>
-
-                {{-- NEW: Separate heading for "Active projects (0)" --}}
-                <h3 class="active-projects-heading">Active projects (0)</h3>
-
-                {{-- The large active-projects-section box, now without its own h3 inside --}}
-                <div class="active-projects-section">
-                    <div class="no-projects-message">
-                        <div class="icon-box">
-                            <i class="fas fa-box-open"></i>
-                        </div>
-                        <p>No Available Projects</p>
-                        <button class="find-opportunities-btn">Find New Opportunities</button>
-                    </div>
-                </div>
-
+                @yield('body')
             </div>
         </div>
 

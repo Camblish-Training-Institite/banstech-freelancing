@@ -40,7 +40,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('pm.dashboard', absolute: false));
         }
         else if(auth()->user()->hasRole('freelancer-client') && $request->user_type == 'freelancer-client'){
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('freelancer.dashboard', absolute: false));
         }
         else{
             return redirect()->back()->with('error', 'something went wrong');

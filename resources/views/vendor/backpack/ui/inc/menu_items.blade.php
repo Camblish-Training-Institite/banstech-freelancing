@@ -5,3 +5,4 @@
 <x-backpack::menu-item title="Job Listing" icon="la la-file" :link="backpack_url('job')" /> 
 <x-backpack::menu-item title="Dispute" icon="la la-question" :link="backpack_url('dispute')" /> 
 <x-backpack::menu-item title="Reports" icon="la la-key" :link="backpack_url('report')" /> 
+<x-backpack::menu-item title="Contracts" icon="la la-question" :link="backpack_url('contract')" />
