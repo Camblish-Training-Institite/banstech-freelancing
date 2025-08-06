@@ -11,7 +11,7 @@ class JobsController extends Controller
 {
     public function index()
     {
-        // Logic to display a list of jobs
+        //Logic to display a list of jobs
     }
     
     public function create(){
