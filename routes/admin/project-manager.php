@@ -30,5 +30,4 @@ Route::post('/management-requests/{request}/accept', [ManagementRequestControlle
 Route::post('/management-requests/{request}/reject', [ManagementRequestController::class, 'reject'])
     ->name('admin.management-requests.reject');
 
-
 //project manager pages
