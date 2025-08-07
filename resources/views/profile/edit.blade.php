@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('dashboards.freelancer.dashboard')
 
-@section('content')
+@section('body')
         <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -29,7 +29,7 @@
                         </div>
                     @endif
 
-                    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ route('freelancer.profile.update') }}" enctype="multipart/form-data">
                         @csrf
                         @method('patch')
 
@@ -37,7 +37,7 @@
                         <div class="mb-6">
                             <label for="avatar" class="block text-sm font-medium text-gray-700">Profile Photo</label>
                             @if ($profile->avatar)
-                                <img src="{{ asset('storage/avatars/' . $profile->avatar) }}" alt="Avatar" class="w-20 h-20 rounded-full mb-2">
+                                <img src="{{ asset('storage/' . $profile->avatar) }}" alt="Avatar" class="w-20 h-20 rounded-full mb-2">
                             @endif
                             <input type="file" name="avatar" id="avatar" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         </div>

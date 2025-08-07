@@ -39,6 +39,7 @@ class UserCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        CRUD::column('id')->label('ID');
         CRUD::column('name')->label('Name');
         CRUD::column('email')->label('Email');
         CRUD::column('user_type')->label('User Type'); // Show user_type

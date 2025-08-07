@@ -2,10 +2,11 @@
     <link rel="stylesheet" href="{{ asset('auth_css/login.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> 
     
-            <form method="POST" action="{{ route('register') }}" class="loginBG">
+            <form method="POST" action="{{ route('register.store') }}" class="loginBG">
                 @csrf
 
-                <input type="hidden" name="user_type" id="user_type" value="freelancer-client">
+                <!-- user type declaration -->
+                <input type="hidden" name="user_type" id="user_type" value="admin">
 
                 <div style="display: flex; justify-content: center; align-items: center;">
                     <a href="{{ route('dashboard') }}">
@@ -13,7 +14,7 @@
                     </a>
                 </div>
             
-                <h1 class="text-2xl font-bold mb-6 text-center" >{{_('Join Banstech')}}</h1>
+                <h1 class="text-2xl font-bold mb-6 text-center" >{{_('Join Banstech s ADMIN')}}</h1>
                 
                     <!-- Social Login Buttons -->
                 <div class="grid gap-4 mb-6">
