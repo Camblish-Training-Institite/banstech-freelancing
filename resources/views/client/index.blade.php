@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('body')
+@section('content')
 <div class="card-body">
     <h1 class="mb-4">My Projects</h1>
 

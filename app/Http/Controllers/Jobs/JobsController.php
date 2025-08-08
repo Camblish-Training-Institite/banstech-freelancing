@@ -20,6 +20,7 @@ class JobsController extends Controller
     public function show(Job $job){
 
         return view('client.show', compact('job'));
+
     }
 
     //This shows the job form on views 
@@ -54,6 +55,7 @@ class JobsController extends Controller
     'budget' => $request->budget,
     'status' => $request->status,
     'skills' => json_encode($request->skills),
+    
     ]);
 
     return redirect()->route('jobs.index')->with('success','Job added!');

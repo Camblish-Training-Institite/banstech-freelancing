@@ -18,7 +18,7 @@
                     type="text"
                     name="title"
                     id="title"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full p-1  border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value="{{ old('title', $job->title ?? '') }}"
                     required
                 >
@@ -31,7 +31,7 @@
                     name="description"
                     id="description"
                     rows="5"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                 >{{ old('description', $job->description ?? '') }}</textarea>
             </div>
@@ -45,7 +45,7 @@
                         type="date"
                         name="deadline"
                         id="deadline"
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-full  border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value="{{ old('deadline', isset($job) && $job->deadline ? \Carbon\Carbon::parse($job->deadline)->format('Y-m-d') : '') }}"
                     >
                 </div>
@@ -59,7 +59,7 @@
                             type="number"
                             name="budget"
                             id="budget"
-                            class="w-full p-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            class="w-full  pl-12 border border-graed-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value="{{ old('budget', $job->budget ?? '') }}"
                             required
                         >
@@ -73,7 +73,7 @@
                 <select
                     name="status"
                     id="status"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full p-1 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required>
                     <option value="open" {{ old('status', $job->status ?? '') === 'open' ? 'selected' : '' }}>Open</option>
                     <option value="in_progress" {{ old('status', $job->status ?? '') === 'in_progress' ? 'selected' : '' }}>In_progress</option>
@@ -91,7 +91,7 @@
                     type="text"
                     name="skills"
                     id="skills"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full p-1 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter skills separated by commas"
                     value="{{ old('skills', is_array($job->skills ?? null) ? implode(', ', $job->skills) : $job->skills ?? '') }}"
                 >
@@ -102,7 +102,7 @@
         <div class="mt-4">
             <button
                 type="submit"
-                class="bg-green-500 text-dark font-bold rounded-lg hover:bg-green-600 
+                class="btn btn-success p-1 text-white  hover:bg-green-600 
                 transition duration-300">
                 {{ isset($job) ? 'Update Project' : 'Create Project' }}
             </button>
