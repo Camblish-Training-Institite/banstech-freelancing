@@ -1,4 +1,4 @@
-@extends('dashboards.freelancer.dashboard')
+@extends('dashboards.client.dashboard')
 
 @section('body')
         <div class="py-12">
@@ -29,7 +29,7 @@
                         </div>
                     @endif
 
-                    <form method="post" action="{{ route('freelancer.profile.update') }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                         @csrf
                         @method('patch')
 

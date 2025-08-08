@@ -46,7 +46,7 @@ class JobCrudController extends CrudController
         // This is the key part!
         // 'user' is the relationship method name in your Job model.
         // 'name' is the attribute on the User model.
-        CRUD::column('user.name')->label('User Name');
+        CRUD::column('user.name')->label('Client Name');
         CRUD::column('title')->label('Title');
 
         CRUD::column('deadline')->label('Deadline')
@@ -75,7 +75,7 @@ class JobCrudController extends CrudController
         CRUD::field('description')->type('textarea');
         CRUD::field('budget')->type('number');
         CRUD::field('status')->type('select_from_array')
-            ->options(['pending' => 'Pending', 'in_progress' => 'In Progress', 'completed' => 'Completed', 'open' => 'Open']);
+            ->options(['open' => 'Open', 'assigned' => 'Assigned', 'in_progress' => 'In Progress', 'completed' => 'Completed']);
 
         /*->type('select_from_array')
             ->options(['freelancer-client' => 'freelancer-client', 'admin' => 'admin', 'project-manager' => 'project-manager'])

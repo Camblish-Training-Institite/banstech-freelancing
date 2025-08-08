@@ -27,7 +27,7 @@
 
         <div style="display: flex; justify-content: center; align-items: center;">
             <a
-                href="{{ route('dashboard') }}"
+                href="{{ route('freelancer.dashboard') }}"
             >
                 <img src="{{asset('storage/pictures/logo.png') }}" alt="logo" style="width:100px; height:auto;">
             </a>

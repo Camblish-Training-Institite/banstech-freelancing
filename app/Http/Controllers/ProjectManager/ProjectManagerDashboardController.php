@@ -13,7 +13,7 @@ class ProjectManagerDashboardController extends Controller
         $user = auth()->user();
 
         // Get all projects managed by this PM
-        $managedProjects = $user->managedProjects()->with('client', 'freelancer', 'milestones')->get();
+        $managedProjects = $user->managedProjects()->with('job.user', 'freelancer')->get();
 
         // Get pending requests (from clients)
         $pendingRequests = ManagementRequest::where('project_manager_id', $user->id)
