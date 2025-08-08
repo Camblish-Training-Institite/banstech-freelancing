@@ -12,17 +12,22 @@ class Job extends Model
     /** @use HasFactory<\Database\Factories\JobFactory> */
     use HasFactory;
 
-    protected $fillable = [
+    protected $fillable = [ 
         'user_id',
         'title',
         'description',
         'budget',
         'status',
         'deadline',
+        'skills',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    protected $casts=[
+        'skills' => 'array',
+    ];
 }
