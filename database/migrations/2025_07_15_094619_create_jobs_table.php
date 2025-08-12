@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('budget', 10, 2)->nullable();
             $table->enum('status', ['open', 'in_progress', 'assigned', 'completed', 'cancelled'])->default('open');
             $table->timestamp('deadline')->nullable();
+            // $table->json('skills')->nullable();  This line is added usign the migration add
             $table->timestamps();
 
             $table->foreign('user_id')
