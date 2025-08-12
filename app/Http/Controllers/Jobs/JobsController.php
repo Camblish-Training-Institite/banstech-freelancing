@@ -10,16 +10,43 @@ use Illuminate\Support\Facades\Auth;
 class JobsController extends Controller
 {
     //This is for listing jobs - LISTING PAGE
+
+    public function index_client()
+    {
+        if(!Auth::check()){
+
+        }
+
+        $clientId = Auth::user()->id;
+        $jobs = Job::where('user_id', $clientId)->paginate(10);
+
+        
+        return view('Users.clients.layouts.job-section', ['jobs' => $jobs]);
+    }
+
     public function index()
     {
-          $jobs = Job::latest()->paginate(10);
-          return view('client.index', compact('jobs'));
+        $jobs = Job::latest()->paginate(10);
+
+        // dd($jobs);
+        return view('Users.Freelancers.layouts.body.job-listing', ['jobs' => $jobs]);
     }
 
     //This is for showing single job
-    public function show(Job $job){
+    public function show(int $id){
+        $job = Job::findOrFail($id);
 
-        return view('client.show', compact('job'));
+        // dd($job);
+        return view('Users.Clients.layouts.body.job-show', ['job' => $job]);
+
+    }
+
+    //This is for showing single job
+    public function show_freelancer(int $id){
+        $job = Job::findOrFail($id);
+
+        // dd($job);
+        return view('Users.Freelancers.layouts.body.job-show', ['job' => $job]);
 
     }
 
@@ -33,30 +60,30 @@ class JobsController extends Controller
     public function store(Request $request){
 
         //converting comma-separated string to array before validation
-                $request->merge([
-                    'skills' => array_map('trim',explode(',', $request->input('skills')))
-                ]);
+        $request->merge([
+            'skills' => array_map('trim',explode(',', $request->input('skills')))
+        ]);
 
-     $request->validate([
-    'title' => 'required|string|max:255',
-    'description' => 'required|string',
-    'deadline' => 'nullable|date',
-    'budget' => 'required|numeric',
-    'status' => 'required|string|in:open,in_progress,assigned,completed,cancelled',
-    'skills' => 'nullable|array',
-    'skills.*' => 'string',
-    ]);
+        $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'deadline' => 'nullable|date',
+        'budget' => 'required|numeric',
+        'status' => 'required|string|in:open,in_progress,assigned,completed,cancelled',
+        'skills' => 'nullable|array',
+        'skills.*' => 'string',
+        ]);
 
-    Job::create([
-    'user_id' => auth()->id(),
-    'title' => $request->title,
-    'description'=> $request->description,
-    'deadline' => $request->deadline,
-    'budget' => $request->budget,
-    'status' => $request->status,
-    'skills' => json_encode($request->skills),
-    
-    ]);
+        Job::create([
+        'user_id' => auth()->id(),
+        'title' => $request->title,
+        'description'=> $request->description,
+        'deadline' => $request->deadline,
+        'budget' => $request->budget,
+        'status' => $request->status,
+        'skills' => json_encode($request->skills),
+        
+        ]);
 
     return redirect()->route('jobs.index')->with('success','Job added!');
     
@@ -72,9 +99,13 @@ class JobsController extends Controller
     public function update(Request $request, Job $job) {
          
  //converting comma-separated string to array before validation
-            $request->merge([
-                'skills' => array_map('trim',explode(',', $request->input('skills')))
-            ]);
+
+        // dd($request->input('skills'));
+        $request->merge([
+            'skills' => array_map('trim', explode(',', $request->input('skills')))
+        ]);
+
+        // dd($request->input('skills'));   
 
         $request->validate([ 
             'title' => 'required|string|max:255',
@@ -97,7 +128,7 @@ class JobsController extends Controller
              
             ]);
 
-            return redirect()->route('jobs.index')->with('success','Successfully updated!');
+            return redirect()->route('client.jobs.index')->with('success','Successfully updated!');
     }
 
     //This is for deleting, using the method destroy

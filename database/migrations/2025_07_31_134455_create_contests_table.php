@@ -6,28 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('contests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('client_id');
             $table->string('title');
             $table->text('description');
-            $table->decimal('budget', 10, 2);
-            $table->enum('status', ['active', 'completed', 'cancelled'])->default('active');
-            $table->timestamp('start_date')->nullable();
-            $table->timestamp('end_date')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->decimal('prize_money', 10, 2);
+            $table->date('closing_date');
+            $table->json('required_skills'); // Store skills as JSON array
+            $table->enum('status', ['open', 'closed', 'completed'])->default('open');
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('contests');

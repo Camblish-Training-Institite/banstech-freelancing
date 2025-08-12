@@ -20,3 +20,10 @@ Route::resource('jobs', JobsController::class);
 
 // Route::get('job/{id}/delete', [JobsController::class, 'delete'])
 // ->name('job.delete');
+
+
+Route::prefix('freelancer')->group(function () {
+    Route::get('jobs-listing', [JobsController::class, 'index'])->name('jobs.listing');
+
+});
+

@@ -20,7 +20,7 @@ Route::get('/freelancer/dashboard', function () {
 })->middleware(['auth'])->name('freelancer.dashboard');
 
 Route::get('/client/dashboard', function () {
-    return view('Users.Clients.layouts.proposal-section');
+    return redirect()->route('client.jobs.list');
 })->middleware(['auth'])->name('client.dashboard');
 
 Route::middleware('auth')->group(function () {
