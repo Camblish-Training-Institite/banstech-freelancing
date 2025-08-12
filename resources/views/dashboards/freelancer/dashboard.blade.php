@@ -67,6 +67,7 @@
             overflow: hidden; /* Important to control scrolling within main content */
         }
 
+
         /* Header Styles */
         .header {
             background-color: #fff;
@@ -500,5 +501,6 @@
                 <span class="badge"></span>
             </button>
         </div>
+
     </div>
 @endsection

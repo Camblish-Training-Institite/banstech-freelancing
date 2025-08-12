@@ -41,7 +41,6 @@ class AuthenticatedSessionController extends Controller
         }
 
         else if(auth()->user()->hasRole('freelancer-client') ){
-
             return redirect()->intended(route('freelancer.dashboard', absolute: false));
         }
         else{
