@@ -6,15 +6,15 @@
                 @csrf
 
                 <!-- user type declaration -->
-                <input type="hidden" name="user_type" id="user_type" value="admin">
+                <input type="hidden" name="user_type" id="user_type" value="freelancer-client">
 
                 <div style="display: flex; justify-content: center; align-items: center;">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('freelancer.dashboard') }}">
                         <img src="{{asset('storage/pictures/logo.png') }}" alt="logo" style="width:100px; height:auto;">
                     </a>
                 </div>
             
-                <h1 class="text-2xl font-bold mb-6 text-center" >{{_('Join Banstech s ADMIN')}}</h1>
+                <h1 class="text-2xl font-bold mb-6 text-center" >{{_('Join Banstech')}}</h1>
                 
                     <!-- Social Login Buttons -->
                 <div class="grid gap-4 mb-6">
