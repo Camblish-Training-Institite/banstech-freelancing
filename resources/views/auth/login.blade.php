@@ -23,7 +23,7 @@
         @csrf
 
         <!-- user type declaration -->
-        <input type="hidden" name="user_type" id="user_type" value="admin">
+        <input type="hidden" name="user_type" id="user_type" value="freelancer-client">
 
         <div style="display: flex; justify-content: center; align-items: center;">
             <a

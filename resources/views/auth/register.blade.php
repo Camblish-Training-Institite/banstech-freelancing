@@ -6,10 +6,10 @@
                 @csrf
 
                 <!-- user type declaration -->
-                <input type="hidden" name="user_type" id="user_type" value="admin">
+                <input type="hidden" name="user_type" id="user_type" value="freelancer-client">
 
                 <div style="display: flex; justify-content: center; align-items: center;">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('freelancer.dashboard') }}">
                         <img src="{{asset('storage/pictures/logo.png') }}" alt="logo" style="width:100px; height:auto;">
                     </a>
                 </div>

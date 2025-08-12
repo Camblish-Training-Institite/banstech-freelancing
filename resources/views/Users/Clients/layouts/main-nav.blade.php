@@ -12,8 +12,10 @@
         </li>
 
         <!-- Contest -->
-        <li class="{{ request()->routeIs('client.contests.list') ? 'active' : '' }}">
-            <a href="{{ route('client.contests.list') }}">Contest</a>
+
+        <li class="{{ request()->routeIs('client.contests.index') ? 'active' : '' }}">
+            <a href="{{ route('client.contests.index') }}">Contest</a>
+
         </li>
 
         <!-- Completed Projects -->
