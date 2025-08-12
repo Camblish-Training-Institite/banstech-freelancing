@@ -1,8 +1,8 @@
-@extends('Users.Freelancers.layouts.dashboard-body')
+@extends('Users.Freelancers.layouts.body.dashboard-body')
 
 @section('active-tab')
     {{-- NEW: Separate heading for "Active projects (0)" --}}
-    <h3 class="active-projects-heading">Active projects (0)</h3>
+    <h3 class="active-projects-heading">Active projects ({{ $projects->count() }})</h3>
 
     {{-- The large active-projects-section box, now without its own h3 inside --}}
     <div class="active-projects-section">
@@ -39,7 +39,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">R {{ number_format($project->agreed_amount, 2) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $formattedEndDate }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if ($project->status == "in progress" || $project->status == "assigned")
+                            @if ($project->status == "in progress" || $project->status == "active")
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-gray-400">{{ $project->status }}</span>
                             @else
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-green-800">{{ $project->status }}</span>

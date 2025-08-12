@@ -1,4 +1,4 @@
-@extends('layouts.freelancer')
+@extends('layouts.client')
 
 @section('content')
 

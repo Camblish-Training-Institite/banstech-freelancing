@@ -1,4 +1,4 @@
-@extends('Users.Freelancers.layouts.dashboard-body')
+@extends('Users.Freelancers.layouts.body.dashboard-body')
 
 @section('active-tab')
     {{-- NEW: Separate heading for "Active projects (0)" --}}

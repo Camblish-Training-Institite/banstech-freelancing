@@ -3,7 +3,7 @@
     <ul>
         <!-- My Jobs -->
         <li class="{{ request()->routeIs('freelancer.jobs.list') ? 'active' : '' }}">
-            <a href="{{ route('freelancer.jobs.list') }}">My Jobs</a>
+            <a href="{{ route('freelancer.jobs.list') }}">My Projects</a>
         </li>
 
         <!-- Proposals -->

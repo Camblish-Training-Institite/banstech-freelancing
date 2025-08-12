@@ -1,4 +1,4 @@
-@extends('Users.Freelancers.layouts.dashboard-body')
+@extends('Users.Clients.layouts.body.dashboard-body')
 
 @section('active-tab')
     {{-- NEW: Separate heading for "Active projects (0)" --}}
@@ -6,12 +6,12 @@
 
     {{-- The large active-projects-section box, now without its own h3 inside --}}
     <div class="active-projects-section">
-        <div class="no-projects-message">
+        <div class="no-projects-message flex flex-col">
             <div class="icon-box">
                 <i class="fas fa-box-open"></i>
             </div>
             <p>No Available Contests</p>
-            {{-- <button class="find-opportunities-btn">Find New Opportunities</button> --}}
+            <button class="find-opportunities-btn">Create new contest</button>
         </div>
     </div>
 @endsection
