@@ -20,7 +20,7 @@ Route::get('/freelancer/dashboard', function () {
 })->middleware(['auth'])->name('freelancer.dashboard');
 
 Route::get('/client/dashboard', function () {
-    return view('Users.Clients.layouts.proposal-section');
+    return redirect()->route('client.jobs.list');
 })->middleware(['auth'])->name('client.dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -63,3 +63,4 @@ require __DIR__.'/auth.php';
 require __DIR__.'/jobs/jobRoutes.php';
 require __DIR__.'/admin/project-manager.php';
 require __DIR__.'/Freelancer-Client/freelancer.php';
+require __DIR__.'/Freelancer-Client/client.php';

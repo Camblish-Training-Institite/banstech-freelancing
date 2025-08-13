@@ -1,4 +1,4 @@
-@extends('Users.Freelancers.layouts.dashboard-body')
+@extends('Users.Freelancers.layouts.body.dashboard-body')
 
 @section('active-tab')
     {{-- NEW: Separate heading for "Active projects (0)" --}}
@@ -11,7 +11,7 @@
                 <i class="fas fa-box-open"></i>
             </div>
             <p>You haven't made any proposals yet</p>
-            <a href="{{ route('freelancer.jobs.list') }}">
+            <a href="{{ route('jobs.listing') }}">
                 <button class="find-opportunities-btn">Browse Jobs</button>
             </a>
         </div>

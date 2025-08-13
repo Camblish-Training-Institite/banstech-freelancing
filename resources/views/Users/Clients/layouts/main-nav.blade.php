@@ -2,18 +2,20 @@
 <nav class="main-nav-tabs">
     <ul>
         <!-- My Jobs -->
-        <li class="{{ request()->routeIs('freelancer.jobs.list') ? 'active' : '' }}">
-            <a href="{{ route('freelancer.jobs.list') }}">My Jobs</a>
+        <li class="{{ request()->routeIs('client.jobs.list') ? 'active' : '' }}">
+            <a href="{{ route('client.jobs.list') }}">My Jobs</a>
         </li>
 
         <!-- Proposals -->
-        <li class="{{ request()->routeIs('freelancer.proposals.list') ? 'active' : '' }}">
-            <a href="{{ route('freelancer.proposals.list') }}">Proposals</a>
+        <li class="{{ request()->routeIs('client.proposals.list') ? 'active' : '' }}">
+            <a href="{{ route('client.proposals.list') }}">Proposals</a>
         </li>
 
         <!-- Contest -->
-        <li class="{{ request()->routeIs('freelancer.contests.list') ? 'active' : '' }}">
-            <a href="{{ route('freelancer.contests.list') }}">Contest</a>
+
+        <li class="{{ request()->routeIs('client.contests.index') ? 'active' : '' }}">
+            <a href="{{ route('client.contests.index') }}">Contest</a>
+
         </li>
 
         <!-- Completed Projects -->

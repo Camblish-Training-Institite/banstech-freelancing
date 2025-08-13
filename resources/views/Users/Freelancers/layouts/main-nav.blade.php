@@ -3,7 +3,7 @@
     <ul>
         <!-- My Jobs -->
         <li class="{{ request()->routeIs('freelancer.jobs.list') ? 'active' : '' }}">
-            <a href="{{ route('freelancer.jobs.list') }}">My Jobs</a>
+            <a href="{{ route('freelancer.jobs.list') }}">My Projects</a>
         </li>
 
         <!-- Proposals -->
@@ -12,8 +12,8 @@
         </li>
 
         <!-- Contest -->
-        <li class="{{ request()->routeIs('freelancer.contests.list') ? 'active' : '' }}">
-            <a href="{{ route('freelancer.contests.list') }}">Contest</a>
+        <li class="{{ request()->routeIs('freelancer.contests.index') ? 'active' : '' }}">
+            <a href="{{ route('freelancer.contests.index') }}">Contest</a>
         </li>
 
         <!-- Completed Projects -->
