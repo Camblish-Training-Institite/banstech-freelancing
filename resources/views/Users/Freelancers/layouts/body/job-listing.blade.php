@@ -233,6 +233,10 @@
             <span class="notification-icon">&#9881;</span>
         </div>
 
+        @php
+            $condition = false;
+        @endphp
+
         <!-- Filters -->
         <div class="filters">
             <div>
@@ -260,54 +264,23 @@
 
         <!-- Tabs -->
         <div class="tabs">
-            <button class="active"><i class="fas fa-list"></i> Jobs ({{ $jobs->count() }})</button>
-            <button><i class="fas fa-trophy"></i> Contests (312)</button>
+            <button class="{{ $condition ? 'active' : 'inactive' }}" onclick="{{$condition = true;}}"><i class="fas fa-list"></i> Jobs ({{ $jobs->count() }})</button>
+            <button class="{{ $condition ? 'inactive' : 'active' }}" onclick="{{$condition = false;}}"><i class="fas fa-trophy"></i> Contests ({{$contests->count()}})</button>
         </div>
 
-        <!-- Opportunity Cards -->
-        @foreach ($jobs as $job)
-            @php
-                // Attempt to decode the skills field as JSON
-                $jobSkills = $job->skills ? json_decode($job->skills, true) : [];
-
-                 // If json_decode fails (e.g., invalid JSON), fallback to manual parsing
-                if (!$jobSkills || !is_array($jobSkills)) {
-                    // Remove surrounding brackets and backslashes, then explode by commas
-                    $jobSkills = trim($job->skills, '[]'); // Remove square brackets
-                    $jobSkills = str_replace('\"', '"', $jobSkills); // Replace escaped quotes
-                    $jobSkills = explode(',', $jobSkills); // Split by comma
-                    $jobSkills = array_map('trim', $jobSkills); // Trim whitespace
-                }
-                dd($jobSkills);
-                
-            @endphp
-            <div class="opportunity-card">
-                <div class="content-block">
-                    <h2>{{ $job->title }}</h2>
-                    <p>{{$job->description}}</p>
-                    <div class="tags">
-                        @forelse ($jobSkills as $skill)
-                            <span>{{$skill}}</span>
-                        @empty
-                            <span style="padding:0.5rem; background-color:#ddd; color:#000; border-radius:4px;">No skills for this job</span>
-                        @endforelse
-                    </div>
-                </div>
-                <div class="price-and-proposals-block">
-                    <div class="price">R {{ number_format($job->budget, 2) }}</div>
-                    <div class="proposals">8 Proposals</div>
-                    <div class="buttons-block">
-                        <a href="{{ route('freelancer.jobs.show', $job->id) }}" class="view-job">View Job</a>
-                        <button class="send-proposal">Send Proposal</button>
-                    </div>
-                </div>
+        @if ($jobs->isEmpty() && $contests->isEmpty())
+            <div class="no-opportunities">
+                <p>No opportunities available at the moment. Please check back later.</p>
             </div>
-        @endforeach
-
-        <!-- Pagination -->
-        <div class="pagination">
-            {{ $jobs->links() }} <!-- Pagination links -->
-        </div>
+            
+        @else
+            {{-- @if ($condition) --}}
+                @include('Users.Freelancers.listing-components._jobs', ['jobs' => $jobs])
+            {{-- @else
+                @include('Users.Freelancers.listing-components._contests', ['contests' => $contests])    
+            @endif --}}
+        @endif
+        
          
     </div>
 @endsection

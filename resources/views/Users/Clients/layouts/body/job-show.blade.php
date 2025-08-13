@@ -19,16 +19,17 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        /* Header */
-        .header {
+        /* Header-title */
+        .header-title {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            width:100%;
             margin-bottom: 20px;
+            margin-top: 1rem;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
         }
-        .header h1 {
+        .header-title h1 {
             font-size: 28px;
             color: #516aae;
             margin: 0;
@@ -155,18 +156,14 @@
     </style>
 
     <div class="container">
-        <!-- Header -->
-        <div class="flex w-full mt-4 ml-4 flex-shrink-0 space-x-2 justify-end">
-            <a href="{{ route('client.jobs.edit', $job->id) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Edit</a>
-            <form action="{{ route('client.jobs.destroy', $job->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700">Delete</button>
-            </form>
-        </div>
-        <div class="header">
-            <h1>{{ $job->title ?? 'Job Title Not Available' }}</h1>
+        <!-- Header-title -->
+        <div class="flex w-full justify-start">
             <a href="{{ url()->previous() }}" class="back-link">← Back to Jobs</a>
+        </div>
+        
+        <div class="header-title">
+            <h1>{{ $job->title ?? 'Job Title Not Available' }}</h1>
+            {{-- <a href="{{ url()->previous() }}" class="back-link">← Back to Jobs</a> --}}
         </div>
 
         <!-- Job Info -->
@@ -198,7 +195,9 @@
         @if(!empty($job->skills))
             <div class="tags">
                 @php
-                    $jobSkills = $job->skills ? json_decode($job->skills, true) : [];
+                    $jobSkills = $job->skills ? explode(',', $job->skills) : [];
+                    // dd($jobSkills);
+                    $jobSkills = str_replace('\"', '"', $jobSkills); // Replace escaped quotes
                 @endphp
                 @foreach($jobSkills as $skill)
                     <span>{{ trim($skill) }}</span>
@@ -217,9 +216,23 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="actions">
-            <a href="" class="send-proposal">Send Proposal</a> {{--{{ route('proposals.create', ['job_id' => $job->id]) }}--}}
-            <button class="save-job">Save Job</button>
+        <div class="bg-white overflow-hidden mt-6">
+            <div class="px-2 flex space-x-4 justify-end">
+                <a href="{{ route('client.jobs.edit', $job->id) }}"
+                    class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                    Edit Contest
+                </a>
+
+                <form action="{{ route('client.jobs.destroy', $job->id) }}" method="POST"
+                    onsubmit="return confirm('Are you sure you want to delete this contest?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700">
+                        Delete Contest
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 @endsection
