@@ -14,7 +14,7 @@
                     </a>
                 </div>
             
-                <h1 class="text-2xl font-bold mb-6 text-center" >{{_('Join Banstech s ADMIN')}}</h1>
+                <h1 class="text-2xl font-bold mb-6 text-center" >{{_('Join Banstech')}}</h1>
                 
                     <!-- Social Login Buttons -->
                 <div class="grid gap-4 mb-6">

@@ -28,6 +28,7 @@ Route::prefix('freelancer')->name('freelancer.')->group(function () {
 
 });
 
+
 Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(function () {
     Route::get('/', [FreelancerContestController::class, 'index'])->name('index');
     Route::get('/{contest}', [FreelancerContestController::class, 'show'])->name('show');
@@ -40,7 +41,21 @@ Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(functi
 
     // Your existing withdraw route (if you have one)
     Route::delete('/entry/{entry}/withdraw', [FreelancerContestController::class, 'withdraw'])->name('entry.withdraw');
+  
+    //This is for the side bar navigations
+    //side-bar services
+    Route::get('/services',function(){
+    return view('dashboards.freelancer.services');
+    })->name('services');
+
+    //Message or Inbox
+    Route::get('/inbox', function(){
+        return view('dashboards.freelancer.inbox');
+    })->name('inbox');
+    //Earnings
+    Route::get('/earnings',function(){
+        return view('dashboards.freelancer.earnings');
+    })->name('earnings');
+
 })->middleware('auth');
-
-
 
