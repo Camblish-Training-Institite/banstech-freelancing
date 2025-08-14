@@ -1,5 +1,5 @@
 
-@extends('Users.Clients.layouts.dashboard-body')
+@extends('Users.Clients.layouts.body.dashboard-body')
 
 
 @section('active-tab')

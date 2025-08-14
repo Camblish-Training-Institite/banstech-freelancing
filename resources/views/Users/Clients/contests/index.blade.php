@@ -1,6 +1,6 @@
-@extends('Users.Clients.layouts.dashboard-body')
+@extends('dashboards.Client.dashboard')
 
-@section('active-tab')
+@section('body')
     <div class="bg-gray-100 dark:bg-gray-900">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center mb-8">
