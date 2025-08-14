@@ -24,7 +24,8 @@
         <div class="flex flex-row min-h-screen bg-gray-100 dark:bg-gray-900"
             style="min-width:100vw;"
         >
-            @include('Users.Freelancers.freelancer-navigation')
+        {{-- This is for the side bar for all dashboards --}}
+            @include('Users.Freelancers.freelancer-navigation') 
 
             <!-- Page Heading -->
             @isset($header)

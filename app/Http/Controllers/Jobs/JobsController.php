@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Jobs;
 
 use App\Http\Controllers\Controller;
 use App\Models\Job;
+use App\Models\Contest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,9 +28,10 @@ class JobsController extends Controller
     public function index()
     {
         $jobs = Job::latest()->paginate(10);
+        $contests = Contest::latest()->paginate(10);
 
         // dd($jobs);
-        return view('Users.Freelancers.layouts.body.job-listing', ['jobs' => $jobs]);
+        return view('Users.Freelancers.layouts.body.job-listing', ['jobs' => $jobs, 'contests' => $contests]);
     }
 
     //This is for showing single job
@@ -60,19 +62,17 @@ class JobsController extends Controller
     public function store(Request $request){
 
         //converting comma-separated string to array before validation
-        $request->merge([
-            'skills' => array_map('trim',explode(',', $request->input('skills')))
-        ]);
-
         $request->validate([
         'title' => 'required|string|max:255',
         'description' => 'required|string',
         'deadline' => 'nullable|date',
         'budget' => 'required|numeric',
         'status' => 'required|string|in:open,in_progress,assigned,completed,cancelled',
-        'skills' => 'nullable|array',
-        'skills.*' => 'string',
+        'skills' => 'string',
         ]);
+
+        $req_skills = $request->input('skills');
+        $skills = is_array($req_skills) ? implode(',', $req_skills) : $req_skills;
 
         Job::create([
         'user_id' => auth()->id(),
@@ -81,11 +81,11 @@ class JobsController extends Controller
         'deadline' => $request->deadline,
         'budget' => $request->budget,
         'status' => $request->status,
-        'skills' => json_encode($request->skills),
+        'skills' => $skills,
         
         ]);
 
-    return redirect()->route('jobs.index')->with('success','Job added!');
+    return redirect()->route('client.jobs.list')->with('success','Job added!');
     
 }
 
@@ -116,8 +116,8 @@ class JobsController extends Controller
             'skills' => 'nullable|array',
             'skills.*' => 'string',
             ]);
-           
-           
+            
+            
             $job->update([               
             'title' => $request->title,
             'description'=> $request->description,
@@ -125,17 +125,17 @@ class JobsController extends Controller
             'budget' => $request->budget,
             'status' => $request->status,
             'skills' => $request->skills,
-             
-            ]);
+                
+        ]);
 
-            return redirect()->route('client.jobs.index')->with('success','Successfully updated!');
+        return redirect()->route('client.jobs.list')->with('success','Successfully updated!');
     }
 
     //This is for deleting, using the method destroy
     public function destroy(Job $job){
        
         $job->delete();
-        return redirect()->route('jobs.index')->with('success','Deleted successful!');
+        return redirect()->route('client.jobs.list')->with('success','Deleted successful!');
     }
 
 }

@@ -6,7 +6,7 @@
 
         <!-- Back Link -->
         <div class="mb-6">
-            <a href="{{ route('client.contests.index') }}" class="inline-flex items-center text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+            <a href="{{ url()->previous() }}" class="inline-flex items-center text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                 <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                 </svg>
@@ -25,10 +25,27 @@
                     </div>
 
                     @if($contest->required_skills)
+                        @php
+                            // Attempt to decode the skills field as JSON
+                            $contestSkills = $contest->required_skills ? explode(',', $contest->required_skills) : [];
+                            // dd($jobSkills);
+                            $contestSkills = str_replace('\"', '"', $contestSkills); // Replace escaped quotes
+
+                            // If json_decode fails (e.g., invalid JSON), fallback to manual parsing
+                            // if (!$jobSkills || !is_array($jobSkills)) {
+                            //     // Remove surrounding brackets and backslashes, then explode by commas
+                            //     $jobSkills = trim($job->skills, '[]'); // Remove square brackets
+                            //     $jobSkills = str_replace('\"', '"', $jobSkills); // Replace escaped quotes
+                            //     $jobSkills = explode(',', $jobSkills); // Split by comma
+                            //     $jobSkills = array_map('trim', $jobSkills); // Trim whitespace
+                            // }
+                            // dd($jobSkills);
+                            
+                        @endphp
                         <div class="mt-6">
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Required Skills</h3>
                             <div class="flex flex-wrap gap-2">
-                                @foreach($contest->required_skills as $skill)
+                                @foreach($contestSkills as $skill)
                                     <span class="inline-block bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-200">
                                         {{ $skill }}
                                     </span>

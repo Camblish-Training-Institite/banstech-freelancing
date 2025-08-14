@@ -28,9 +28,11 @@ class ContestController extends Controller
             'description' => 'required|string',
             'prize_money' => 'required|numeric|min:0',
             'closing_date' => 'required|date|after_or_equal:today',
-            'required_skills' => 'nullable|array',
-            'required_skills.*' => 'string|max:255',
+            'required_skills' => 'string',
         ]);
+
+        $req_skills = $request->input('required_skills');
+        $skills = is_array($req_skills) ? implode(',', $req_skills) : $req_skills;
 
         $contest = Contest::create([
             'client_id' => Auth::id(),
@@ -38,7 +40,7 @@ class ContestController extends Controller
             'description' => $request->description,
             'prize_money' => $request->prize_money,
             'closing_date' => $request->closing_date,
-            'required_skills' => $request->required_skills,
+            'required_skills' => $skills,
         ]);
 
         return redirect()->route('client.contests.index')->with('success', 'Contest created successfully.');
