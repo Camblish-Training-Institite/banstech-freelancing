@@ -19,16 +19,16 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        /* Header */
-        .header {
+        /* Header-title */
+        .header-title {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: left;
             margin-bottom: 20px;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
         }
-        .header h1 {
+        .header-title h1 {
             font-size: 28px;
             color: #6a51ae;
             margin: 0;
@@ -155,10 +155,12 @@
     </style>
 
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>{{ $job->title ?? 'Job Title Not Available' }}</h1>
+        <!-- Header-title -->
+        <div class="flex w-full justify-start mb-4">
             <a href="{{ url()->previous() }}" class="back-link">← Back to Jobs</a>
+        </div>
+        <div class="header-title flex flex-col">
+            <h1>{{ $job->title ?? 'Job Title Not Available' }}</h1>
         </div>
 
         <!-- Job Info -->

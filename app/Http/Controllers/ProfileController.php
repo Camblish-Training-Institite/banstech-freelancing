@@ -100,7 +100,7 @@ class ProfileController extends Controller
             $profile->save();
 
             // Redirect with success message
-            return redirect()->route('dashboard')->with('status', 'Profile updated successfully.');
+            return redirect()->route('freelancer.dashboard')->with('status', 'Profile updated successfully.');
 
         } catch (\Illuminate\Validation\ValidationException $validationException) {
             // Handle validation errors

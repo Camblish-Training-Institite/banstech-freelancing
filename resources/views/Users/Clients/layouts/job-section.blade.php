@@ -32,7 +32,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">R {{ number_format($job->budget, 2) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $formattedEndDate }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if ($job->status == "in_progress" || $job->status == "assigned")
+                            @if ($job->status == "in_progress" || $job->status == "assigned" || $job->status == "open")
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-gray-400">{{ $job->status }}</span>
                             @else
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-gray-400">{{ $job->status }}</span>

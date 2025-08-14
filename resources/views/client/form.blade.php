@@ -85,7 +85,7 @@
 
 
             {{-- Skills --}}
-            <div>
+            {{-- <div>
                 <label for="skills" class="block text-sm font-semibold text-gray-600 mb-2">Project Skills</label>
                 <input
                     type="text"
@@ -95,6 +95,18 @@
                     placeholder="Enter skills separated by commas"
                     value="{{ old('skills', is_array($job->skills ?? null) ? implode(', ', $job->skills) : $job->skills ?? '') }}"
                 >
+            </div> --}}
+            <div>
+                <h3 class="text-lg font-medium text-gray-900">Facilities</h3>
+                <p class="text-sm text-gray-500">Select the facilities available in this room.</p>
+                <div class="mt-2">
+                    <input type="text" id="facility-input" placeholder="Search for a facility..." class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    <ul id="suggestions" class="hidden mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10"></ul>
+                </div>
+                <div id="selected-facilities" class="mt-2 space-x-2 space-y-2">
+                    {{-- Selected facilities will appear here --}}
+                </div>
+                <input type="hidden" name="skills" id="required_skills" value="{{ old('skills', is_array($job->skills ?? null) ? implode(', ', $job->skills) : $job->skills ?? '') }}"> <!--  old('required_skills', $contest->required_skills)  -->
             </div>
         </div>
 
@@ -109,6 +121,9 @@
         </div>
     
 </div>
+
+<!-- tag script -->
+@include('components.tag-script')
 
 {{-- Optional: Auto-focus on title input when page loads --}}
 <script>
