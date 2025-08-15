@@ -23,7 +23,7 @@ Route::prefix('client')->name('client.')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/proposals', [ProposalController::class, 'index_client'])->name('proposals.list');
+    Route::get('/proposals-list', [ProposalController::class, 'index_client'])->name('proposals.list');
 
     Route::resource('/proposals', ProposalController::class);
 
