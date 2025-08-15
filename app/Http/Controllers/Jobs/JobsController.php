@@ -27,8 +27,13 @@ class JobsController extends Controller
 
     public function index()
     {
-        $jobs = Job::latest()->paginate(10);
-        $contests = Contest::latest()->paginate(10);
+        if(!Auth::check()){
+            return redirect()->route('login')->with('error', 'You must be logged in to view jobs.');
+        }
+
+        $user_id = Auth::user()->id; // Get the authenticated user's ID
+        $jobs = Job::where('user_id', '!=', $user_id)->paginate(10);
+        $contests = Contest::where('client_id', '!=', $user_id)->paginate(10);
 
         // dd($jobs);
         return view('Users.Freelancers.layouts.body.job-listing', ['jobs' => $jobs, 'contests' => $contests]);

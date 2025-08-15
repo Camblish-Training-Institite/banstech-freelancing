@@ -234,7 +234,7 @@
         </div>
 
         @php
-            $condition = false;
+            $currentTab = 'jobs';
         @endphp
 
         <!-- Filters -->
@@ -264,23 +264,45 @@
 
         <!-- Tabs -->
         <div class="tabs">
-            <button class="{{ $condition ? 'active' : 'inactive' }}" onclick="{{$condition = true;}}"><i class="fas fa-list"></i> Jobs ({{ $jobs->count() }})</button>
-            <button class="{{ $condition ? 'inactive' : 'active' }}" onclick="{{$condition = false;}}"><i class="fas fa-trophy"></i> Contests ({{$contests->count()}})</button>
+            <button onclick="switchTab('jobs')" id="jobs-tab"  class="{{ $currentTab === 'jobs' ? 'active' : '' }}" onclick="switchTab('jobs')">
+                <i class="fas fa-list"></i> Jobs ({{ count($jobs) }})
+            </button>
+            <button onclick="switchTab('contests')" id="contests-tab" class="{{ $currentTab === 'contests' ? 'active' : '' }}" onclick="switchTab('contests')">
+                <i class="fas fa-trophy"></i> Contests ({{ count($contests) }})
+            </button>
         </div>
 
-        @if ($jobs->isEmpty() && $contests->isEmpty())
-            <div class="no-opportunities">
-                <p>No opportunities available at the moment. Please check back later.</p>
-            </div>
-            
-        @else
-            {{-- @if ($condition) --}}
-                @include('Users.Freelancers.listing-components._jobs', ['jobs' => $jobs])
-            {{-- @else
-                @include('Users.Freelancers.listing-components._contests', ['contests' => $contests])    
-            @endif --}}
-        @endif
-        
-         
+        <!-- Tab Contents -->
+        <div id="jobs-content">
+            @include('Users.Freelancers.listing-components._jobs', ['jobs' => $jobs])
+        </div>
+
+        <div id="contests-content" style="display: none;">
+            @include('Users.Freelancers.listing-components._contests', ['contests' => $contests])
+        </div>
     </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Step 1: Hide both contents
+            document.getElementById('jobs-content').style.display = 'none';
+            document.getElementById('contests-content').style.display = 'none';
+
+            // Step 2: Remove 'active' class from both buttons
+            document.getElementById('jobs-tab').classList.remove('active');
+            document.getElementById('contests-tab').classList.remove('active');
+
+            // Step 3: Show selected content and highlight button
+            if (tabName === 'jobs') {
+                document.getElementById('jobs-content').style.display = 'block';
+                document.getElementById('jobs-tab').classList.add('active');
+            } else if (tabName === 'contests') {
+                document.getElementById('contests-content').style.display = 'block';
+                document.getElementById('contests-tab').classList.add('active');
+            }
+
+            // Optional: Update URL hash
+            window.location.hash = '#' + tabName;
+        }
+    </script>
 @endsection

@@ -7,8 +7,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Client\ContestController;
 
 use App\Http\Controllers\Jobs\JobsController;
+use App\Http\Controllers\Jobs\ProposalController;
 
-use App\Http\Controllers\ProfileController;
 
 
 Route::prefix('client')->name('client.')->group(function () {
@@ -18,14 +18,16 @@ Route::prefix('client')->name('client.')->group(function () {
 
     Route::get('/my-jobs', [JobsController::class, 'index_client'])->name('jobs.list');
   
-    Route::get('/my-jobs', [ContractController::class, 'index'])->name('jobs.list');
+    Route::get('/my-projects', [ContractController::class, 'index'])->name('jobs.list');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/proposals', function() {
-        return view('Users.clients.layouts.proposal-section');
-    })->name('proposals.list');
+    Route::get('/proposals', [ProposalController::class, 'index_client'])->name('proposals.list');
+
+    Route::resource('/proposals', ProposalController::class);
+
+    Route::get('/proposals/{job}/show', [ProposalController::class, 'show'])->name('proposals.job.show');   
 
 
     // Route::get('/contests', function() {
@@ -35,6 +37,19 @@ Route::prefix('client')->name('client.')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/services',function(){
+    return view('Users.Clients.pages.services');
+    })->name('services');
+
+    //Message or Inbox
+    Route::get('/inbox', function(){
+        return view('Users.Clients.pages.inbox');
+    })->name('inbox');
+    //Earnings
+    Route::get('/earnings',function(){
+        return view('Users.Clients.pages.earnings');
+    })->name('earnings');
 
     Route::resource('jobs', JobsController::class);
 });
