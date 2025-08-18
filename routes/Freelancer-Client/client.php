@@ -8,7 +8,6 @@ use App\Http\Controllers\Client\ContestController;
 
 use App\Http\Controllers\Jobs\JobsController;
 
-use App\Http\Controllers\ProfileController;
 
 
 Route::prefix('client')->name('client.')->group(function () {
