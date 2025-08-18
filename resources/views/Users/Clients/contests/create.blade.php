@@ -1,4 +1,4 @@
-@extends('users.clients.layouts.dashboard-body')
+@extends('users.clients.layouts.body.dashboard-body')
 @section('body')
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">Create New Contest</h2>
@@ -31,17 +31,52 @@
                             <input type="date" id="closing_date" name="closing_date" class="mt-1 block w-full" required>
                         </div>
 
-                        <div class="mb-4">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">Facilities</h3>
+                            <p class="text-sm text-gray-500">Select the facilities available in this room.</p>
+                            <div class="mt-2">
+                                <input type="text" id="facility-input" placeholder="Search for a facility..." class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <ul id="suggestions" class="hidden mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10"></ul>
+                            </div>
+                            <div id="selected-facilities" class="mt-2 space-x-2 space-y-2">
+                                {{-- Selected facilities will appear here --}}
+                            </div>
+                            <input type="hidden" name="required_skills" id="required_skills" value=""> <!--  old('required_skills', $contest->required_skills)  -->
+                        </div>
+
+                        {{-- <div class="mb-4">
                             <label for="required_skills" class="block text-sm font-medium text-gray-700">Required Skills</label>
                             <input type="text" id="required_skills" name="required_skills[]" placeholder="Skill 1, Skill 2, Skill 3" class="mt-1 block w-full">
                             <small>Separate skills with commas.</small>
-                        </div>
+                        </div> --}}
 
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Create Contest</button>
+                        <button 
+                            type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                            style="background-color: rgb(59 130 246); color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500;"
+                        >Create Contest</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    {{-- @if ($table == 'Room')
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <h3 class="text-lg font-medium text-gray-900">Facilities</h3>
+            <p class="text-sm text-gray-500">Select the facilities available in this room.</p>
+            <div class="mt-2">
+                <input type="text" id="facility-input" placeholder="Search for a facility..." class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                <ul id="suggestions" class="hidden mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10"></ul>
+            </div>
+            <div id="selected-facilities" class="mt-2 space-x-2 space-y-2">
+                {{-- Selected facilities will appear here 
+            </div>
+            <input type="hidden" name="required_skills" id="required_skills" value="{{ old('required_skills', $room->required_skills) }}">
+        </div>
+    @endif --}}
+
+<!-- script for tags -->
+@include('components.tag-script')
 
 @endsection

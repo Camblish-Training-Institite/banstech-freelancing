@@ -6,14 +6,6 @@
 
     {{-- The large active-projects-section box, now without its own h3 inside --}}
     <div class="active-projects-section">
-        <div class="no-projects-message flex flex-col">
-            <div class="icon-box">
-                <i class="fas fa-box-open"></i>
-            </div>
-            <p>You haven't made any proposals yet</p>
-            <a href="{{ route('jobs.listing') }}">
-                <button class="find-opportunities-btn">Browse Jobs</button>
-            </a>
-        </div>
+        @include('Users.Freelancers.proposals.index', ['proposals' => $proposals])
     </div>
 @endsection

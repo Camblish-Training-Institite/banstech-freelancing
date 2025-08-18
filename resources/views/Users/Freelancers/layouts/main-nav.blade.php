@@ -7,8 +7,8 @@
         </li>
 
         <!-- Proposals -->
-        <li class="{{ request()->routeIs('freelancer.proposals.list') ? 'active' : '' }}">
-            <a href="{{ route('freelancer.proposals.list') }}">Proposals</a>
+        <li class="{{ request()->routeIs('freelancer.proposals.index') ? 'active' : '' }}">
+            <a href="{{ route('freelancer.proposals.index') }}">Proposals</a>
         </li>
 
         <!-- Contest -->

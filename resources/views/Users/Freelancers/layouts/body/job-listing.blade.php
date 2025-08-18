@@ -233,6 +233,10 @@
             <span class="notification-icon">&#9881;</span>
         </div>
 
+        @php
+            $currentTab = 'jobs';
+        @endphp
+
         <!-- Filters -->
         <div class="filters">
             <div>
@@ -260,54 +264,45 @@
 
         <!-- Tabs -->
         <div class="tabs">
-            <button class="active"><i class="fas fa-list"></i> Jobs ({{ $jobs->count() }})</button>
-            <button><i class="fas fa-trophy"></i> Contests (312)</button>
+            <button onclick="switchTab('jobs')" id="jobs-tab"  class="{{ $currentTab === 'jobs' ? 'active' : '' }}" onclick="switchTab('jobs')">
+                <i class="fas fa-list"></i> Jobs ({{ count($jobs) }})
+            </button>
+            <button onclick="switchTab('contests')" id="contests-tab" class="{{ $currentTab === 'contests' ? 'active' : '' }}" onclick="switchTab('contests')">
+                <i class="fas fa-trophy"></i> Contests ({{ count($contests) }})
+            </button>
         </div>
 
-        <!-- Opportunity Cards -->
-        @foreach ($jobs as $job)
-            @php
-                // Attempt to decode the skills field as JSON
-                $jobSkills = $job->skills ? json_decode($job->skills, true) : [];
-
-                 // If json_decode fails (e.g., invalid JSON), fallback to manual parsing
-                if (!$jobSkills || !is_array($jobSkills)) {
-                    // Remove surrounding brackets and backslashes, then explode by commas
-                    $jobSkills = trim($job->skills, '[]'); // Remove square brackets
-                    $jobSkills = str_replace('\"', '"', $jobSkills); // Replace escaped quotes
-                    $jobSkills = explode(',', $jobSkills); // Split by comma
-                    $jobSkills = array_map('trim', $jobSkills); // Trim whitespace
-                }
-                dd($jobSkills);
-                
-            @endphp
-            <div class="opportunity-card">
-                <div class="content-block">
-                    <h2>{{ $job->title }}</h2>
-                    <p>{{$job->description}}</p>
-                    <div class="tags">
-                        @forelse ($jobSkills as $skill)
-                            <span>{{$skill}}</span>
-                        @empty
-                            <span style="padding:0.5rem; background-color:#ddd; color:#000; border-radius:4px;">No skills for this job</span>
-                        @endforelse
-                    </div>
-                </div>
-                <div class="price-and-proposals-block">
-                    <div class="price">R {{ number_format($job->budget, 2) }}</div>
-                    <div class="proposals">8 Proposals</div>
-                    <div class="buttons-block">
-                        <a href="{{ route('freelancer.jobs.show', $job->id) }}" class="view-job">View Job</a>
-                        <button class="send-proposal">Send Proposal</button>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-
-        <!-- Pagination -->
-        <div class="pagination">
-            {{ $jobs->links() }} <!-- Pagination links -->
+        <!-- Tab Contents -->
+        <div id="jobs-content">
+            @include('Users.Freelancers.listing-components._jobs', ['jobs' => $jobs])
         </div>
-         
+
+        <div id="contests-content" style="display: none;">
+            @include('Users.Freelancers.listing-components._contests', ['contests' => $contests])
+        </div>
     </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Step 1: Hide both contents
+            document.getElementById('jobs-content').style.display = 'none';
+            document.getElementById('contests-content').style.display = 'none';
+
+            // Step 2: Remove 'active' class from both buttons
+            document.getElementById('jobs-tab').classList.remove('active');
+            document.getElementById('contests-tab').classList.remove('active');
+
+            // Step 3: Show selected content and highlight button
+            if (tabName === 'jobs') {
+                document.getElementById('jobs-content').style.display = 'block';
+                document.getElementById('jobs-tab').classList.add('active');
+            } else if (tabName === 'contests') {
+                document.getElementById('contests-content').style.display = 'block';
+                document.getElementById('contests-tab').classList.add('active');
+            }
+
+            // Optional: Update URL hash
+            window.location.hash = '#' + tabName;
+        }
+    </script>
 @endsection

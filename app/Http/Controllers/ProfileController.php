@@ -6,6 +6,7 @@ use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -68,7 +69,7 @@ class ProfileController extends Controller
             
             // Validate the request data
             $validatedData = $request->validate([
-                'bio'       => 'nullable|string|max:1000',
+                'bio'       => 'nullable|string',
                 'address'   => 'nullable|string|max:255',
                 'city'      => 'nullable|string|max:255',
                 'zip_code'  => 'nullable|string|max:20',
@@ -99,7 +100,7 @@ class ProfileController extends Controller
             $profile->save();
 
             // Redirect with success message
-            return redirect()->route('dashboard')->with('status', 'Profile updated successfully.');
+            return redirect()->route('freelancer.dashboard')->with('status', 'Profile updated successfully.');
 
         } catch (\Illuminate\Validation\ValidationException $validationException) {
             // Handle validation errors
