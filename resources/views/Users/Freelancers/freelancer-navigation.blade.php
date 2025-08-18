@@ -153,6 +153,7 @@
             <ul>
 
                 <li><a href="{{route('freelancer.dashboard') }}"><i class="fas fa-briefcase"></i> <span>Dashboard</span></a></li>
+
                 <li><a href="{{route('freelancer.services') }}"><i class="fas fa-briefcase"></i> <span>Services</span></a></li>
                 <li><a href="{{ route('jobs.listing') }}"><i class="fas fa-tasks"></i> <span>Browse Available Jobs</span></a></li>
                 <li><a href="{{route('freelancer.inbox')}}"><i class="fas fa-inbox"></i> <span>Inbox</span></a></li>
