@@ -69,7 +69,7 @@ class ProfileController extends Controller
             
             // Validate the request data
             $validatedData = $request->validate([
-                'bio'       => 'nullable|string|max:1000',
+                'bio'       => 'nullable|string',
                 'address'   => 'nullable|string|max:255',
                 'city'      => 'nullable|string|max:255',
                 'zip_code'  => 'nullable|string|max:20',

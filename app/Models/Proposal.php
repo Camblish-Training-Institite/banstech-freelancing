@@ -16,19 +16,17 @@ class Proposal extends Model
         'bid_amount',
         'cover_letter',
         'status',
-        'submitted_at'
 
     ];
 
-// Relationships
-// public function user()
-// {
-//     return $this->belongsTo(User::class);
-// }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
-// public function job()
-// {
-//     return $this->belongsTo(Job::class);
-// }
+    public function job()
+    {
+        return $this->belongsTo(Job::class, 'job_id');
+    }
 
 }
