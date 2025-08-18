@@ -3,18 +3,16 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Jobs\ContractController;
 use App\Http\Controllers\ProfileController;
-
 use App\Http\Controllers\Client\ContestController;
-
 use App\Http\Controllers\Jobs\JobsController;
 
-use App\Http\Controllers\ProfileController;
+
 
 
 Route::prefix('client')->name('client.')->group(function () {
     //main nav links
 
-    Route::get('/my-jobs', [ContractController::class, 'index'])->name('jobs.list');
+    // Route::get('/my-jobs', [ContractController::class, 'index'])->name('jobs.list');
 
     Route::get('/my-jobs', [JobsController::class, 'index_client'])->name('jobs.list');
   
