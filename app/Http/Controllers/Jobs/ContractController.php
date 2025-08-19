@@ -32,7 +32,6 @@ class ContractController extends Controller
 
         $freelancerId = Auth::user()->id;
         $projects = Contract::where('user_id', $freelancerId)->get();
-
         return view('Users.Freelancers.layouts.job-section', ['projects' => $projects]);
     }
 
