@@ -17,7 +17,7 @@
             <div class="proposal-card">
                 <div class="header">
                     <div class="user-profile">
-                        <img src="{{ asset('storage/'. $proposal->user->profile->avatar) }}" alt="{{$proposal->user->name}}" class="avatar">
+                        <img src="{{ $proposal->user->profile ? asset('storage/'. $proposal->user->profile->avatar) : "https://ui-avatars.com/api/?name=".  $proposal->user->name . "&background=random&size=128" }}" alt="{{$proposal->user->name}}" class="avatar">
                         <h4>{{$proposal->user->name}}</h4>
                     </div>
                     <div class="action-buttons">

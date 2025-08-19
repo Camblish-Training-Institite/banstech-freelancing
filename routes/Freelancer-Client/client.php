@@ -63,7 +63,7 @@ Route::prefix('client')->name('client.')->group(function () {
         return view('Users.Clients.pages.earnings');
     })->name('earnings');
 
-});
+})->middleware('auth');
 
 //client contest routes
 Route::prefix('client/contests')->name('client.contests.')->group(function () {
