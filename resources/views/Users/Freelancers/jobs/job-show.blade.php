@@ -1,4 +1,4 @@
-@extends('dashboards.client.dashboard')
+@extends('dashboards.freelancer.dashboard')
 
 @section('body')
     <style>
@@ -23,19 +23,18 @@
         .header-title {
             display: flex;
             justify-content: space-between;
-            width:100%;
+            align-items: left;
             margin-bottom: 20px;
-            margin-top: 1rem;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
         }
         .header-title h1 {
             font-size: 28px;
-            color: #516aae;
+            color: #6a51ae;
             margin: 0;
         }
         .back-link {
-            color: #516aae;
+            color: #6a51ae;
             text-decoration: none;
             font-weight: bold;
             font-size: 16px;
@@ -77,7 +76,7 @@
         }
         .tags span {
             background-color: #f0eaff;
-            color: #516aae;
+            color: #6a51ae;
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 14px;
@@ -127,11 +126,11 @@
             text-decoration: none;
         }
         .send-proposal {
-            background-color: #516aae;
+            background-color: #6a51ae;
             color: white;
         }
         .send-proposal:hover {
-            background-color: #253050;
+            background-color: #5b419e;
         }
         .save-job {
             background-color: #e0e0e0;
@@ -157,13 +156,11 @@
 
     <div class="container">
         <!-- Header-title -->
-        <div class="flex w-full justify-start">
+        <div class="flex w-full justify-start mb-4">
             <a href="{{ url()->previous() }}" class="back-link">← Back to Jobs</a>
         </div>
-        
-        <div class="header-title">
+        <div class="header-title flex flex-col">
             <h1>{{ $job->title ?? 'Job Title Not Available' }}</h1>
-            {{-- <a href="{{ url()->previous() }}" class="back-link">← Back to Jobs</a> --}}
         </div>
 
         <!-- Job Info -->
@@ -195,9 +192,7 @@
         @if(!empty($job->skills))
             <div class="tags">
                 @php
-                    $jobSkills = $job->skills ? explode(',', $job->skills) : [];
-                    // dd($jobSkills);
-                    $jobSkills = str_replace('\"', '"', $jobSkills); // Replace escaped quotes
+                    $jobSkills = $job->skills ? explode(',',$job->skills) : [];
                 @endphp
                 @foreach($jobSkills as $skill)
                     <span>{{ trim($skill) }}</span>
@@ -216,23 +211,9 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="bg-white overflow-hidden mt-6">
-            <div class="px-2 flex space-x-4 justify-end">
-                <a href="{{ route('client.jobs.edit', $job->id) }}"
-                    class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
-                    Edit Contest
-                </a>
-
-                <form action="{{ route('client.jobs.destroy', $job->id) }}" method="POST"
-                    onsubmit="return confirm('Are you sure you want to delete this contest?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700">
-                        Delete Contest
-                    </button>
-                </form>
-            </div>
+        <div class="actions">
+            <a href="" class="send-proposal">Send Proposal</a> {{--{{ route('proposals.create', ['job_id' => $job->id]) }}--}}
+            <button class="save-job">Save Job</button>
         </div>
     </div>
 @endsection

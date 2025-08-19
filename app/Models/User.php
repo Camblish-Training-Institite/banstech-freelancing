@@ -36,9 +36,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Contract::class, 'project_assignments');
     }
 
-    public function jobsPosted()
+    public function jobs()
     {
-        return $this->hasMany(Job::class, 'client_id');
+        return $this->hasMany(Job::class, 'user_id');
     }
     public function proposals()
     {
@@ -46,7 +46,11 @@ class User extends Authenticatable
     }
     public function contractsAsFreelancer()
     {
-        return $this->hasMany(Contract::class, 'freelancer_id');
+        return $this->hasMany(Contract::class, 'user_id');
+    }
+    public function contracts()
+    {
+        return $this->hasManyThrough(Contract::class, Job::class);
     }
 
     // Notifications for incoming management requests
@@ -54,6 +58,12 @@ class User extends Authenticatable
     {
         return $this->morphMany(ManagementRequest::class, 'requester');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id');
+    }
+
 
 
     /**

@@ -36,7 +36,7 @@
             <div class="proposals">{{$contest->entries->count()}} Enries</div>
             <div class="buttons-block">
                 <a href="{{ route('freelancer.contests.show', $contest->id) }}" class="view-contest">View contest</a>
-                <button class="send-proposal">Send Proposal</button>
+                <button class="send-proposal">Send Submission</button>
             </div>
         </div>
     </div>

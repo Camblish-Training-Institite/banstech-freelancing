@@ -192,7 +192,7 @@
         @if(!empty($job->skills))
             <div class="tags">
                 @php
-                    $jobSkills = $job->skills ? json_decode($job->skills, true) : [];
+                    $jobSkills = $job->skills ? explode(',',$job->skills) : [];
                 @endphp
                 @foreach($jobSkills as $skill)
                     <span>{{ trim($skill) }}</span>

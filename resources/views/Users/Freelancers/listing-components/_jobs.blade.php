@@ -36,7 +36,7 @@
             <div class="proposals">8 Proposals</div>
             <div class="buttons-block">
                 <a href="{{ route('freelancer.jobs.show', $job->id) }}" class="view-job">View Job</a>
-                <button class="send-proposal">Send Proposal</button>
+                <a href="{{ route('freelancer.proposal.create', $job->id) }}" class="send-proposal">Send Proposal</a>
             </div>
         </div>
     </div>

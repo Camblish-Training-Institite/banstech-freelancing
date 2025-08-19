@@ -6,29 +6,47 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Client\ContestController;
 use App\Http\Controllers\Freelancer\FreelancerContestController;
 use App\Http\Controllers\Jobs\JobsController;
+use App\Http\Controllers\Jobs\ProposalController;
 
 
 Route::prefix('freelancer')->name('freelancer.')->group(function () {
     //main nav links
-    Route::get('/my-jobs', [ContractController::class, 'index'])->name('jobs.list');
 
-    Route::get('/proposals', function() {
-        return view('Users.Freelancers.layouts.proposal-section');
-    })->name('proposals.list');
 
-    // Route::get('/contests', function() {
-    //     return view('Users.Freelancers.layouts.contest-section');
-    // })->name('contests.list');
+    //freelancer project routes
+    Route::get('/my-projects', [ContractController::class, 'index'])->name('projects.list');
+    Route::resource('projects', ContractController::class);
 
+    //freelancer project milestone routes
+    Route::get('/projects/{project}/milestone', [ContractController::class, 'requestMilestone'])->name('projects.milestone.request');
+
+    //freelancer proposal routes
+    Route::resource('/proposals', ProposalController::class);
+    Route::get('/my-proposal/{id}', [ProposalController::class, 'myProposal'])->name('proposal.show');
+    Route::get('/create_proposal/{job_id}', [ProposalController::class, 'create'])->name('proposal.create');
+
+    //freelancer profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    //Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/jobs/{id}', [JobsController::class, 'show_freelancer'])->name('jobs.show');
+    //services
+    Route::get('/services',function(){
+    return view('Users.Freelancers.pages.services');
+    })->name('services');
+
+    //Message or Inbox
+    Route::get('/inbox', function(){
+        return view('Users.Freelancers.pages.inbox');
+    })->name('inbox');
+    //Earnings
+    Route::get('/earnings',function(){
+        return view('Users.Freelancers.pages.earnings');
+    })->name('earnings');
 
 });
 
-
+//freelancer contests routes
 Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(function () {
     Route::get('/', [FreelancerContestController::class, 'index'])->name('index');
     Route::get('/{contest}', [FreelancerContestController::class, 'show'])->name('show');
@@ -44,18 +62,6 @@ Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(functi
   
     //This is for the side bar navigations
     //side-bar services
-    Route::get('/services',function(){
-    return view('dashboards.freelancer.services');
-    })->name('services');
-
-    //Message or Inbox
-    Route::get('/inbox', function(){
-        return view('dashboards.freelancer.inbox');
-    })->name('inbox');
-    //Earnings
-    Route::get('/earnings',function(){
-        return view('dashboards.freelancer.earnings');
-    })->name('earnings');
 
 })->middleware('auth');
 

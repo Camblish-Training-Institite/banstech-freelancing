@@ -6,6 +6,11 @@
             <a href="{{ route('client.jobs.list') }}">My Jobs</a>
         </li>
 
+        <!-- My Projects -->
+        <li class="{{ request()->routeIs('client.projects.list') ? 'active' : '' }}">
+            <a href="{{ route('client.projects.list') }}">My Projects</a>
+        </li>
+
         <!-- Proposals -->
         <li class="{{ request()->routeIs('client.proposals.list') ? 'active' : '' }}">
             <a href="{{ route('client.proposals.list') }}">Proposals</a>

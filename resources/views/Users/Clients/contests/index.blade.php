@@ -1,3 +1,23 @@
+{{-- @extends('dashboards.Client.dashboard')
+
+@section('body') --}}
+    {{-- <div class="bg-gray-100 dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-4 md:mb-0">
+                    My Contests
+                </h2>
+                <a href="{{ route('client.contests.create') }}"
+                    class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                    <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Post New Contest
+                </a> --}}
+
 {{-- <div>
     <div class="mx-auto py-12 px-4 sm:px-6 lg:px-8"> --}}
         <!-- moved add contest section to the contest-section blade -->
@@ -13,6 +33,7 @@
                 </svg> -->
                 <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No Contests Yet</h3>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by posting a new contest.</p>
+
             </div>
         @else --}}
             {{-- <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

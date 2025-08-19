@@ -20,6 +20,7 @@ class JobsController extends Controller
 
         $clientId = Auth::user()->id;
         $jobs = Job::where('user_id', $clientId)->paginate(10);
+        // dd($jobs);
 
         
         return view('Users.clients.layouts.job-section', ['jobs' => $jobs]);
@@ -27,8 +28,15 @@ class JobsController extends Controller
 
     public function index()
     {
-        $jobs = Job::latest()->paginate(10);
-        $contests = Contest::latest()->paginate(10);
+        if(!Auth::check()){
+            return redirect()->route('login')->with('error', 'You must be logged in to view jobs.');
+        }
+
+        $user_id = Auth::user()->id; // Get the authenticated user's ID
+        $jobs = Job::where('user_id', '!=', $user_id)
+        ->where('status', 'open') // Fetch all open jobs except those created by the user
+        ->paginate(10);
+        $contests = Contest::where('client_id', '!=', $user_id)->paginate(10);
 
         // dd($jobs);
         return view('Users.Freelancers.layouts.body.job-listing', ['jobs' => $jobs, 'contests' => $contests]);
@@ -39,7 +47,7 @@ class JobsController extends Controller
         $job = Job::findOrFail($id);
 
         // dd($job);
-        return view('Users.Clients.layouts.body.job-show', ['job' => $job]);
+        return view('Users.Clients.jobs.job-show', ['job' => $job]);
 
     }
 
@@ -48,7 +56,7 @@ class JobsController extends Controller
         $job = Job::findOrFail($id);
 
         // dd($job);
-        return view('Users.Freelancers.layouts.body.job-show', ['job' => $job]);
+        return view('Users.Freelancers.jobs.job-show', ['job' => $job]);
 
     }
 
@@ -100,11 +108,6 @@ class JobsController extends Controller
          
  //converting comma-separated string to array before validation
 
-        // dd($request->input('skills'));
-        $request->merge([
-            'skills' => array_map('trim', explode(',', $request->input('skills')))
-        ]);
-
         // dd($request->input('skills'));   
 
         $request->validate([ 
@@ -113,7 +116,6 @@ class JobsController extends Controller
             'deadline' => 'nullable|date',
             'budget' => 'required|numeric',
             'status' => 'required|string|in:open,in_progress,assigned,completed,cancelled',
-            'skills' => 'nullable|array',
             'skills.*' => 'string',
             ]);
             

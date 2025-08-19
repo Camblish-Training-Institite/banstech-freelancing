@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -10,6 +11,15 @@ use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
+
+    public function viewFreelancerProfile($freelancerId)
+    {
+        $freelancer = User::findOrFail($freelancerId);
+        $profile = $freelancer->profile;
+
+        return view('Users.Clients.layouts.freelancer-profile', compact('freelancer', 'profile'));
+    }
+
     public function edit()
     {
         $user = Auth::user();
@@ -69,7 +79,7 @@ class ProfileController extends Controller
             
             // Validate the request data
             $validatedData = $request->validate([
-                'bio'       => 'nullable|string|max:1000',
+                'bio'       => 'nullable|string',
                 'address'   => 'nullable|string|max:255',
                 'city'      => 'nullable|string|max:255',
                 'zip_code'  => 'nullable|string|max:20',
