@@ -157,7 +157,7 @@
     <div class="container">
         <!-- Header-title -->
         <div class="flex w-full justify-start mb-4">
-            <a href="{{ url()->previous() }}" class="back-link">← Back to Jobs</a>
+            <a href="{{ route('jobs.listing') }}" class="back-link">← Back to Jobs</a>
         </div>
         <div class="header-title flex flex-col">
             <h1>{{ $job->title ?? 'Job Title Not Available' }}</h1>
@@ -212,7 +212,7 @@
 
         <!-- Action Buttons -->
         <div class="actions">
-            <a href="" class="send-proposal">Send Proposal</a> {{--{{ route('proposals.create', ['job_id' => $job->id]) }}--}}
+            <a href="{{route('freelancer.proposal.create', $job->id)}}" class="send-proposal">Send Proposal</a> {{--{{ route('proposals.create', ['job_id' => $job->id]) }}--}}
             <button class="save-job">Save Job</button>
         </div>
     </div>

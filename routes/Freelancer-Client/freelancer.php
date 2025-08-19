@@ -12,6 +12,8 @@ use App\Http\Controllers\Jobs\ProposalController;
 Route::prefix('freelancer')->name('freelancer.')->group(function () {
     //main nav links
 
+    //freelancer job routes
+    Route::get('/job/{id}/show', [JobsController::class, 'show_freelancer'])->name('jobs.show');
 
     //freelancer project routes
     Route::get('/my-projects', [ContractController::class, 'index'])->name('projects.list');

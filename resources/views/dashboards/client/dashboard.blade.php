@@ -470,7 +470,7 @@
             <header class="header">
                 <div class="dashboard-title">Client Dashboard</div>
                 <div class="header-right">
-                    <div class="become-client">
+                    <div class="become-client" onclick="window.location.href='{{ route('freelancer.dashboard') }}'">
                         <span>Become Freelancer</span>
                         <label class="switch">
                             <input type="checkbox">
