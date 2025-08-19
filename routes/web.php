@@ -16,7 +16,7 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/freelancer/dashboard', function () {
-    return redirect()->route('freelancer.jobs.list');
+    return redirect()->route('freelancer.projects.list');
 })->middleware(['auth'])->name('freelancer.dashboard');
 
 Route::get('/client/dashboard', function () {

@@ -126,41 +126,32 @@
             text-align: center;
             text-decoration: none;
         }
-        .view-btn {
+        .view-btn{
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: rgb(79 70 229);
-            color: white;
             padding: 5px 20px;
             border-radius: 5px;
-            width: 100%;
-            max-width: 150px;
+            background-color: rgb(79 70 229);
+            color: white;
         }
         .accept-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: rgb(22 163 74);
-            color: white;
             padding: 5px 20px;
             border-radius: 5px;
-            width: 100%;
-            max-width: 150px;
+            background-color: #4CAF50;
+            color: white;
         }
         .reject-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: rgb(220 38 38);
-            color: white;
             padding: 5px 20px;
             border-radius: 5px;
-            width: 100%;
-            max-width: 150px;
-        }
-        .view-btn:hover, .accept-btn:hover, .reject-btn:hover {
-            opacity: 0.8;
+            background-color: #f44336;
+            color: white;
         }
 
         /* Responsive */
@@ -259,7 +250,7 @@
     </div>
     <!-- Contest proposals Section -->
     @if($job->proposals->isNotEmpty())
-        <div class="container">
+        <div class="container bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
             <div class="p-6 border-b border-gray-200">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">proposals Received ({{
                     $job->proposals->count() }})</h3>
@@ -267,32 +258,25 @@
                 <div class="space-y-4">
                     @foreach($job->proposals as $proposal)
                     <div class="border rounded-lg p-4 hover:bg-gray-50">
-                        <div class="flex flex-col justify-between">
-                            <div  class="flex flex-col items-start mb-2 justify-start w-full border-b-gray-400">
-                                {{-- Freelancer's Avatar and Name --}}
-                                <div class="flex items-center space-x-2 mb-2">
-                                    {{-- Freelancer's Avatar and Name --}}
-                                    <div class="flex items-center justify-center rounded-full w-8 h-8 object-cover overflow-hidden">
-                                        @if ($proposal->user->profile)
-                                            <img src="{{ asset('storage/' . $proposal->user->profile->avatar) }}" alt="">
-                                        @else
-                                            <img src="https://ui-avatars.com/api/?name={{ $proposal->user->name }}&background=random&size=128" alt="">
-                                        @endif
-                                    </div>
-                                    <p class="font-medium">{{ $proposal->user->name }}</p>
+                        <div class="flex justify-between">
+                            <div class="flex items-center justify-start space-x-2">
+                                <div class="flex items-center justify-center rounded-full w-8 h-8 object-cover overflow-hidden">
+                                    @if ($proposal->user->profile)
+                                        <img src="{{ asset('storage/' . $proposal->user->profile->avatar) }}" alt="">
+                                    @else
+                                        <img src="https://ui-avatars.com/api/?name={{ $proposal->user->name }}&background=random&size=128" alt="">
+                                    @endif
                                 </div>
-                                <div class="px-2">
-                                    <p class="text-sm text-gray-600">{{ $proposal->created_at->diffForHumans() }}</p>
-                                    <p class="text-sm text-gray-600">Proposed Amount: R{{ number_format($proposal->bid_amount, 2) }}</p>
-                                </div>
+                                <p class="font-medium">{{ $proposal->user->name }}</p>
                             </div>
-                            <div class="flex space-x-2 justify-end items-center px-8 pt-2">
+
+                            <div class="flex space-x-2">
                                 <a href="{{ route('client.proposals.show', $proposal) }}"
-                                    class="view-btn">View</a>
-                                    <a href="{{ route('client.proposals.accept', $proposal) }}"
-                                    class="accept-btn">Accept</a>
-                                    <a href="{{ route('client.proposals.reject', $proposal) }}"
-                                    class="reject-btn">Reject</a>
+                                class="view-btn text-indigo-600 text-sm hover:underline">View</a>
+                                <a href="{{ route('client.proposals.accept', $proposal) }}"
+                                class="accept-btn text-green-600 text-sm hover:underline">Accept</a>
+                                <a href="{{ route('client.proposals.accept', $proposal) }}"
+                                class="reject-btn text-red-600 text-sm hover:underline">Reject</a>
                             </div>
                         </div>
                     </div>
