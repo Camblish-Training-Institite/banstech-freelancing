@@ -114,14 +114,15 @@ namespace App\Models{
  * @property int $job_id
  * @property int $user_id
  * @property string $agreed_amount
- * @property string|null $start_date
- * @property string|null $end_date
+ * @property \Illuminate\Support\Carbon|null $start_date
+ * @property \Illuminate\Support\Carbon|null $end_date
  * @property string $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int|null $project_manager_id
  * @property-read \App\Models\User $freelancer
  * @property-read \App\Models\Job $job
+ * @property-read \App\Models\Project|null $project
  * @property-read \App\Models\User|null $projectManager
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\ContractFactory factory($count = null, $state = [])
@@ -189,6 +190,8 @@ namespace App\Models{
  * @property string|null $deadline
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Proposal> $proposals
+ * @property-read int|null $proposals_count
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\JobFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Job newModelQuery()
@@ -232,6 +235,27 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ManagementRequest whereUpdatedAt($value)
  */
 	class ManagementRequest extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property-read \App\Models\Payment|null $payment
+ * @property-read \App\Models\Project|null $project
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone query()
+ */
+	class Milestone extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property-read \App\Models\Milestone|null $milestone
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment query()
+ */
+	class Payment extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -333,6 +357,20 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property-read \App\Models\Contract|null $contract
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Milestone> $milestones
+ * @property-read int|null $milestones_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Payment> $payments
+ * @property-read int|null $payments_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project query()
+ */
+	class Project extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
  * @property int $user_id
  * @property int $job_id
@@ -341,6 +379,8 @@ namespace App\Models{
  * @property string $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Job $job
+ * @property-read \App\Models\User $user
  * @method static \Database\Factories\ProposalFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Proposal newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Proposal newQuery()
@@ -478,20 +518,19 @@ namespace App\Models{
  * @property string $payment_gateway
  * @property string|null $gateway_transaction_id
  * @property string $status
- * @method static \Database\Factories\TransactionsFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transactions newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transactions newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transactions query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transactions whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transactions whereContractId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transactions whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transactions whereGatewayTransactionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transactions whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transactions wherePaymentGateway($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transactions whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transactions whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereContractId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereGatewayTransactionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction wherePaymentGateway($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereUpdatedAt($value)
  */
-	class Transactions extends \Eloquent {}
+	class Transaction extends \Eloquent {}
 }
 
 namespace App\Models{
