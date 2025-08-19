@@ -2,8 +2,8 @@
 <nav class="main-nav-tabs">
     <ul>
         <!-- My Jobs -->
-        <li class="{{ request()->routeIs('freelancer.jobs.list') ? 'active' : '' }}">
-            <a href="{{ route('freelancer.jobs.list') }}">My Projects</a>
+        <li class="{{ request()->routeIs('freelancer.projects.list') ? 'active' : '' }}">
+            <a href="{{ route('freelancer.projects.list') }}">My Projects</a>
         </li>
 
         <!-- Proposals -->

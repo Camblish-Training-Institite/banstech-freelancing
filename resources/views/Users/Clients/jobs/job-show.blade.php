@@ -126,19 +126,32 @@
             text-align: center;
             text-decoration: none;
         }
-        .send-proposal {
-            background-color: #516aae;
+        .view-btn{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 20px;
+            border-radius: 5px;
+            background-color: rgb(79 70 229);
             color: white;
         }
-        .send-proposal:hover {
-            background-color: #253050;
+        .accept-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 20px;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
         }
-        .save-job {
-            background-color: #e0e0e0;
-            color: #333;
-        }
-        .save-job:hover {
-            background-color: #d0d0d0;
+        .reject-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 20px;
+            border-radius: 5px;
+            background-color: #f44336;
+            color: white;
         }
 
         /* Responsive */
@@ -236,27 +249,40 @@
         </div>
     </div>
     <!-- Contest proposals Section -->
-    @if($Job->proposals->isNotEmpty())
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-        <div class="p-6 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">proposals Received ({{
-                $Job->proposals->count() }})</h3>
+    @if($job->proposals->isNotEmpty())
+        <div class="container bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">proposals Received ({{
+                    $job->proposals->count() }})</h3>
 
-            <div class="space-y-4">
-                @foreach($Job->proposals as $proposal)
-                <div class="border rounded-lg p-4 hover:bg-gray-50">
-                    <div class="flex justify-between">
-                        <div>
-                            <p class="font-medium">{{ $proposal->user->name }}</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <a href="{{ route('client.proposal.show', $proposal) }}"
-                                class="text-indigo-600 text-sm hover:underline">View</a>
+                <div class="space-y-4">
+                    @foreach($job->proposals as $proposal)
+                    <div class="border rounded-lg p-4 hover:bg-gray-50">
+                        <div class="flex justify-between">
+                            <div class="flex items-center justify-start space-x-2">
+                                <div class="flex items-center justify-center rounded-full w-8 h-8 object-cover overflow-hidden">
+                                    @if ($proposal->user->profile)
+                                        <img src="{{ asset('storage/' . $proposal->user->profile->avatar) }}" alt="">
+                                    @else
+                                        <img src="https://ui-avatars.com/api/?name={{ $proposal->user->name }}&background=random&size=128" alt="">
+                                    @endif
+                                </div>
+                                <p class="font-medium">{{ $proposal->user->name }}</p>
+                            </div>
+
+                            <div class="flex space-x-2">
+                                <a href="{{ route('client.proposals.show', $proposal) }}"
+                                class="view-btn text-indigo-600 text-sm hover:underline">View</a>
+                                <a href="{{ route('client.proposals.accept', $proposal) }}"
+                                class="accept-btn text-green-600 text-sm hover:underline">Accept</a>
+                                <a href="{{ route('client.proposals.accept', $proposal) }}"
+                                class="reject-btn text-red-600 text-sm hover:underline">Reject</a>
+                            </div>
                         </div>
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
             </div>
         </div>
-    </div>
+    @endif
 @endsection

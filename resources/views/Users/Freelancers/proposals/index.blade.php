@@ -44,7 +44,7 @@
                     @endif
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    <a href="{{ route('freelancer.proposal.show', $proposal) }}" class="text-blue-500 hover:text-blue-600" style="background-color: #000; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500;">View</a>
+                    <a href="{{ route('freelancer.proposal.show', $proposal->id) }}" class="text-blue-500 hover:text-blue-600" style="background-color: #000; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500;">View</a>
                 </td>
             </tr>
         @empty

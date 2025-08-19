@@ -36,7 +36,7 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-left">{{ $formatedEndDate }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-left">{{ $job->proposals->count() }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    <a href="{{ route('client.proposals.show', $job) }}" class="text-blue-500 hover:text-blue-600" style="background-color: #000; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500;">View</a>
+                    <a href="{{ route('client.proposals.job.show', $job) }}" class="text-blue-500 hover:text-blue-600" style="background-color: #000; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500;">View</a>
                 </td>
             </tr>
         @empty
