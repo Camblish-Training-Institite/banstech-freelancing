@@ -15,14 +15,16 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-Route::get('/dashboard', function () {
-    return view('dashboards.dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/freelancer/dashboard', function () {
+    return redirect()->route('freelancer.projects.list');
+})->middleware(['auth'])->name('freelancer.dashboard');
+
+Route::get('/client/dashboard', function () {
+    return redirect()->route('client.jobs.list');
+})->middleware(['auth'])->name('client.dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    //Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
 
 Route::get('/freelancer/active-jobs', [JobController::class, 'activeJobs'])
         ->name('freelancer.active-jobs');
@@ -60,3 +62,5 @@ Route::get('project-manager/dashboard', function() {
 require __DIR__.'/auth.php';
 require __DIR__.'/jobs/jobRoutes.php';
 require __DIR__.'/admin/project-manager.php';
+require __DIR__.'/Freelancer-Client/freelancer.php';
+require __DIR__.'/Freelancer-Client/client.php';

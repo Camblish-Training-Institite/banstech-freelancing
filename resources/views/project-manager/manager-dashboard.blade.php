@@ -47,10 +47,10 @@
                             <div class="col-md-6 mb-3">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title">{{ $project->title }}</h5>
-                                        <p class="text-muted">Client: {{ $project->client->name }}</p>
-                                        <p>Milestones: {{ $project->milestones->count() }}</p>
-                                        <a href="{{ route('admin.projects.show', $project->id) }}" class="btn btn-primary btn-sm">View Project</a>
+                                        <h5 class="card-title">{{ $project->job->title }}</h5>
+                                        <p class="text-muted">Client: {{ $project->job->user->name }}</p>
+                                        <p>Milestones: 0{{--$project->milestones->count()--}}</p>
+                                        <a href="" class="btn btn-primary btn-sm">View Project</a> {{--{{ route('admin.projects.show', $project->id) }}--}}
                                     </div>
                                 </div>
                             </div>

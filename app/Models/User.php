@@ -17,7 +17,7 @@ class User extends Authenticatable
     use  HasRoles;
     use CrudTrait;
     // use HasBackpackUser; // Add this trait for Backpack user access logic
-  
+
 
     public function getRoleNamesAttribute()
     {
@@ -36,13 +36,36 @@ class User extends Authenticatable
         return $this->belongsToMany(Contract::class, 'project_assignments');
     }
 
+    public function jobs()
+    {
+        return $this->hasMany(Job::class, 'user_id');
+    }
+    public function proposals()
+    {
+        return $this->hasMany(Proposal::class, 'freelancer_id');
+    }
+    public function contractsAsFreelancer()
+    {
+        return $this->hasMany(Contract::class, 'user_id');
+    }
+    public function contracts()
+    {
+        return $this->hasManyThrough(Contract::class, Job::class);
+    }
+
     // Notifications for incoming management requests
     public function pendingManagementRequests()
     {
         return $this->morphMany(ManagementRequest::class, 'requester');
     }
 
-    
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id');
+    }
+
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -65,7 +88,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    
+
 
     /**
      * Get the attributes that should be cast.
@@ -84,7 +107,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
-  
+
     public function canAccessBackpack(): bool
     {
         // Option 1: Using user_type

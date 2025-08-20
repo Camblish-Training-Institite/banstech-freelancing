@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Contract extends Model
 {
+    use CrudTrait;
     /** @use HasFactory<\Database\Factories\ContractFactory> */
     use HasFactory;
 
@@ -17,5 +19,25 @@ class Contract extends Model
         'start_date',
         'end_date',
         'status',
+        'project_manager_id',
     ];
+
+    public function job()
+    {
+        return $this->belongsTo(Job::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+     public function projectManager()
+    {
+        return $this->belongsTo(User::class, 'project_manager_id');
+    }
+
+    public function freelancer(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

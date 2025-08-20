@@ -2,13 +2,14 @@
     <link rel="stylesheet" href="{{ asset('auth_css/login.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> 
     
-            <form method="POST" action="{{ route('register') }}" class="loginBG">
+            <form method="POST" action="{{ route('register.store') }}" class="loginBG">
                 @csrf
 
+                <!-- user type declaration -->
                 <input type="hidden" name="user_type" id="user_type" value="freelancer-client">
 
                 <div style="display: flex; justify-content: center; align-items: center;">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('freelancer.dashboard') }}">
                         <img src="{{asset('storage/pictures/logo.png') }}" alt="logo" style="width:100px; height:auto;">
                     </a>
                 </div>

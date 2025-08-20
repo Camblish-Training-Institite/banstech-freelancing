@@ -70,7 +70,7 @@ class RegisteredUserController extends Controller
             return redirect()->intended(route('manager.dashboard', absolute: false));
         }
         else if($request->user_type == 'freelancer-client'){
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('freelancer.dashboard', absolute: false));
         }
     }
 }
