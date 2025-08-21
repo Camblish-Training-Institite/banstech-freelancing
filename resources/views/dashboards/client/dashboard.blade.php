@@ -553,6 +553,7 @@
                 {{-- The <div class="user-avatar"> block was previously here and has been removed. --}}
                 </div>
 
+                {{-- code below is supposed to display milestone requested  (might have to implement in the freelancer dashboard) --}}
                 @foreach(auth()->user()->notifications->where('type', 'milestone_requested') as $notification)
                 @include('dashboards.components.notification-item', ['notification' => $notification])
                 @endforeach
