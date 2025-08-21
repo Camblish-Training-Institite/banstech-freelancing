@@ -15,7 +15,10 @@ class FreelancerContestController extends Controller
 
     public function index()
     {
-        $contests = Contest::where('status', 'open')->latest()->get();
+        $user = Auth::user();
+        $contests = $user->contests;
+        dd($contests);
+        // $contests = Contest::where('status', 'open')->latest()->get();
         return view('Users.Freelancers.layouts.contest-section', compact('contests'));
     }
 
