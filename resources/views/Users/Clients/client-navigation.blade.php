@@ -144,7 +144,7 @@
                 @endif
             </div>
             <div>
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
+                <div class="font-medium text-base text-gray-200">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
         </div>

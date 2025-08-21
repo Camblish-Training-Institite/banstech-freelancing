@@ -118,6 +118,11 @@ class ProposalController extends Controller
         $proposal->status = 'accepted'; // Update the proposal status to accepted
         $proposal->save();
 
+        $proposal->job->proposals()
+        ->where('id', '!=', $proposal->id)
+        ->where('status', '!=', 'accepted') // Optional: avoid updating if already accepted
+        ->update(['status' => 'rejected']);
+
         $job = $proposal->job; // Get the job associated with the proposal
         $job->status = 'assigned'; // Update the job status to in progress
         $job->save();

@@ -12,9 +12,11 @@
                 <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
             @enderror
         </div>
-        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            Upload
-        </button>
+        <div class="flex items-center justify-end mb-2">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Upload
+            </button>
+        </div>
     </form>
 
     <!-- Uploaded Files List -->
