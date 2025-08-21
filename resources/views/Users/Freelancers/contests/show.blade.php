@@ -6,8 +6,10 @@
 
         <!-- Back Link -->
         <div class="mb-6">
-            <a href="{{ url()->previous() }}" class="inline-flex items-center text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-                <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <a href="{{ url()->previous() }}"
+                class="inline-flex items-center text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                 </svg>
                 Back to All Contests
@@ -25,96 +27,120 @@
                     </div>
 
                     @if($contest->required_skills)
-                        @php
-                            // Attempt to decode the skills field as JSON
-                            $contestSkills = $contest->required_skills ? explode(',', $contest->required_skills) : [];
-                            // dd($jobSkills);
-                            $contestSkills = str_replace('\"', '"', $contestSkills); // Replace escaped quotes
+                    @php
+                    // Attempt to decode the skills field as JSON
+                    $contestSkills = $contest->required_skills ? explode(',', $contest->required_skills) : [];
+                    // dd($jobSkills);
+                    $contestSkills = str_replace('\"', '"', $contestSkills); // Replace escaped quotes
 
-                            // If json_decode fails (e.g., invalid JSON), fallback to manual parsing
-                            // if (!$jobSkills || !is_array($jobSkills)) {
-                            //     // Remove surrounding brackets and backslashes, then explode by commas
-                            //     $jobSkills = trim($job->skills, '[]'); // Remove square brackets
-                            //     $jobSkills = str_replace('\"', '"', $jobSkills); // Replace escaped quotes
-                            //     $jobSkills = explode(',', $jobSkills); // Split by comma
-                            //     $jobSkills = array_map('trim', $jobSkills); // Trim whitespace
-                            // }
-                            // dd($jobSkills);
-                            
-                        @endphp
-                        <div class="mt-6">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Required Skills</h3>
-                            <div class="flex flex-wrap gap-2">
-                                @foreach($contestSkills as $skill)
-                                    <span class="inline-block bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-200">
-                                        {{ $skill }}
-                                    </span>
-                                @endforeach
-                            </div>
+                    // If json_decode fails (e.g., invalid JSON), fallback to manual parsing
+                    // if (!$jobSkills || !is_array($jobSkills)) {
+                    // // Remove surrounding brackets and backslashes, then explode by commas
+                    // $jobSkills = trim($job->skills, '[]'); // Remove square brackets
+                    // $jobSkills = str_replace('\"', '"', $jobSkills); // Replace escaped quotes
+                    // $jobSkills = explode(',', $jobSkills); // Split by comma
+                    // $jobSkills = array_map('trim', $jobSkills); // Trim whitespace
+                    // }
+                    // dd($jobSkills);
+
+                    @endphp
+                    <div class="mt-6">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Required Skills</h3>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($contestSkills as $skill)
+                            <span
+                                class="inline-block bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-200">
+                                {{ $skill }}
+                            </span>
+                            @endforeach
                         </div>
+                    </div>
                     @endif
                 </div>
 
                 <!-- Entries Section -->
                 <div class="mt-8">
-                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Entries</h3>
-                     <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Entries</h3>
+                    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg">
                         {{-- You can loop through and display contest entries here --}}
                         {{-- Example of an entry card --}}
                         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                            @if($contest->entries->count() > 0)
+                            @foreach($contest->entries as $entry)
+                            <div class="mb-4">
+                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">{{
+                                    $entry->freelancer->name }}</h4>
+                                <p class="text-gray-600 dark:text-gray-400">{{ $entry->description }}</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Submitted on: {{
+                                    $entry->created_at->format('M d, Y') }}</p>
+                            </div>
+                            @endforeach
+                            @else
                             <p class="text-gray-600 dark:text-gray-400">No entries submitted yet.</p>
+                            @endif
                         </div>
-                     </div>
+                    </div>
                 </div>
+
+                
             </div>
 
             <!-- Right Column: Summary & Actions -->
             <div class="mt-8 lg:mt-0">
                 <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 sticky top-6">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">Contest Summary</h3>
-                    
+                    <h3
+                        class="text-xl font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">
+                        Contest Summary</h3>
+
                     <div class="space-y-4">
                         <div>
                             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Prize</dt>
-                            <dd class="mt-1 text-2xl font-bold text-indigo-600 dark:text-indigo-400">${{ number_format($contest->prize_money, 2) }}</dd>
+                            <dd class="mt-1 text-2xl font-bold text-indigo-600 dark:text-indigo-400">${{
+                                number_format($contest->prize_money, 2) }}</dd>
                         </div>
                         <div>
                             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
                             <dd class="mt-1">
                                 @php
-                                    $statusClass = '';
-                                    if ($contest->status === 'open') {
-                                        $statusClass = 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-                                    } elseif ($contest->status === 'closed') {
-                                        $statusClass = 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-                                    } else {
-                                        $statusClass = 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-                                    }
+                                $statusClass = '';
+                                if ($contest->status === 'open') {
+                                $statusClass = 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+                                } elseif ($contest->status === 'closed') {
+                                $statusClass = 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+                                } else {
+                                $statusClass = 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+                                }
                                 @endphp
-                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium {{ $statusClass }}">
+                                <span
+                                    class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium {{ $statusClass }}">
                                     {{ ucfirst($contest->status) }}
                                 </span>
                             </dd>
                         </div>
-                         <div>
+                        <div>
                             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Closes On</dt>
-                            <dd class="mt-1 text-md font-semibold text-gray-900 dark:text-white">{{ \Carbon\Carbon::parse($contest->closing_date)->format('d F, Y') }}</dd>
+                            <dd class="mt-1 text-md font-semibold text-gray-900 dark:text-white">{{
+                                \Carbon\Carbon::parse($contest->closing_date)->format('d F, Y') }}</dd>
                         </div>
                     </div>
 
                     @if ($contest->status === 'open' && $contest->closing_date >= now()->toDateString())
-                        <div class="mt-6">
-                            <a href="{{ route('freelancer.contests.submit.show', $contest) }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10">
-                                Submit Entry
-                            </a>
-                        </div>
+                    <div class="mt-6">
+                        <a href="{{ route('freelancer.contests.submit.show', $contest) }}"
+                            class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10">
+                            Submit Entry
+                        </a>
+                    </div>
                     @else
-                        <div class="mt-6 p-4 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded-lg text-center">
-                            This contest is now closed.
-                        </div>
+                    <div
+                        class="mt-6 p-4 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded-lg text-center">
+                        This contest is now closed.
+                    </div>
                     @endif
                 </div>
             </div>
+
+            
 
         </div>
     </div>

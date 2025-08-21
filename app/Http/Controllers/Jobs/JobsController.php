@@ -15,7 +15,7 @@ class JobsController extends Controller
     public function index_client()
     {
         if(!Auth::check()){
-
+            return redirect()->route('login')->with('error', 'You must be logged in to view jobs.');
         }
 
         $clientId = Auth::user()->id;
@@ -139,5 +139,12 @@ class JobsController extends Controller
         $job->delete();
         return redirect()->route('client.jobs.list')->with('success','Deleted successful!');
     }
+
+    // private function authorizeOwner(Job $job)
+    // {
+    //     if ($job->client_id !== auth()->id()) {
+    //         abort(403);
+    //     }
+    // }
 
 }
