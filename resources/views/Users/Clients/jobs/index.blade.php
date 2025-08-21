@@ -18,12 +18,23 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">R {{ number_format($job->budget, 2) }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $formattedEndDate }}</td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    @if ($job->status == "in_progress" || $job->status == "assigned" || $job->status == "open")
+                    {{-- @if ($job->status == "in_progress" || $job->status == "assigned" || $job->status == "open")
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-gray-400">{{ $job->status }}</span>
                     @else
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-gray-400">{{ $job->status }}</span>
-                    @endif
+                    @endif --}}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            {{ $job->status }}
+                                        </span>
                 </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <a href="{{ route('client.jobs.show', $job) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
+                                        <a href="{{ route('client.jobs.edit', $job) }}" class="text-yellow-600 hover:text-yellow-900">Edit</a>
+                                        <form action="{{ route('client.jobs.destroy', $job) }}" method="POST" class="inline">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                        </form>
+                                    </td>
             </tr>
         @empty
             <tr>
