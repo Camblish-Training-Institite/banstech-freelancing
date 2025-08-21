@@ -22,6 +22,12 @@ class Job extends Model
         'skills',
     ];
 
+    protected $casts = [
+        'facilities' => 'json',
+        'completion_date' => 'date',
+        'skills' => 'array',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -32,25 +38,33 @@ class Job extends Model
         return $this->hasMany(Proposal::class, 'job_id');
     }
 
-    // Function to get the minimum bid amount
-    public function lowestBid()
+    public function project(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->proposals()->min('bid_amount');
+        return $this->hasOne(Project::class);
     }
 
-    // Function to get the latest submission date
-    public function latestSubmissionDate()
+    public function getIsOpenAttribute(): bool
     {
-        return $this->proposals()->max('created_at');
+        return $this->status === 'open';
     }
 
-    // Function to get the latest proposal object
-    public function latestSubmission()
-    {
-        return $this->proposals()->latest('created_at')->first();
-    }
+    // // Function to get the minimum bid amount
+    // public function lowestBid()
+    // {
+    //     return $this->proposals()->min('bid_amount');
+    // }
 
-    protected $casts=[
-        'skills' => 'array',
-    ];
+    // // Function to get the latest submission date
+    // public function latestSubmissionDate()
+    // {
+    //     return $this->proposals()->max('created_at');
+    // }
+
+    // // Function to get the latest proposal object
+    // public function latestSubmission()
+    // {
+    //     return $this->proposals()->latest('created_at')->first();
+    // }
+    
+    
 }

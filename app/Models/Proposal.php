@@ -19,6 +19,10 @@ class Proposal extends Model
 
     ];
 
+    protected $casts = [
+        'bid_amount' => 'decimal:2',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -27,6 +31,17 @@ class Proposal extends Model
     public function job()
     {
         return $this->belongsTo(Job::class, 'job_id');
+    }
+
+    public function accept()
+    {
+        $this->update(['status' => 'accepted']);
+        event(new \App\Events\ProposalAccepted($this));
+    }
+
+     public function reject()
+    {
+        $this->update(['status' => 'rejected']);
     }
 
 }

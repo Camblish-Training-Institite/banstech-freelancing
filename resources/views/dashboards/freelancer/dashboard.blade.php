@@ -154,6 +154,7 @@
 
         .search-bar {
             position: relative;
+            border: #2c2c2c
         }
 
         .search-bar input {
