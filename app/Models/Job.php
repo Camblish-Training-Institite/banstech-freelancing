@@ -48,17 +48,17 @@ class Job extends Model
         return $this->status === 'open';
     }
 
-    // // Function to get the minimum bid amount
-    // public function lowestBid()
-    // {
-    //     return $this->proposals()->min('bid_amount');
-    // }
+    // Function to get the minimum bid amount
+    public function lowestBid()
+    {
+        return $this->proposals()->min('bid_amount');
+    }
 
-    // // Function to get the latest submission date
-    // public function latestSubmissionDate()
-    // {
-    //     return $this->proposals()->max('created_at');
-    // }
+    // Function to get the latest submission date
+    public function latestSubmissionDate()
+    {
+        return $this->proposals()->max('created_at');
+    }
 
     // // Function to get the latest proposal object
     // public function latestSubmission()

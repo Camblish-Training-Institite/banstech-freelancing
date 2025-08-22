@@ -53,11 +53,7 @@ class User extends Authenticatable
         return $this->hasManyThrough(Contract::class, Job::class);
     }
 
-    public function contests()
-    {
-        return $this->hasManyThrough(Contest::class, ContestSubmission::class, 'freelancer_id', 'id', 'id', 'contest_id');
-        
-    }
+    
     public function submissions(){
         return $this->hasMany(ContestSubmission::class, 'freelancer_id');
     }

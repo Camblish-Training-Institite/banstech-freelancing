@@ -12,7 +12,7 @@
         </li>
 
         <!-- Proposals -->
-        <li class="{{ request()->routeIs('client.proposals.list') ? 'active' : '' }}">
+        <li class="{{ request()->routeIs('client.proposals.list') || request()->routeIs('client.proposals.show') || request()->routeIs('client.proposals.job.show') ? 'active' : '' }}">
             <a href="{{ route('client.proposals.list') }}">Proposals</a>
         </li>
 

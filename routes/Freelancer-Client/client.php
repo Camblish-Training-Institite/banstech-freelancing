@@ -5,6 +5,7 @@ use App\Http\Controllers\Jobs\ContractController;
 use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\Client\ContestController;
+use App\Http\Controllers\Freelancer\MilestoneController;
 
 use App\Http\Controllers\Jobs\JobsController;
 use App\Http\Controllers\Jobs\ProposalController;
@@ -27,10 +28,12 @@ Route::prefix('client')->name('client.')->group(function () {
 
     //client milestone routes
     Route::get('/project/{project}/milestones', [ContractController::class, 'milestones'])->name('project.milestones');
-    Route::get('/project/{project}/milestones/create', function() {
-        $project = Contract::find(request()->route('project'));
-        return view('Users.Clients.projects.create-milestone', ['project' => $project]);
-    })->name('project.milestones.create');
+    Route::get('/project/{project}/milestones/create', [MilestoneController::class, 'create'])->name('project.milestones.create');
+    Route::post('/project/{project}/milestones/store', [MilestoneController::class, 'store'])->name('project.milestone.store');
+    Route::get('/project/{project}/milestones/edit/{milestone}', [MilestoneController::class, 'edit'])->name('project.milestone.edit');
+    Route::post('/project/{project}/milestones/store/{milestone}', [MilestoneController::class, 'update'])->name('project.milestone.update');
+    Route::get('/project/{project}/milestones/destroy/{milestone}', [MilestoneController::class, 'destroy'])->name('project.milestone.destroy');
+    Route::get('/project/{project}/milestones/destroy/{milestone}', [MilestoneController::class, 'releasePayment'])->name('project.milestone.release');
   
     //Proposal Routes
     Route::get('/proposals-list', [ProposalController::class, 'index_client'])->name('proposals.list');
