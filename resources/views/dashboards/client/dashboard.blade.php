@@ -554,10 +554,10 @@
                 </div>
 
                 {{-- code below is supposed to display milestone requested  (might have to implement in the freelancer dashboard) --}}
-                @foreach(auth()->user()->notifications->where('type', 'milestone_requested') as $notification)
+                {{-- @foreach(auth()->user()->notifications->where('type', 'milestone_requested') as $notification)
                 @include('dashboards.components.notification-item', ['notification' => $notification])
                 @endforeach
-                <a href="{{ route('notifications.markAsRead', $notification) }}">Mark as Read</a>
+                <a href="{{ route('notifications.markAsRead', $notification) }}">Mark as Read</a> --}}
         </header>
 
         <div class="dashboard-body">
