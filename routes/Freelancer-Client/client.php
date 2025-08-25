@@ -3,13 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Jobs\ContractController;
 use App\Http\Controllers\ProfileController;
-
 use App\Http\Controllers\Client\ContestController;
 use App\Http\Controllers\Freelancer\MilestoneController;
-
 use App\Http\Controllers\Jobs\JobsController;
 use App\Http\Controllers\Jobs\ProposalController;
 use App\Models\Contract;
+
 
 
 
@@ -45,7 +44,6 @@ Route::prefix('client')->name('client.')->group(function () {
     //Freelacner Profile Routes
     Route::get('/freelancer/{freelancerId}/profile', [ProfileController::class, 'viewFreelancerProfile'])->name('freelancer.profile');
 
-
     //client profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -78,3 +76,8 @@ Route::prefix('client/contests')->name('client.contests.')->group(function () {
     Route::delete('/{contest}', [ContestController::class, 'destroy'])->name('destroy');
     Route::get('/{contest}/show', [ContestController::class, 'show'])->name('show');
 })->middleware('auth');
+
+//This is for billing page situated under dashboards/clients...
+Route::get('/billing',function(){
+    return view('dashboards.client.billing');
+})->name('billing');
