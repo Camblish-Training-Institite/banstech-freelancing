@@ -43,7 +43,6 @@ Route::prefix('freelancer')->name('freelancer.')->group(function () {
 
 });
 
-
 Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(function () {
     Route::get('/', [FreelancerContestController::class, 'index'])->name('index');
     Route::get('/{contest}', [FreelancerContestController::class, 'show'])->name('show');
@@ -66,10 +65,9 @@ Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(functi
     Route::get('/inbox', function(){
         return view('dashboards.freelancer.inbox');
     })->name('inbox');
-    //Earnings
-    Route::get('/earnings',function(){
-        return view('dashboards.freelancer.earnings');
-    })->name('earnings');
+ })->middleware('auth');
 
-})->middleware('auth');
-
+   //Earnings
+   Route::get('/earnings',function(){
+    return view('dashboards.freelancer.earnings');
+})->name('freelancer.earnings');

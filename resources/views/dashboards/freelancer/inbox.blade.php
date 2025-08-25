@@ -14,6 +14,5 @@
     }    
 </style>
 <div class="welcome-message">Welcome back, {{Auth::User()->name}}! 👋</div>
-
 <h1 class="heading">Hi there I stand for <b>Inbox</b></h1>
 @endsection

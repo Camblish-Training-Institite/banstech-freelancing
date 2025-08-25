@@ -22,11 +22,8 @@ Route::prefix('client')->name('client.')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/proposals-list', [ProposalController::class, 'index_client'])->name('proposals.list');
-
     Route::resource('/proposals', ProposalController::class);
-
     Route::get('/proposals/{job}/show', [ProposalController::class, 'show'])->name('proposals.job.show');   
-
 
     // Route::get('/contests', function() {
     //     return view('Users.clients.layouts.contest-section');
@@ -61,3 +58,8 @@ Route::prefix('client/contests')->name('client.contests.')->group(function () {
     Route::delete('/{contest}', [ContestController::class, 'destroy'])->name('destroy');
     Route::get('/{contest}/show', [ContestController::class, 'show'])->name('show');
 })->middleware('auth');
+
+//This is for billing page situated under dashboards/clients...
+Route::get('/billing',function(){
+    return view('dashboards.client.billing');
+})->name('billing');
