@@ -7,13 +7,18 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center space-x-4">
                     <img 
-                        src="{{ asset('storage/'.$profile->avatar) ?? 'https://placehold.co/40x40/6366f1/ffffff?text=NJ' }}" 
+                        src="{{ $profile? asset('storage/'.$profile->avatar) : 'https://ui-avatars.com/api/?name=' . $freelancer->name . '&background=random&size=128' }}" 
                         alt="Profile" 
                         class="w-10 h-10 rounded-full border-2 border-blue-500"
                     />
                     <div>
-                        <h1 class="text-xl font-bold text-gray-900">{{ $profile->user->name }}</h1>
-                        <p class="text-sm text-gray-500">{{ $profile->location }} • Member since {{ $profile->user->created_at->diffForHumans() }}</p>
+                        <h1 class="text-xl font-bold text-gray-900">{{ $freelancer->name }}</h1>
+                        <p class="text-sm text-gray-500">
+                            @if ($profile)
+                                {{$profile->location}}    
+                            @else
+                                no address
+                            @endif • Member since {{ $freelancer->created_at->diffForHumans() }}</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -21,8 +26,8 @@
                         <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
-                        <span class="text-sm font-medium text-gray-900">{{ $profile->rating }}</span>
-                        <span class="text-xs text-gray-500 ml-1">({{ $profile->total_reviews }} reviews)</span>
+                        <span class="text-sm font-medium text-gray-900">{{ $freelancer->rating }}</span>
+                        <span class="text-xs text-gray-500 ml-1">({{ $freelancer->total_reviews }} reviews)</span>
                     </div>
                     <button
                         onclick="toggleFollow()"
@@ -62,12 +67,12 @@
 
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 mb-4">Hourly Rate</h3>
-                            <p class="text-2xl font-bold text-gray-900">{{ $profile->hourly_rate }}</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ $freelancer->hourly_rate }}</p>
                         </div>
 
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 mb-4">Total Earnings</h3>
-                            <p class="text-lg font-semibold text-gray-900">{{ $profile->total_earnings }}</p>
+                            <p class="text-lg font-semibold text-gray-900">{{ $freelancer->total_earnings }}</p>
                         </div>
 
                         <div>
@@ -86,15 +91,15 @@
                             <div class="space-y-3 text-sm">
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Projects Completed</span>
-                                    <span class="font-medium text-gray-900">{{ $profile->projects_completed }}</span>
+                                    <span class="font-medium text-gray-900">{{ $freelancer->projects_completed }}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Response Time</span>
-                                    <span class="font-medium text-gray-900">{{ $profile->response_time }}</span>
+                                    <span class="font-medium text-gray-900">{{ $freelancer->response_time }}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Availability</span>
-                                    <span class="font-medium text-gray-900">{{ $profile->availability }}</span>
+                                    <span class="font-medium text-gray-900">{{ $freelancer->availability }}</span>
                                 </div>
                             </div>
                         </div>
@@ -162,7 +167,7 @@
                                     <div class="bg-gradient-to-br from-green-50 to-teal-50 p-6 rounded-xl border">
                                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Recent Projects</h3>
                                         <ul class="space-y-2">
-                                            @foreach($profile->user->contractsAsFreelancer as $project)
+                                            @foreach($freelancer->contractsAsFreelancer as $project)
                                                 <li class="flex items-center text-gray-700">
                                                     <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -206,7 +211,7 @@
                             <div class="space-y-6">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Reviews</h2>
                                 <div class="space-y-6">
-                                    @foreach($profile->user->reviews as $review)
+                                    @foreach($freelancer->reviews as $review)
                                         <div class="bg-white rounded-xl shadow-sm border p-6">
                                             <div class="flex items-start justify-between mb-4">
                                                 <div class="flex items-center space-x-3">
@@ -252,7 +257,7 @@
                                             </tr>
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-200">
-                                            @foreach($profile->user->contractsAsFreelancer as $project)
+                                            @foreach($freelancer->contractsAsFreelancer as $project)
                                                 @php
                                                     $start = Carbon\Carbon::parse($project->job->start_date);
                                                     $end = Carbon\Carbon::parse($project->job->deadline);

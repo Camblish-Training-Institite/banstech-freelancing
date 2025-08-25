@@ -17,8 +17,7 @@
           <li class="nav-item"><a class="nav-link text-light" href="#services">Services</a></li>
           <li class="nav-item"><a class="nav-link text-light" href="{{ route('login') }}">Login</a></li>
           <li class="nav-item"><a class="nav-link text-light" href="{{ route('register') }}">Register</a></li>
-          <li class="nav-item"><a class="nav-link text-light" href="{{url ('PostProject') }}">Post Project</a></li>   
-          
+          <li class="nav-item"><a class="nav-link text-light" href="{{ route('client.jobs.create') }}">Post Project</a></li>   
         </ul>
       </div>
     </div>
