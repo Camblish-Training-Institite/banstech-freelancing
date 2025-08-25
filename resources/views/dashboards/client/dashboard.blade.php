@@ -557,7 +557,6 @@
                 {{-- @foreach(auth()->user()->notifications->where('type', 'milestone_requested') as $notification)
                 @include('dashboards.components.notification-item', ['notification' => $notification])
                 @endforeach
-                <a href="{{ route('notifications.markAsRead', $notification) }}">Mark as Read</a> --}}
         </header>
 
         <div class="dashboard-body">

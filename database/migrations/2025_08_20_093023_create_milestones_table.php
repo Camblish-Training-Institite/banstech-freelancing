@@ -13,13 +13,17 @@ return new class extends Migration
     {
         Schema::create('milestones', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('project_id')->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
             $table->decimal('amount', 10, 2);
             $table->date('due_date');
             $table->enum('status', ['pending', 'requested', 'approved', 'released'])->default('pending');
             $table->timestamps();
+
+            $table->foreign('project_id')
+            ->references('id')
+            ->on('contracts');
         });
     }
 

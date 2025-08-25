@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasManyThrough(Contract::class, Job::class);
     }
 
+    
+    public function submissions(){
+        return $this->hasMany(ContestSubmission::class, 'freelancer_id');
+    }
+
     // Notifications for incoming management requests
     public function pendingManagementRequests()
     {

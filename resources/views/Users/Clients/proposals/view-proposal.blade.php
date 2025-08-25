@@ -1,7 +1,8 @@
 {{-- resources/views/proposal.blade.php --}}
-@extends('dashboards.client.dashboard')
+{{-- @extends('dashboards.client.dashboard') --}}
+@extends('Users.Clients.layouts.body.dashboard-body')
 
-@section('body')
+@section('active-tab')
 
 
 <!-- Font Awesome Icons -->
@@ -40,6 +41,15 @@
                             <p>{{$proposal->cover_letter}}</p>
                         @else
                             <p>no message sent</p>
+                        @endif
+                    </div>
+
+                    <div class="section">
+                        <h5 class="">Bid amount</h5>
+                        @if ($proposal->bid_amount)
+                            <p class="text-xl font-bold" style="color:#7A4D8B;">R {{number_format($proposal->bid_amount,2)}}</p>
+                        @else
+                            <p>bid not found</p>
                         @endif
                     </div>
 
@@ -269,6 +279,7 @@
     }
 
     .section h5 {
+        font-weight:bold;
         font-size: 1rem;
         margin-bottom: 10px;
         color: #333;

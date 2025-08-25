@@ -13,6 +13,12 @@
             @php
                 $endDate = new DateTime($project->job->deadline);
                 $formattedEndDate = $endDate->format('M d Y');
+
+                // dd($project->milestones->where('status', '=', 'released')->count());
+                $allMilestones = $project->milestones->isempty() ? 1:  $project->milestones->count();
+                $completedMilestones = $project->milestones->where('status', '=', 'released')->count();
+                // dd(($completedMilestones/$allMilestones)*100);
+                $percentage = number_format(($completedMilestones/$allMilestones)*100);
             @endphp
             <tr class="hover:bg-gray-50 cursor-pointer text-left" onclick="window.location.href='{{route('client.project.show', $project->id)}}'"> {{-- {{ route('client.projects.show', $project) }} --}}
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -31,11 +37,14 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">R {{ number_format($project->agreed_amount, 2) }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $formattedEndDate }}</td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    @if ($project->status == "in_progress" || $project->status == "assigned" || $project->status == "open")
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-gray-400">{{ $project->status }}</span>
-                    @else
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-gray-400">{{ $project->status }}</span>
-                    @endif
+                    <div class="flex items-center space-x-2">
+                        <div class="" style="width:100%; height:3px; border-radius:2px; background-color:#ddd; font-weight:bold;">
+                            <div class="" style="width:{{$percentage}}%; height:100%; border-radius:2px; background-color:#7A4D8B; font-weight:bold;"></div>
+                        </div>
+                        <div>
+                            <p class="text-sm">{{$percentage}}%</p>
+                        </div>
+                    </div>
                 </td>
             </tr>
         @empty
