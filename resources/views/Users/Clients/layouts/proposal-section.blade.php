@@ -6,6 +6,10 @@
 
     {{-- The large active-projects-section box, now without its own h3 inside --}}
     <div class="active-projects-section">
-        @include('Users.Clients.proposals.index', ['jobs' => $jobs])
+        @if (request()->routeIs('client.proposals.list'))
+            @include('Users.Clients.proposals.index', ['jobs' => $jobs])
+        @elseif(request()->routeIs('client.proposals.job.show'))
+            @include('Users.Clients.proposals.show', ['job' => $job])
+        @endif
     </div>
 @endsection

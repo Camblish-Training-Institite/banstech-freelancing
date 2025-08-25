@@ -153,9 +153,9 @@
             <ul>
                 <li><a href="{{ route('client.dashboard') }}"><i class="fas fa-briefcase"></i> <span>Dashboard</span></a></li>
                 <li><a href="#"><i class="fas fa-briefcase"></i> <span>Services</span></a></li>
-                <li><a href="#"><i class="fas fa-tasks"></i> <span>Browse Available Jobs</span></a></li>
                 <li><a href="#"><i class="fas fa-inbox"></i> <span>Inbox</span></a></li>
-                <li><a href="#"><i class="fas fa-dollar-sign"></i> <span>Earnings</span></a></li>
+                <li><a href="#"><i class="fas fa-tasks"></i> <span>Hire Project Manager</span></a></li>
+                <li><a href="{{route('billing')}}"><i class="fas fa-dollar-sign"></i> <span>Billing</span></a></li>
             </ul>
             <div class="sidebar-header">Preference</div>
             <ul>

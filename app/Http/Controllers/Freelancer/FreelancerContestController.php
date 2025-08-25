@@ -14,7 +14,7 @@ class FreelancerContestController extends Controller
     use AuthorizesRequests;
 
     public function index()
-    {   
+    {
         $user = Auth::user();
         $contests = $user->contests;
         return view('Users.Freelancers.layouts.contest-section', compact('contests'));

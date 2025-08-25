@@ -3,12 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Jobs\ContractController;
 use App\Http\Controllers\ProfileController;
-
 use App\Http\Controllers\Client\ContestController;
-
+use App\Http\Controllers\Freelancer\MilestoneController;
 use App\Http\Controllers\Jobs\JobsController;
 use App\Http\Controllers\Jobs\ProposalController;
 use App\Models\Contract;
+
 
 
 
@@ -27,10 +27,12 @@ Route::prefix('client')->name('client.')->group(function () {
 
     //client milestone routes
     Route::get('/project/{project}/milestones', [ContractController::class, 'milestones'])->name('project.milestones');
-    Route::get('/project/{project}/milestones/create', function() {
-        $project = Contract::find(request()->route('project'));
-        return view('Users.Clients.projects.create-milestone', ['project' => $project]);
-    })->name('project.milestones.create');
+    Route::get('/project/{project}/milestones/create', [MilestoneController::class, 'create'])->name('project.milestones.create');
+    Route::post('/project/{project}/milestones/store', [MilestoneController::class, 'store'])->name('project.milestone.store');
+    Route::get('/project/{project}/milestones/edit/{milestone}', [MilestoneController::class, 'edit'])->name('project.milestone.edit');
+    Route::post('/project/{project}/milestones/store/{milestone}', [MilestoneController::class, 'update'])->name('project.milestone.update');
+    Route::get('/project/{project}/milestones/destroy/{milestone}', [MilestoneController::class, 'destroy'])->name('project.milestone.destroy');
+    Route::get('/project/{project}/milestones/destroy/{milestone}', [MilestoneController::class, 'releasePayment'])->name('project.milestone.release');
   
     //Proposal Routes
     Route::get('/proposals-list', [ProposalController::class, 'index_client'])->name('proposals.list');
@@ -41,7 +43,6 @@ Route::prefix('client')->name('client.')->group(function () {
 
     //Freelacner Profile Routes
     Route::get('/freelancer/{freelancerId}/profile', [ProfileController::class, 'viewFreelancerProfile'])->name('freelancer.profile');
-
 
     //client profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -75,3 +76,8 @@ Route::prefix('client/contests')->name('client.contests.')->group(function () {
     Route::delete('/{contest}', [ContestController::class, 'destroy'])->name('destroy');
     Route::get('/{contest}/show', [ContestController::class, 'show'])->name('show');
 })->middleware('auth');
+
+//This is for billing page situated under dashboards/clients...
+Route::get('/billing',function(){
+    return view('dashboards.client.billing');
+})->name('billing');
