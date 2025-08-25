@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Proposal;
 use App\Models\Job;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Contract;
 
 class ProposalController extends Controller
 {
@@ -15,9 +16,10 @@ class ProposalController extends Controller
         if(!Auth::check()){
             return redirect()->route('login')->with('error', 'You must be logged in to view proposals.');
         }
-        $jobs = Job::where('user_id', Auth::id())->get(); // Fetch all jobs for the client
-
-        // dd($jobs->proposals);
+        $jobs = Job::where('user_id', Auth::id())
+        ->where('status', 'open') // Fetch all open jobs for the client
+        ->get(); // Fetch all jobs for the client
+        // dd($jobs);
 
         return view('Users.Clients.layouts.proposal-section', ['jobs' => $jobs]);
     }
@@ -35,23 +37,31 @@ class ProposalController extends Controller
     }
 
     public function myProposal(int $id){
+
+        $proposal = Proposal::findOrFail($id); // Fetch the proposal by ID
+
         if(!Auth::check()){
             return redirect()->route('login')->with('error', 'You must be logged in to view your proposals.');
         }
-        $proposal = Proposal::findOrFail($id); // Fetch all proposals for the user
+        // dd($proposal->user_id . '-' . Auth::user()->id);
+        
         if(!Auth::user()->id == $proposal->user_id){
             return redirect()->back()->with('error', 'You do not have permission to view this proposal.');
         }
 
-        // dd($proposal->job->skills);
+        
 
         return view('Users.Freelancers.proposals.view-proposal', ['proposal' => $proposal]);
     }
 
-    public function show(Job $job){
-        $proposal = Proposal::findOrFail($job->id); // Fetch the proposal by ID
+    public function job_show(int $job_id){
+        $job = Job::findOrFail($job_id); // Fetch the job by ID
+        return view('Users.Clients.layouts.proposal-section', ['job' => $job]);
+    }
 
-        return view('Users.Clients.proposals.show', ['proposal' => $proposal]);
+    public function show(Proposal $proposal){
+        $proposal = proposal::findOrFail($proposal->id); // Fetch the job by ID
+        return view('Users.Clients.proposals.view-proposal', ['proposal' => $proposal]);
     }
 
     public function create(int $job_id) {
@@ -103,19 +113,46 @@ class ProposalController extends Controller
         return redirect()->route('freelancer.proposals.index')->with('success', 'Proposal updated successfully.');
     }
 
-    public function acceptProposal(Request $request, int $id){
-        // This method will handle accepting a proposal
-        // Logic to update the proposal status to accepted goes here
+    public function acceptProposal(Proposal $proposal){
+        $user_id = Auth::user()->id; // Get the authenticated user's ID
+        $proposal->status = 'accepted'; // Update the proposal status to accepted
+        $proposal->save();
+
+        $proposal->job->proposals()
+        ->where('id', '!=', $proposal->id)
+        ->where('status', '!=', 'accepted') // Optional: avoid updating if already accepted
+        ->update(['status' => 'rejected']);
+
+        $job = $proposal->job; // Get the job associated with the proposal
+        $job->status = 'assigned'; // Update the job status to in progress
+        $job->save();
+
+        Contract::create([
+            'job_id' => $job->id,
+            'user_id' => $proposal->user_id,
+            'agreed_amount' => $proposal->bid_amount,
+            'status' => 'active', // Set the initial status of the contract
+            'end_date' => $job->deadline,
+        ]);
+
+        return redirect()->route('client.proposals.list')->with('success', 'Proposal accepted successfully.');
     }
 
-    public function rejectProposal(Request $request, int $id){
-        // This method will handle rejecting a proposal
-        // Logic to update the proposal status to rejected goes here
+    public function rejectProposal(Proposal $proposal){
+        $proposal->status = 'rejected'; // Update the proposal status to accepted
+        $proposal->save();
+
+        return redirect()->route('client.proposals.list')->with('success', 'Proposal rejected successfully.');
     }
 
-    public function withdrawProposal(Request $request, int $id){
-        // This method will handle withdrawing a proposal
-        // Logic to update the proposal status to withdrawn goes here
+    public function withdrawProposal(Proposal $proposal){
+
+        if(!Auth::check()){
+            return redirect()->route('login')->with('error', 'You must be logged in to withdraw a proposal.');
+        }
+
+        $proposal->save();
+        return redirect()->route('freelancer.proposals.index')->with('success', 'Proposal withdrawn successfully.');
     }
 
     public function destroy(int $id){

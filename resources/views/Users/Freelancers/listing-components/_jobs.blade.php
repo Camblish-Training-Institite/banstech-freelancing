@@ -33,7 +33,7 @@
         </div>
         <div class="price-and-proposals-block">
             <div class="price">R {{ number_format($job->budget, 2) }}</div>
-            <div class="proposals">8 Proposals</div>
+            <div class="proposals">{{$job->proposals->count()}} Proposals</div>
             <div class="buttons-block">
                 <a href="{{ route('freelancer.jobs.show', $job->id) }}" class="view-job">View Job</a>
                 <a href="{{ route('freelancer.proposal.create', $job->id) }}" class="send-proposal">Send Proposal</a>

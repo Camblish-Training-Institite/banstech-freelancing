@@ -11,21 +11,28 @@ use App\Http\Controllers\Jobs\ProposalController;
 
 Route::prefix('freelancer')->name('freelancer.')->group(function () {
     //main nav links
-    Route::get('/my-projects', [ContractController::class, 'index'])->name('jobs.list');
 
+    //freelancer job routes
+    Route::get('/job/{id}/show', [JobsController::class, 'show_freelancer'])->name('jobs.show');
+
+    //freelancer project routes
+    Route::get('/my-projects', [ContractController::class, 'index'])->name('projects.list');
+    Route::resource('projects', ContractController::class);
+
+    //freelancer project milestone routes
+    Route::get('/projects/{project}/milestone', [ContractController::class, 'requestMilestone'])->name('projects.milestone.request');
+
+    //freelancer proposal routes
     Route::resource('/proposals', ProposalController::class);
-
     Route::get('/my-proposal/{id}', [ProposalController::class, 'myProposal'])->name('proposal.show');
     Route::get('/create_proposal/{job_id}', [ProposalController::class, 'create'])->name('proposal.create');
 
-    // Route::get('/contests', function() {
-    //     return view('Users.Freelancers.layouts.contest-section');
-    // })->name('contests.list');
-
+    //freelancer profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    //Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    //services
     Route::get('/services',function(){
     return view('Users.Freelancers.pages.services');
     })->name('services');
@@ -39,10 +46,9 @@ Route::prefix('freelancer')->name('freelancer.')->group(function () {
         return view('Users.Freelancers.pages.earnings');
     })->name('earnings');
 
-    Route::get('/jobs/{id}', [JobsController::class, 'show_freelancer'])->name('jobs.show');
-
 });
 
+//freelancer contests routes
 Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(function () {
     Route::get('/', [FreelancerContestController::class, 'index'])->name('index');
     Route::get('/{contest}', [FreelancerContestController::class, 'show'])->name('show');

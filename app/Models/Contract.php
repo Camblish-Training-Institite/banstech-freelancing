@@ -40,4 +40,8 @@ class Contract extends Model
     public function freelancer(){
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function milestones(){
+        return $this->hasMany(Milestone::class, 'project_id');
+    }
 }

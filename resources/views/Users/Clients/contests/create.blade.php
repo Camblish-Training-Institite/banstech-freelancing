@@ -1,4 +1,5 @@
-@extends('users.clients.layouts.body.dashboard-body')
+@extends('dashboards.Client.dashboard')
+
 @section('body')
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">Create New Contest</h2>

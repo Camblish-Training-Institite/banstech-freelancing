@@ -49,8 +49,7 @@ class ContestController extends Controller
     public function edit(Contest $contest)
     {
         // $this->authorize('update', $contest);
-        if(!Auth::check()){
-            return redirect()->route('client.contests.index')->with('error', 'You must be logged in to edit contests.');
+        if (!Auth::check()) {
         } // Ensure only the client can edit
         return view('Users.Clients.contests.edit', compact('contest'));
     }
@@ -58,8 +57,7 @@ class ContestController extends Controller
     public function update(Request $request, Contest $contest)
     {
         // $this->authorize('update', $contest);
-        if(!Auth::check()){
-            return redirect()->route('client.contests.index')->with('error', 'You must be logged in to edit contests.');
+        if (!Auth::check()) {
         }
 
         $request->validate([
@@ -85,7 +83,7 @@ class ContestController extends Controller
     public function show(Contest $contest)
     {
         // Ensure the contest belongs to this client
-        if ($contest->client_id !== auth()->id()) {
+        if ($contest->client_id !== Auth::id()) {
             abort(403);
         }
         return view('Users.Clients.contests.show', compact('contest'));
@@ -94,8 +92,7 @@ class ContestController extends Controller
     public function destroy(Contest $contest)
     {
         // $this->authorize('delete', $contest);
-        if(!Auth::check()){
-            return redirect()->route('client.contests.index')->with('error', 'You must be logged in to edit contests.');
+        if (!Auth::check()) {
         }
 
         $contest->delete();

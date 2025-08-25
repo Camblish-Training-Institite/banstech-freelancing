@@ -6,13 +6,13 @@
             <a href="{{ route('client.jobs.list') }}">My Jobs</a>
         </li>
 
-        {{-- <!-- My Projects -->
+        <!-- My Projects -->
         <li class="{{ request()->routeIs('client.projects.list') ? 'active' : '' }}">
             <a href="{{ route('client.projects.list') }}">My Projects</a>
-        </li> --}}
+        </li>
 
         <!-- Proposals -->
-        <li class="{{ request()->routeIs('client.proposals.list') ? 'active' : '' }}">
+        <li class="{{ request()->routeIs('client.proposals.list') || request()->routeIs('client.proposals.show') || request()->routeIs('client.proposals.job.show') ? 'active' : '' }}">
             <a href="{{ route('client.proposals.list') }}">Proposals</a>
         </li>
 

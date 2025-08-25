@@ -36,9 +36,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Contract::class, 'project_assignments');
     }
 
-    public function jobsPosted()
+    public function jobs()
     {
-        return $this->hasMany(Job::class, 'client_id');
+        return $this->hasMany(Job::class, 'user_id');
     }
     public function proposals()
     {
@@ -46,7 +46,16 @@ class User extends Authenticatable
     }
     public function contractsAsFreelancer()
     {
-        return $this->hasMany(Contract::class, 'freelancer_id');
+        return $this->hasMany(Contract::class, 'user_id');
+    }
+    public function contracts()
+    {
+        return $this->hasManyThrough(Contract::class, Job::class);
+    }
+
+    
+    public function submissions(){
+        return $this->hasMany(ContestSubmission::class, 'freelancer_id');
     }
 
     // Notifications for incoming management requests
@@ -54,6 +63,12 @@ class User extends Authenticatable
     {
         return $this->morphMany(ManagementRequest::class, 'requester');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id');
+    }
+
 
 
     /**
@@ -111,5 +126,15 @@ class User extends Authenticatable
 
         // Choose the logic that best fits your access control strategy.
         // For this guide, we'll primarily use the user_type, but keep Spatie in mind for granular control.
+    }
+
+    public function contests()
+    {
+        return $this->hasManyThrough(Contest::class, ContestEntry::class, 'freelancer_id', 'id', 'id', 'contest_id');
+    }
+
+    public function entries()
+    {
+        return $this->hasMany(ContestEntry::class, 'freelancer_id');
     }
 }
