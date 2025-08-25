@@ -27,16 +27,16 @@
             <thead>
                 <tr>
                     <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                    <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                    <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</th>
                     <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
                     <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                 </tr>
             </thead>
             <tbody class="bg-white">
-                {{-- @foreach ($project->milestones as $milestone)
+                @foreach ($project->milestones as $milestone)
                     <tr>
-                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ $milestone->created_at->format('d M Y') }}</td>
-                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ $milestone->description }}</td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ $milestone->due_date->format('d M Y') }}</td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ $milestone->title }}</td>
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                 @if($milestone->status == 'released') bg-green-100 text-green-800 
@@ -47,23 +47,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${{ number_format($milestone->amount, 2) }}</td>
                     </tr>
-                @endforeach --}}
-                <tr>
-                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ '17 August 2025' }}</td> {{-- $milestone->created_at->format('d M Y') --}}
-                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ 'Make the logo' }}</td> {{-- $milestone->description --}}
-                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                            {{-- <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                @if($milestone->status == 'released') bg-green-100 text-green-800 
-                                @elseif($milestone->status == 'in_progress') bg-yellow-100 text-yellow-800
-                                @else bg-blue-100 text-blue-800 @endif">
-                                {{ ucfirst(str_replace('_', ' ', $milestone->status)) }}
-                            </span> --}}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                In Progress
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${{ 20 }}</td> {{-- number_format($milestone->amount, 2) --}}
-                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

@@ -1,4 +1,4 @@
-@extends('dashboards.client.dashboard')
+@extends('dashboards.freelancer.dashboard')
 
 @section('body')
 <style>

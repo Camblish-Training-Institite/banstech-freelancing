@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Proposal;
 use App\Models\Job;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Contract;
 
 class ProposalController extends Controller
 {
@@ -55,7 +56,7 @@ class ProposalController extends Controller
 
     public function job_show(int $job_id){
         $job = Job::findOrFail($job_id); // Fetch the job by ID
-        return view('Users.Clients.proposals.show', ['job' => $job]);
+        return view('Users.Clients.layouts.proposal-section', ['job' => $job]);
     }
 
     public function show(Proposal $proposal){
@@ -113,9 +114,14 @@ class ProposalController extends Controller
     }
 
     public function acceptProposal(Proposal $proposal){
-
+        $user_id = Auth::user()->id; // Get the authenticated user's ID
         $proposal->status = 'accepted'; // Update the proposal status to accepted
         $proposal->save();
+
+        $proposal->job->proposals()
+        ->where('id', '!=', $proposal->id)
+        ->where('status', '!=', 'accepted') // Optional: avoid updating if already accepted
+        ->update(['status' => 'rejected']);
 
         $job = $proposal->job; // Get the job associated with the proposal
         $job->status = 'assigned'; // Update the job status to in progress
@@ -123,10 +129,9 @@ class ProposalController extends Controller
 
         Contract::create([
             'job_id' => $job->id,
-            'freelancer_id' => $proposal->user_id,
+            'user_id' => $proposal->user_id,
             'agreed_amount' => $proposal->bid_amount,
-            'client_id' => Auth::id(), // Assuming the client is the authenticated user
-            'status' => 'in_progress', // Set the initial status of the contract
+            'status' => 'active', // Set the initial status of the contract
             'end_date' => $job->deadline,
         ]);
 
