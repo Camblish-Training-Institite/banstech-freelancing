@@ -5,6 +5,7 @@
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Budget</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">End Date</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
         </tr>
     </thead>
     <tbody class="bg-white divide-y divide-gray-200">
@@ -18,11 +19,30 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">R {{ number_format($job->budget, 2) }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $formattedEndDate }}</td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    @if ($job->status == "in_progress" || $job->status == "assigned" || $job->status == "open")
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-gray-400">{{ $job->status }}</span>
-                    @else
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-gray-400">{{ $job->status }}</span>
+                    @if ($job->status == "completed")
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">{{ $job->status }}</span>
+                    @elseif($job->status == "assigned")
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{ $job->status }}</span>
+                    @elseif($job->status == "assigned" || $job->status == "in_progress")
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">{{ $job->status }}</span>
+                    @elseif($job->status == 'open')
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">{{ $job->status }}</span>
+                    @elseif($job->status == 'canceled')
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">{{ $job->status }}</span>
                     @endif
+                    {{-- <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        {{ $job->status }}
+                    </span> --}}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex w-full space-x-2">
+                        <a href="{{ route('client.jobs.show', $job) }}" class="flex items-center justify-center py-2 px-4 bg-black text-white hover:text-indigo-900 rounded-md">View</a>
+                        {{-- <a href="{{ route('client.jobs.edit', $job) }}" class="flex items-center justify-center py-1 px-2 bg-blue-500 text-white hover:text-yellow-900 rounded-md">Edit</a> --}}
+                        {{-- <form action="{{ route('client.jobs.destroy', $job) }}" method="POST" class="inline">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                        </form> --}}
+                    </div>
                 </td>
             </tr>
         @empty

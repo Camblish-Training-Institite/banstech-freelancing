@@ -83,7 +83,7 @@ class ContestController extends Controller
     public function show(Contest $contest)
     {
         // Ensure the contest belongs to this client
-        if ($contest->client_id !== auth()->id()) {
+        if ($contest->client_id !== Auth::id()) {
             abort(403);
         }
         return view('Users.Clients.contests.show', compact('contest'));

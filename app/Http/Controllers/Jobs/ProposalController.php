@@ -56,7 +56,7 @@ class ProposalController extends Controller
 
     public function job_show(int $job_id){
         $job = Job::findOrFail($job_id); // Fetch the job by ID
-        return view('Users.Clients.proposals.show', ['job' => $job]);
+        return view('Users.Clients.layouts.proposal-section', ['job' => $job]);
     }
 
     public function show(Proposal $proposal){
