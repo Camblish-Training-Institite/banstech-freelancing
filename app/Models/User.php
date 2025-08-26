@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasManyThrough(Contract::class, Job::class);
     }
 
+    
+    public function submissions(){
+        return $this->hasMany(ContestSubmission::class, 'freelancer_id');
+    }
+
     // Notifications for incoming management requests
     public function pendingManagementRequests()
     {
@@ -121,5 +126,15 @@ class User extends Authenticatable
 
         // Choose the logic that best fits your access control strategy.
         // For this guide, we'll primarily use the user_type, but keep Spatie in mind for granular control.
+    }
+
+    public function contests()
+    {
+        return $this->hasManyThrough(Contest::class, ContestEntry::class, 'freelancer_id', 'id', 'id', 'contest_id');
+    }
+
+    public function entries()
+    {
+        return $this->hasMany(ContestEntry::class, 'freelancer_id');
     }
 }

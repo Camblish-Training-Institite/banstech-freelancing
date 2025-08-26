@@ -18,4 +18,9 @@ class ContestSubmission extends Model
     {
         return $this->belongsTo(User::class, 'freelancer_id');
     }
+
+    public function contest()
+    {
+        return $this->belongsTo(Contest::class, 'contest_id');
+    }
 }

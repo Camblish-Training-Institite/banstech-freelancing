@@ -33,7 +33,7 @@
             </a>
         </div>
     
-        <h1 class="text-2xl font-bold text-center mb-6">{{ __('Welcome Back ADMIN') }}</h1>
+        <h1 class="text-2xl font-bold text-center mb-6">{{ __('Welcome Back') }}</h1>
     
         <!-- Social Login Buttons -->
         <div class="grid gap-4 mb-6">
