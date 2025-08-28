@@ -68,6 +68,17 @@
     }
 
 
+    .back-link {
+        color: #516aae;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+
 
 
     /* Main Content Area */

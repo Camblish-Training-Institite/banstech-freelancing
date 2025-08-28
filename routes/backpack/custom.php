@@ -21,6 +21,10 @@ Route::group([
     // Route::crud('dispute', 'DisputeCrudController');// To be added by Lwwazi
     // Route::crud('report', 'ReportCrudController');//To be added by Lwazi
     Route::crud('contract', 'ContractCrudController');
+    Route::crud('proposal', 'ProposalCrudController');
+    Route::crud('contest', 'ContestCrudController');
+    Route::crud('contest-submission', 'ContestSubmissionCrudController');
+    Route::crud('milestone', 'MilestoneCrudController');
 }); // this should be the absolute last line of this file
 
 /**

@@ -34,15 +34,6 @@
             color: #516aae;
             margin: 0;
         }
-        .back-link {
-            color: #516aae;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
 
         /* Job Info Section */
         .job-info {
@@ -249,7 +240,7 @@
         </div>
     </div>
     <!-- Contest proposals Section -->
-    @if($job->proposals->isNotEmpty())
+    @if($job->proposals->isNotEmpty() && $job->status == 'open')
         <div class="container bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
             <div class="p-6 border-b border-gray-200">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">proposals Received ({{
@@ -258,24 +249,30 @@
                 <div class="space-y-4">
                     @foreach($job->proposals as $proposal)
                     <div class="border rounded-lg p-4 hover:bg-gray-50">
-                        <div class="flex justify-between">
-                            <div class="flex items-center justify-start space-x-2">
-                                <div class="flex items-center justify-center rounded-full w-8 h-8 object-cover overflow-hidden">
-                                    @if ($proposal->user->profile)
-                                        <img src="{{ asset('storage/' . $proposal->user->profile->avatar) }}" alt="">
-                                    @else
-                                        <img src="https://ui-avatars.com/api/?name={{ $proposal->user->name }}&background=random&size=128" alt="">
-                                    @endif
+                        <div class="flex flex-col justify-between">
+                            <div class="flex flex-col items-start justify-center space-x-2 w-full mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <div class="flex items-center justify-center rounded-full w-8 h-8 object-cover overflow-hidden">
+                                        @if ($proposal->user->profile)
+                                            <img src="{{ asset('storage/' . $proposal->user->profile->avatar) }}" alt="">
+                                        @else
+                                            <img src="https://ui-avatars.com/api/?name={{ $proposal->user->name }}&background=random&size=128" alt="">
+                                        @endif
+                                    </div>
+                                    <p class="font-medium">{{ $proposal->user->name }}</p>
                                 </div>
-                                <p class="font-medium">{{ $proposal->user->name }}</p>
+                                <div class="flex flex-col px-4">
+                                    <p class="text-gray-500 text-sm">sent: {{ $proposal->created_at->diffForHumans() }}</p>
+                                    <p class="text-gray-500 text-sm">Bid Amount: R{{ number_format($proposal->bid_amount, 2) }}</p>
+                                </div>
                             </div>
 
-                            <div class="flex space-x-2">
+                            <div class="flex justify-end space-x-2">
                                 <a href="{{ route('client.proposals.show', $proposal) }}"
                                 class="view-btn text-indigo-600 text-sm hover:underline">View</a>
                                 <a href="{{ route('client.proposals.accept', $proposal) }}"
                                 class="accept-btn text-green-600 text-sm hover:underline">Accept</a>
-                                <a href="{{ route('client.proposals.accept', $proposal) }}"
+                                <a href="{{ route('client.proposals.reject', $proposal) }}"
                                 class="reject-btn text-red-600 text-sm hover:underline">Reject</a>
                             </div>
                         </div>

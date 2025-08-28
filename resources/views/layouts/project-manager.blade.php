@@ -21,8 +21,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="flex min-h-screen bg-gray-100 ">
-            @include('project-manager.layouts.navigation')
+        <div class="flex min-h-screen w-full bg-gray-100">
+            @include('project-manager.layouts.pr-navigation')
 
             <!-- Page Heading -->
             @isset($header)
@@ -41,8 +41,8 @@
                 display:flex;
                 flex-direction:column;
                 align-items:center;
+                justify-content:center; 
             ">
-                {{-- {{ $slot }} --}}
                 @yield('content')
             </main>
         </div>
