@@ -3,12 +3,12 @@
 
     <!-- Create Task Form -->
     {{-- add action URL for tasks form --}}
-    <form action="" method="POST" class="mb-6 border-b pb-6">
+    <form action="{{ route('client.project.tabs.task', $project->id) }}" method="POST" enctype="multipart/form-data" class="mb-6 border-b pb-6">
         @csrf
         <div class="mb-4">
             <label for="task_description" class="block text-gray-700 text-sm font-bold mb-2">New Task</label>
             <div class="flex">
-                <input type="text" name="description" id="task_description" class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('description') border-red-500 @enderror" placeholder="e.g., Design the homepage mockup" required>
+                <input type="text" name="title" id="title" class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('description') border-red-500 @enderror" placeholder="e.g., Design the homepage mockup" required>
                 <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-r focus:outline-none focus:shadow-outline">
                     Add
                 </button>
@@ -23,16 +23,16 @@
     <h4 class="text-lg font-bold text-gray-800 mb-4">Task List</h4>
     <ul>
         {{-- add tasks table and model for projects --}}
-        {{-- @forelse ($project->tasks as $task)
-            <li class="py-3 flex items-center">
-                <input type="checkbox" id="task_{{ $task->id }}" {{ $task->is_completed ? 'checked' : '' }} class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                <label for="task_{{ $task->id }}" class="ml-3 block text-gray-900 {{ $task->is_completed ? 'line-through text-gray-500' : '' }}">
-                    {{ $task->description }}
-                </label>
+        @forelse ($project->tasks as $task)
+            <li class="border-b py-3 flex items-center justify-between">
+                <div>
+                    <p class="text-gray-800">{{ $task->title }}</p>
+                    <p class="text-sm text-gray-500">Status: {{ ucfirst($task->status) }} | Due: {{ $task->due_date ? $task->due_date->format('d M Y') : 'N/A' }}</p>
+                </div>
+                <span class="text-sm text-gray-500">Assigned to: {{ $task->user->name }}</span>
             </li>
         @empty
             <li class="text-gray-500">No tasks have been created yet.</li>
-        @endforelse --}}
-        <li class="text-gray-500">No tasks have been created yet.</li>
+        @endforelse
     </ul>
 </div>

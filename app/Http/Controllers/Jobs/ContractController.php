@@ -8,6 +8,8 @@ use App\Models\Contract;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\File;
+use App\Models\Task;
 
 class ContractController extends Controller
 {
@@ -92,5 +94,66 @@ class ContractController extends Controller
             return redirect()->back()->with('success', 'Contract completed successfully.');
         }
         return redirect()->back()->with('error', 'Contract not found or you do not have permission to complete it.');
+    }
+
+    public function uploadFile(Request $request, Contract $project)
+    {
+        // dd($request->all());
+        // Validate the request
+        $request->validate([
+            'file' => 'required|file|mimes:pdf,doc,docx,xlsx,jpg,jpeg,png|max:10240' // 10MB max
+        ]);
+
+        $file = $request->file('file');
+
+        // Store file in disk
+        $path = $file->store('projects/' . $project->id, 'public'); // e.g., projects/123/file.pdf
+
+        // Get file info
+        $fileName = $file->getClientOriginalName();
+        //$fileSize = formatBytes($file->getSize()); // Helper function below
+
+        // Save to database
+        $uploadedFile = new File([
+            'file_name' => $fileName,
+            'file_path' => $path,
+            // 'file_size' => $fileSize,
+            'project_id' => $project->id,
+            'user_id' => auth()->id(),
+        ]);
+        $uploadedFile->save();
+
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'File uploaded successfully!');
+
+
+    }
+
+    public function createTask(Request $request, Contract $project)
+    {
+        //dd($request->all());
+        $request->validate([
+            'title' => '|string|max:255',
+            'description' => 'nullable|string',
+            'due_date' => 'nullable|date',
+        ]);
+
+        $task = Task::create([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'status' => 'pending',
+            'project_id' => $project->id,
+            'user_id' => auth()->id(),
+            'due_date' => $request->input('due_date'),
+        ]);
+        $task->save();
+
+        return redirect()->route('client.project.show',$project->id)->with('success', 'Task created successfully!');
+    }
+
+    public function clientProjectTasks(Request $request, Contract $project)
+    {
+        $tasks = $project->tasks()->with('user')->get();
+        return view('Users.Clients.projects.tabs.tasks', ['project' => $project, 'tasks' => $tasks]);
     }
 }

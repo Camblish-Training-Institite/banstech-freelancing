@@ -23,16 +23,16 @@
     <h4 class="text-lg font-bold text-gray-800 mb-4">Task List</h4>
     <ul>
         {{-- add tasks table and model for projects --}}
-        {{-- @forelse ($project->tasks as $task)
+        @forelse ($project->tasks as $task)
             <li class="py-3 flex items-center">
                 <input type="checkbox" id="task_{{ $task->id }}" {{ $task->is_completed ? 'checked' : '' }} class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                 <label for="task_{{ $task->id }}" class="ml-3 block text-gray-900 {{ $task->is_completed ? 'line-through text-gray-500' : '' }}">
-                    {{ $task->description }}
+                    {{ $task->title }}
                 </label>
             </li>
         @empty
             <li class="text-gray-500">No tasks have been created yet.</li>
-        @endforelse --}}
-        <li class="text-gray-500">No tasks have been created yet.</li>
+        @endforelse
+        
     </ul>
 </div>

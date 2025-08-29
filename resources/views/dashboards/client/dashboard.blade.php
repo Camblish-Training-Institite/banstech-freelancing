@@ -546,18 +546,22 @@
                     </label>
                 </div>
                 <div class="search-bar">
-                    <input type="text" placeholder="Search">
-                    <i class="fas fa-search"></i>
+                    <div class="flex items-center">
+                            <img src="https://img.icons8.com/ios/50/search--v1.png" alt="search--v1" class="fas fa-search ml-3" width="20" height="20"/>
+                            <input type="text" placeholder="Search" class="ml-4">
+                            <i class="fas fa-search"></i>
+                        </div>
                 </div>
                 <i class="fas fa-bell notification-icon"></i>
                 {{-- The <div class="user-avatar"> block was previously here and has been removed. --}}
                 </div>
 
                 {{-- code below is supposed to display milestone requested  (might have to implement in the freelancer dashboard) --}}
-                @foreach(auth()->user()->notifications->where('type', 'milestone_requested') as $notification)
+                {{-- @foreach(auth()->user()->notifications->where('type', 'milestone_requested') as $notification)
                 @include('dashboards.components.notification-item', ['notification' => $notification])
                 @endforeach
-                <a href="">Mark as Read</a> {{-- {{ route('notifications.markAsRead', $notification) }} --}}
+                <a href="">Mark as Read</a> {{ route('notifications.markAsRead', $notification) }}  --}}
+
         </header>
 
         <div class="dashboard-body">

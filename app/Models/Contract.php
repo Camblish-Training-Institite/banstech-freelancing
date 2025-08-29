@@ -44,4 +44,14 @@ class Contract extends Model
     public function milestones(){
         return $this->hasMany(Milestone::class, 'project_id');
     }
+
+    public function files()
+    {
+        return $this->hasMany(File::class, 'project_id');
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'project_id');
+    }
 }

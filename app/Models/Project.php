@@ -33,6 +33,8 @@ class Project extends Model
         return $this->hasMany(Milestone::class);
     }
 
+   
+
     public function getIsCompletedAttribute(): bool
     {
         return $this->status === 'completed';

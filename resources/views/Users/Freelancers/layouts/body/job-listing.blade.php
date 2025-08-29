@@ -257,7 +257,12 @@
                 <label>Budget (USD)</label>
                 <input type="text" placeholder="Min amount" />
             </div>
-            <button>Apply Filters</button>
+            <button style="grid-column: span 4; justify-self: end;">
+                <div class="flex items-center">
+                    <img width="15" height="15" src="https://img.icons8.com/ios/50/filter--v1.png" alt="filter--v1" class="mr-2"/>
+                Apply Filters
+                </div>
+            </button>
         </div>
 
         <!-- Tabs -->
