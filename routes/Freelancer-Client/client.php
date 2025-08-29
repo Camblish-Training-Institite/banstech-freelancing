@@ -81,3 +81,12 @@ Route::prefix('client/contests')->name('client.contests.')->group(function () {
 Route::get('/billing',function(){
     return view('dashboards.client.billing');
 })->name('billing');
+
+// Show project page (with file upload form)
+// Route::get('/Users/Clients/project/{project}/show', [ContractController::class, 'show'])->name('client.project.show')->middleware('auth');
+
+//Handle file uploads
+Route::post('Clients/project/{project}/upload-file', [ContractController::class, 'uploadFile'])->name('client.project.tabs.file')->middleware('auth');
+
+//Handle task creation
+Route::post('Clients/project/{project}/task', [ContractController::class, 'createTask'])->name('client.project.tabs.task')->middleware('auth');

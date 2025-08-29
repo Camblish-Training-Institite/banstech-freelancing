@@ -23,7 +23,7 @@
     <h4 class="text-lg font-bold text-gray-800 mb-4">Uploaded Files</h4>
     <ul>
         {{-- create a files table and model where project files can be stored --}}
-        {{-- @forelse ($project->files as $file)
+        @forelse ($project->files as $file)
             <li class="border-b py-3 flex items-center justify-between">
                 <div>
                     <a href="{{ $file->file_url }}" target="_blank" class="text-indigo-600 hover:underline">{{ $file->file_name }}</a>
@@ -33,7 +33,7 @@
             </li>
         @empty
             <li class="text-gray-500">No files have been uploaded yet.</li>
-        @endforelse --}}
-        <li class="text-gray-500">No files have been uploaded yet.</li>
+        @endforelse
+        
     </ul>
 </div>

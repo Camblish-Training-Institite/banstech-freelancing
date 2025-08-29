@@ -3,7 +3,7 @@
 
     <!-- File Upload Form -->
     {{-- add action URL to form --}}
-    <form action="" method="POST" enctype="multipart/form-data" class="mb-6 border-b pb-6">
+    <form action="{{ route('client.project.tabs.file', $project) }}" method="POST" enctype="multipart/form-data" class="mb-6 border-b pb-6">
         @csrf
         <div class="mb-4">
             <label for="file" class="block text-gray-700 text-sm font-bold mb-2">Upload New File</label>
@@ -23,9 +23,17 @@
     <h4 class="text-lg font-bold text-gray-800 mb-4">Uploaded Files</h4>
     <ul>
         {{-- create a files table and model where project files can be stored --}}
-        {{-- @forelse ($project->files as $file)
+        @forelse ($project->files as $file)
+            
             <li class="border-b py-3 flex items-center justify-between">
-                <div>
+                @if (in_array($file->file_extension, ['jpg', 'jpeg', 'png', 'gif']))
+                    <img src="{{ $file->file_path() }}" alt="{{ $file->file_name }}" class="w-12 h-12 object-cover rounded mr-4">
+                @else
+                    <div class="w-12 h-12 flex items-center justify-center bg-gray-200 rounded mr-4">
+                        <span class="text-gray-500 text-sm">{{ strtoupper($file->file_extension) }}</span>
+                    </div>
+                @endif
+                <div class="flex-1 ml-4">
                     <a href="{{ $file->file_url }}" target="_blank" class="text-indigo-600 hover:underline">{{ $file->file_name }}</a>
                     <p class="text-sm text-gray-500">Uploaded by {{ $file->user->name }} on {{ $file->created_at->format('d M Y') }}</p>
                 </div>
@@ -33,7 +41,7 @@
             </li>
         @empty
             <li class="text-gray-500">No files have been uploaded yet.</li>
-        @endforelse --}}
-        <li class="text-gray-500">No files have been uploaded yet.</li>
+        @endforelse
+        
     </ul>
 </div>
