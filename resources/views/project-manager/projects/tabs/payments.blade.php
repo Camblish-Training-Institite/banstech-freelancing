@@ -9,7 +9,7 @@
                 </div>
                 <div>
                     <p class="text-gray-500">In Progress</p>
-                    <p class="text-2xl font-bold text-gray-800">R{{ $project->milestones->where('status', '<>', 'released')->sum('amount') }}</p> {{-- number_format($project->milestones->where('status', 'in_progress')->sum('amount'), 2) --}}
+                    <p class="text-2xl font-bold text-gray-800">R{{ number_format($project->milestones->where('status', '<>', 'released')->sum('amount'), 2) }}</p> {{-- number_format($project->milestones->where('status', 'in_progress')->sum('amount'), 2) --}}
                 </div>
                 <div>
                     <p class="text-gray-500">Released</p>
@@ -20,7 +20,7 @@
         <!-- insert your project milestone creation route here -->
         {{-- route('projects.milestones.create', $project) --}}
         <div>
-            <a href="{{route('client.project.milestones.create', $project)}}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{route('pm.project.milestones.create', $project)}}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
                 Create Milestone
             </a>
         </div>
@@ -52,7 +52,7 @@
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${{ number_format($milestone->amount, 2) }}</td>
                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
                             @if($milestone->status != 'released')
-                                <a href="{{route('client.project.milestone.release', [$project, $milestone])}}" class="text-indigo-600 hover:text-indigo-900">Release</a>
+                                <a href="{{route('pm.project.milestone.release', [$project, $milestone])}}" class="text-indigo-600 hover:text-indigo-900">Release</a>
                             @else
                                 <a href="#" class="text-indigo-600 hover:text-indigo-900">View Invoice</a>
                             @endif

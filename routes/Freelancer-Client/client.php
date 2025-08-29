@@ -37,9 +37,9 @@ Route::prefix('client')->name('client.')->group(function () {
     //Proposal Routes
     Route::get('/proposals-list', [ProposalController::class, 'index_client'])->name('proposals.list');
     Route::resource('/proposals', ProposalController::class);
-    Route::get('/proposal/{job}/show', [ProposalController::class, 'job_show'])->name('proposals.job.show');  
-    Route::get('/proposal/{proposal}/accept', [ProposalController::class, 'acceptProposal'])->name('proposals.accept'); 
-    Route::get('/proposal/{proposal}/reject', [ProposalController::class, 'rejectProposal'])->name('proposals.reject'); 
+    Route::get('/proposal/{job}/show', [ProposalController::class, 'job_show'])->name('proposals.job.show');
+    Route::get('/proposal/{proposal}/accept', [ProposalController::class, 'acceptProposal'])->name('proposals.accept');
+    Route::get('/proposal/{proposal}/reject', [ProposalController::class, 'rejectProposal'])->name('proposals.reject');
 
     //Freelacner Profile Routes
     Route::get('/freelancer/{freelancerId}/profile', [ProfileController::class, 'viewFreelancerProfile'])->name('freelancer.profile');

@@ -152,6 +152,16 @@
             transform: translateX(20px);
         }
 
+        .back-link {
+            color: #516aae;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
         .search-bar {
             position: relative;
             border: #2c2c2c
