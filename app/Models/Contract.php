@@ -50,6 +50,7 @@ class Contract extends Model
         return $this->milestones()
         ->where('status', '=', 'released')
         ->sum('amount');
+    }
 
     public function files()
     {
