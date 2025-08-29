@@ -311,7 +311,7 @@
     </div>
 
     <!-- Message Modal -->
-    <div id="messageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+    <div id="messageModal" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-96 overflow-y-auto">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-6">

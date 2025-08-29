@@ -140,6 +140,14 @@
             background-color: #d0d0d0;
         }
 
+        .report-job {
+            background-color: #f44336;
+            color: white;
+        }
+        .report-job:hover {
+            background-color: #d32f2f;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .job-info {
@@ -214,6 +222,7 @@
         <div class="actions">
             <a href="{{route('freelancer.proposal.create', $job->id)}}" class="send-proposal">Send Proposal</a> {{--{{ route('proposals.create', ['job_id' => $job->id]) }}--}}
             <button class="save-job">Save Job</button>
+            <button class="report-job">Report Job</button>
         </div>
     </div>
 @endsection

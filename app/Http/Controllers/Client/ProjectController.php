@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Job;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\File;
 
 class ProjectController extends Controller
 {
@@ -25,7 +26,7 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         $this->authorizeOwner($project);
-        return view('dashboards.client.projects.show', compact('project'));
+        return view('Users.Clients.projects.tabs.files', compact('project'));
     }
 
     public function createMilestone(Request $request, Project $project)
@@ -41,4 +42,6 @@ class ProjectController extends Controller
 
         return back()->with('status', 'Milestone created.');
     }
+
+    
 }
