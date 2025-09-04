@@ -20,6 +20,7 @@ class Job extends Model
         'status',
         'deadline',
         'skills',
+        'job_funded',
     ];
 
     protected $casts = [

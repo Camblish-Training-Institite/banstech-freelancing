@@ -76,19 +76,27 @@
             <div x-data="{ tab: 'details' }">
                 <div class="border-b border-gray-200">
                     <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                        <a href="#" @click.prevent="tab = 'details'" :class="{ 'border-indigo-500 text-indigo-600': tab === 'details', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': tab !== 'details' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                        <a href="#" @click.prevent="tab = 'details'" :class="{ 'border-indigo-500
+                         text-indigo-600': tab === 'details', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': tab !== 'details' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                             Details
                         </a>
 
-                        <a href="#" @click.prevent="tab = 'payments'" :class="{ 'border-indigo-500 text-indigo-600': tab === 'payments', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': tab !== 'payments' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                        <a href="#" @click.prevent="tab = 'payments'" :class="{ 'border-indigo-500 text-indigo-600':
+                         tab === 'payments', 'border-transparent text-gray-500 hover:text-gray-700
+                          hover:border-gray-300': tab !== 'payments' }" class="whitespace-nowrap py-4 
+                          px-1 border-b-2 font-medium text-sm">
                             Payments
                         </a>
 
-                        <a href="#" @click.prevent="tab = 'files'" :class="{ 'border-indigo-500 text-indigo-600': tab === 'files', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': tab !== 'files' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                        <a href="#" @click.prevent="{{ $project->job->job_funded ? 'tab = \'files\'' : '' }}" :class="{ 'border-indigo-500 text-indigo-600': tab === 'files', 'border-transparent
+                         text-gray-500 hover:text-gray-700 hover:border-gray-300': tab !== 'files' }" 
+                            class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{$project->job->job_funded ? '' : 'cursor-not-allowed'}}">
                             Files
                         </a>
 
-                        <a href="#" @click.prevent="tab = 'tasks'" :class="{ 'border-indigo-500 text-indigo-600': tab === 'tasks', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': tab !== 'tasks' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                        <a href="#" @click.prevent="{{ $project->job->job_funded ? 'tab = \'tasks\'' : '' }}" :class="{ 'border-indigo-500 text-indigo-600': tab === 'tasks', 'border-transparent
+                         text-gray-500 hover:text-gray-700 hover:border-gray-300': tab !== 'tasks' }"
+                          class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{$project->job->job_funded ? '' : 'cursor-not-allowed'}}">
                             Tasks
                         </a>
                     </nav>
