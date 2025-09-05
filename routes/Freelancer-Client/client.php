@@ -19,6 +19,7 @@ Route::prefix('client')->name('client.')->group(function () {
     //client job routes
     Route::get('/my-jobs', [JobsController::class, 'index_client'])->name('jobs.list');
     Route::resource('jobs', JobsController::class);
+    Route::get('/job/subCategories', [JobsController::class, 'getSubcategories'])->name('jobs.subcategories');
 
     //client project routes
     Route::get('/my-projects', [ContractController::class, 'index_client'])->name('projects.list');

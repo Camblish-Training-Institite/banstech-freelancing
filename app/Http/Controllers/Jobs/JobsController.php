@@ -7,6 +7,7 @@ use App\Models\Job;
 use App\Models\Contest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\SubCategory;
 
 class JobsController extends Controller
 {
@@ -62,8 +63,9 @@ class JobsController extends Controller
 
     //This shows the job form on views 
     public function create(){
-
-        return view('client.createJobs');
+        $subCategories = null;
+        // dd($subCategories->count());
+        return view('client.createJobs', ['subCategories' => $subCategories]);
     }
 
     //This stores the instered data to the database (Job table using Job module)

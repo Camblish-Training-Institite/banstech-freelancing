@@ -14,6 +14,26 @@
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SubCategory> $children
+ * @property-read int|null $children_count
+ * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereUpdatedAt($value)
+ */
+	class Category extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property int $client_id
  * @property string $title
  * @property string $description
@@ -189,7 +209,7 @@ namespace App\Models{
  * @property int $id
  * @property string $file_name
  * @property string $file_path
- * @property string|null $file_size
+ * @property string $file_size
  * @property int $project_id
  * @property int $user_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -540,6 +560,29 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Skill whereUpdatedAt($value)
  */
 	class Skill extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string $name
+ * @property int $parent_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, SubCategory> $children
+ * @property-read int|null $children_count
+ * @property-read \App\Models\Category $parent
+ * @method static \Database\Factories\SubCategoryFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory whereUpdatedAt($value)
+ */
+	class SubCategory extends \Eloquent {}
 }
 
 namespace App\Models{
