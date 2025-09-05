@@ -1,7 +1,7 @@
 @extends('dashboards.Freelancer.dashboard')
 @section('body')
 <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         Submit Entry to "{{ $contest->title }}"
     </h2>
 </x-slot>
@@ -55,13 +55,13 @@
             <form method="POST" action="{{ route('freelancer.contests.submit.store', $contest) }}"
                 enctype="multipart/form-data">
                 @csrf
-                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
+                <div class="bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <div class="row g-5">
                             <div class="col-lg-8">
                                 <div class="mb-4">
                                     <label for="title"
-                                        class="form-label fs-5 fw-semibold text-gray-800 dark:text-gray-200">Entry
+                                        class="form-label fs-5 fw-semibold text-gray-800">Entry
                                         Title</label>
                                     <input type="text" class="form-control @error('title') is-invalid @enderror"
                                         id="title" name="title" value="{{ old('title') }}" required>
@@ -72,7 +72,7 @@
 
                                 <div class="mb-4">
                                     <label for="description"
-                                        class="form-label fs-5 fw-semibold text-gray-800 dark:text-gray-200">Describe
+                                        class="form-label fs-5 fw-semibold text-gray-800">Describe
                                         your entry</label>
                                     <textarea class="form-control @error('description') is-invalid @enderror"
                                         id="description" name="description" rows="5" maxlength="1000"
@@ -84,7 +84,7 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <h3 class="fs-5 fw-semibold text-gray-800 dark:text-gray-200 mb-3">Licensed Content
+                                    <h3 class="fs-5 fw-semibold text-gray-800 mb-3">Licensed Content
                                     </h3>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="licensed_content"
@@ -102,7 +102,7 @@
 
                                 <div class="mb-4">
                                     <label for="sell_price"
-                                        class="form-label fs-5 fw-semibold text-gray-800 dark:text-gray-200">Entry Sell
+                                        class="form-label fs-5 fw-semibold text-gray-800">Entry Sell
                                         Price</label>
                                     <p class="text-muted small">Enter the price you want to sell this entry for. If you
                                         don't win, the contest holder may still buy your entry at this price.</p>
@@ -119,7 +119,7 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <h3 class="fs-5 fw-semibold text-gray-800 dark:text-gray-200 mb-3">Promote my entry
+                                    <h3 class="fs-5 fw-semibold text-gray-800 mb-3">Promote my entry
                                     </h3>
                                     <div class="promo-card">
                                         <input class="form-check-input me-3" type="checkbox" value="1" id="highlight"
@@ -146,7 +146,7 @@
                             </div>
 
                             <div class="col-lg-4">
-                                <h3 class="fs-5 fw-semibold text-gray-800 dark:text-gray-200 mb-3">Add Files</h3>
+                                <h3 class="fs-5 fw-semibold text-gray-800  mb-3">Add Files</h3>
                                 <div class="file-upload-wrapper" id="file-upload-area">
                                     <input type="file" name="entry_files[]" id="file-upload-input" multiple>
                                     <p>Drag multiple files here</p>
@@ -160,7 +160,7 @@
                                 @enderror
 
                                 <div
-                                    class="mt-4 p-3 bg-light dark:bg-gray-700 rounded small text-gray-600 dark:text-gray-300">
+                                    class="mt-4 p-3 bg-light rounded small text-gray-600">
                                     <p>Please ensure you have read the contest brief and any feedback left by the
                                         contest holder on the public clarification board. Supported files types are:
                                         <strong>GIF, JPEG, JPG, PNG</strong>.</p>
