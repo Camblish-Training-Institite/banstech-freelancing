@@ -147,7 +147,7 @@ class ProposalController extends Controller
         $proposal->status = 'rejected'; // Update the proposal status to accepted
         $proposal->save();
 
-        return redirect()->route('client.proposals.list')->with('success', 'Proposal rejected successfully.');
+        return redirect()->route('dashboards.client.billing')->with('success', 'Proposal rejected successfully.');
     }
 
     public function withdrawProposal(Proposal $proposal){

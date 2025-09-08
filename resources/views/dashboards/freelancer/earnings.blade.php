@@ -232,7 +232,7 @@
                 <option value="pending-payouts-section">Pending Payouts</option>
             </select>
         </div>
-
+{{-- this is for overview-section --}}
         <div id="overview-section" class="content-section active">
             <h2 class="section-title">My Earnings</h2>
             <div class="earnings-cards">
@@ -278,7 +278,7 @@
                 </form>
             </div>
         </div>
-
+{{-- This is for history-section --}}
         <div id="history-section" class="content-section">
             <h3 class="section-title">Transaction History</h3>
             <div class="table-wrapper">
@@ -326,6 +326,7 @@
             </div>
         </div>
 
+{{-- This is for pending-payouts-section --}}
         <div id="pending-payouts-section" class="content-section">
             <h3 class="section-title">Pending Payouts</h3>
             <div class="table-wrapper">
@@ -333,7 +334,8 @@
                     <thead>
                         <tr>
                             <th>Date Requested</th>
-                            <th>Method</th>
+                            <th>Project</th>
+                            <th>milestone</th>
                             <th>Amount</th>
                             <th>Status</th>
                         </tr>
@@ -341,14 +343,16 @@
                     <tbody>
                         <tr>
                             <td data-label="Date">2025-08-15</td>
-                            <td data-label="Method">PayPal</td>
-                            <td data-label="Amount">R2000.00</td>
+                            <td data-label="Project">###</td>
+                            <td data-label="milestone">frontpage</td>
+                            <td data-label="Amount">R200.00</td>
                             <td data-label="Status"><span class="status pending">Pending</span></td>
                         </tr>
                         <tr>
                             <td data-label="Date">2025-08-10</td>
-                            <td data-label="Method">Bank Transfer</td>
-                            <td data-label="Amount">R1500.00</td>
+                            <td data-label="Project">###</td>
+                            <td data-label="milestone">Paymentpage</td>
+                            <td data-label="Amount">R500.00</td>
                             <td data-label="Status"><span class="status In-progress">Processing</span></td>
                         </tr>
                     </tbody>

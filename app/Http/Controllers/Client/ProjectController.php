@@ -43,5 +43,4 @@ class ProjectController extends Controller
         return back()->with('status', 'Milestone created.');
     }
 
-    
 }

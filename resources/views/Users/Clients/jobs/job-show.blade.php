@@ -270,7 +270,7 @@
                             <div class="flex justify-end space-x-2">
                                 <a href="{{ route('client.proposals.show', $proposal) }}"
                                 class="view-btn text-indigo-600 text-sm hover:underline">View</a>
-                                <a href="{{ route('client.proposals.accept', $proposal) }}"
+                                <a href="{{ route('billing')}} "
                                 class="accept-btn text-green-600 text-sm hover:underline">Accept</a>
                                 <a href="{{ route('client.proposals.reject', $proposal) }}"
                                 class="reject-btn text-red-600 text-sm hover:underline">Reject</a>
