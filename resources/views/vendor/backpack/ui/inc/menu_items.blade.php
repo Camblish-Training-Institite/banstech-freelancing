@@ -6,3 +6,7 @@
 <x-backpack::menu-item title="Dispute" icon="la la-question" :link="backpack_url('dispute')" /> 
 <x-backpack::menu-item title="Reports" icon="la la-key" :link="backpack_url('report')" /> 
 <x-backpack::menu-item title="Contracts" icon="la la-question" :link="backpack_url('contract')" />
+<x-backpack::menu-item title="Proposals" icon="la la-question" :link="backpack_url('proposal')" />
+<x-backpack::menu-item title="Contests" icon="la la-question" :link="backpack_url('contest')" />
+<x-backpack::menu-item title="Contest submissions" icon="la la-question" :link="backpack_url('contest-submission')" />
+<x-backpack::menu-item title="Milestones" icon="la la-question" :link="backpack_url('milestone')" />
