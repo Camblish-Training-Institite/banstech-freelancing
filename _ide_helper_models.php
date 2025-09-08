@@ -14,6 +14,26 @@
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SubCategory> $children
+ * @property-read int|null $children_count
+ * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereUpdatedAt($value)
+ */
+	class Category extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property int $client_id
  * @property string $title
  * @property string $description
@@ -92,6 +112,7 @@ namespace App\Models{
  * @property string|null $file_path
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Contest $contest
  * @property-read \App\Models\User $freelancer
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ContestSubmission newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ContestSubmission newQuery()
@@ -114,16 +135,21 @@ namespace App\Models{
  * @property int $job_id
  * @property int $user_id
  * @property string $agreed_amount
- * @property \Illuminate\Support\Carbon|null $start_date
- * @property \Illuminate\Support\Carbon|null $end_date
+ * @property string|null $start_date
+ * @property string|null $end_date
  * @property string $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int|null $project_manager_id
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\File> $files
+ * @property-read int|null $files_count
  * @property-read \App\Models\User $freelancer
  * @property-read \App\Models\Job $job
- * @property-read \App\Models\Project|null $project
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Milestone> $milestones
+ * @property-read int|null $milestones_count
  * @property-read \App\Models\User|null $projectManager
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task> $tasks
+ * @property-read int|null $tasks_count
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\ContractFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contract newModelQuery()
@@ -181,6 +207,33 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $file_name
+ * @property string $file_path
+ * @property string $file_size
+ * @property int $project_id
+ * @property int $user_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Contract $project
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereFileName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereFilePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereFileSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereProjectId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereUserId($value)
+ */
+	class File extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property int $user_id
  * @property string $title
  * @property string $description
@@ -190,6 +243,8 @@ namespace App\Models{
  * @property string|null $deadline
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read bool $is_open
+ * @property-read \App\Models\Project|null $project
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Proposal> $proposals
  * @property-read int|null $proposals_count
  * @property-read \App\Models\User $user
@@ -239,23 +294,30 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * @property-read \App\Models\Payment|null $payment
- * @property-read \App\Models\Project|null $project
+ * @property int $id
+ * @property int $project_id
+ * @property string $title
+ * @property string|null $description
+ * @property string $amount
+ * @property \Illuminate\Support\Carbon $due_date
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Contract $project
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone whereDueDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone whereProjectId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Milestone whereUpdatedAt($value)
  */
 	class Milestone extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * @property-read \App\Models\Milestone|null $milestone
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment query()
- */
-	class Payment extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -357,14 +419,32 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * @property-read \App\Models\Contract|null $contract
+ * @property int $id
+ * @property int $job_id
+ * @property int $user_id
+ * @property string $status
+ * @property string|null $started_at
+ * @property string|null $completed_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $client
+ * @property-read \App\Models\User|null $freelancer
+ * @property-read bool $is_active
+ * @property-read bool $is_completed
+ * @property-read \App\Models\Job $job
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Milestone> $milestones
  * @property-read int|null $milestones_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Payment> $payments
- * @property-read int|null $payments_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereCompletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereJobId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereStartedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereUserId($value)
  */
 	class Project extends \Eloquent {}
 }
@@ -374,7 +454,7 @@ namespace App\Models{
  * @property int $id
  * @property int $user_id
  * @property int $job_id
- * @property string $bid_amount
+ * @property numeric $bid_amount
  * @property string|null $cover_letter
  * @property string $status
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -485,6 +565,29 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $name
+ * @property int $parent_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, SubCategory> $children
+ * @property-read int|null $children_count
+ * @property-read \App\Models\Category $parent
+ * @method static \Database\Factories\SubCategoryFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubCategory whereUpdatedAt($value)
+ */
+	class SubCategory extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $user_id
@@ -506,6 +609,35 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereUserId($value)
  */
 	class Subscription extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string $title
+ * @property string|null $description
+ * @property string $status
+ * @property int $project_id
+ * @property int $user_id
+ * @property string|null $due_date
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Contract $project
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereDueDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereProjectId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereUserId($value)
+ */
+	class Task extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -546,11 +678,17 @@ namespace App\Models{
  * @property string|null $user_type
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Contract> $assignedProjects
  * @property-read int|null $assigned_projects_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Contest> $contests
+ * @property-read int|null $contests_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Contract> $contracts
+ * @property-read int|null $contracts_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Contract> $contractsAsFreelancer
  * @property-read int|null $contracts_as_freelancer_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ContestEntry> $entries
+ * @property-read int|null $entries_count
  * @property-read mixed $role_names
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Job> $jobsPosted
- * @property-read int|null $jobs_posted_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Job> $jobs
+ * @property-read int|null $jobs_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Contract> $managedProjects
  * @property-read int|null $managed_projects_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
@@ -562,8 +700,12 @@ namespace App\Models{
  * @property-read \App\Models\Profile|null $profile
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Proposal> $proposals
  * @property-read int|null $proposals_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Review> $reviews
+ * @property-read int|null $reviews_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ContestSubmission> $submissions
+ * @property-read int|null $submissions_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()

@@ -22,6 +22,19 @@
                             <textarea id="description" name="description" rows="4" class="mt-1 block w-full" required></textarea>
                         </div>
 
+                {{-- File Upload --}}
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Attach Files (Optional)</h3>
+                    <div class="mb-4">
+                        <label for="file" class="block text-gray-700 text-sm font-bold mb-2">Upload New File</label>
+                        <input type="file" name="file" id="file"
+                            class="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('file') border-red-500 @enderror"
+                            >
+                        @error('file')
+                        <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+               
+
                         <div class="mb-4">
                             <label for="prize_money" class="block text-sm font-medium text-gray-700">Prize Money</label>
                             <input type="number" id="prize_money" name="prize_money" step="0.01" class="mt-1 block w-full" required>

@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Contest extends Model
 {
+    use CrudTrait;
     use HasFactory;
 
     protected $fillable = [
@@ -35,9 +37,9 @@ class Contest extends Model
     }
 
     public function submissions()
-{
-    return $this->hasMany(ContestSubmission::class);
-}
+    {
+        return $this->hasMany(ContestSubmission::class);
+    }
 
 public function payouts()
 
