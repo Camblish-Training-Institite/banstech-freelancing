@@ -44,4 +44,8 @@ class Contract extends Model
     public function milestones(){
         return $this->hasMany(Milestone::class, 'project_id');
     }
+    public function payouts(){
+       return $this->hasMany(Payout::class,'contract_id');
+
+    }
 }
