@@ -115,6 +115,11 @@ class ProposalController extends Controller
 
     public function acceptProposal(Proposal $proposal){
         $user_id = Auth::user()->id; // Get the authenticated user's ID
+        
+        if($proposal->job->status == "assigned" || $proposal->job->status == "in_progress"){
+            return redirect()->back()->with('error', 'cannot accept freelancer to a project that is already assigned');
+        }
+
         $proposal->status = 'accepted'; // Update the proposal status to accepted
         $proposal->save();
 

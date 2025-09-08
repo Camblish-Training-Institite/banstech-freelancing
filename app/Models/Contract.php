@@ -44,4 +44,21 @@ class Contract extends Model
     public function milestones(){
         return $this->hasMany(Milestone::class, 'project_id');
     }
+
+  
+    public function sumReleased(){
+        return $this->milestones()
+        ->where('status', '=', 'released')
+        ->sum('amount');
+    }
+
+    public function files()
+    {
+        return $this->hasMany(File::class, 'project_id');
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'project_id');
+    }
 }

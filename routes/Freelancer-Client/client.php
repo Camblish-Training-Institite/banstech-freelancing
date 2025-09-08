@@ -21,6 +21,7 @@ Route::prefix('client')->name('client.')->group(function () {
     //client job routes
     Route::get('/my-jobs', [JobsController::class, 'index_client'])->name('jobs.list');
     Route::resource('jobs', JobsController::class);
+    Route::get('/job/subCategories', [JobsController::class, 'getSubcategories'])->name('jobs.subcategories');
 
     //client project routes
     Route::get('/my-projects', [ContractController::class, 'index_client'])->name('projects.list');
@@ -39,9 +40,9 @@ Route::prefix('client')->name('client.')->group(function () {
     //Proposal Routes
     Route::get('/proposals-list', [ProposalController::class, 'index_client'])->name('proposals.list');
     Route::resource('/proposals', ProposalController::class);
-    Route::get('/proposal/{job}/show', [ProposalController::class, 'job_show'])->name('proposals.job.show');  
-    Route::get('/proposal/{proposal}/accept', [ProposalController::class, 'acceptProposal'])->name('proposals.accept'); 
-    Route::get('/proposal/{proposal}/reject', [ProposalController::class, 'rejectProposal'])->name('proposals.reject'); 
+    Route::get('/proposal/{job}/show', [ProposalController::class, 'job_show'])->name('proposals.job.show');
+    Route::get('/proposal/{proposal}/accept', [ProposalController::class, 'acceptProposal'])->name('proposals.accept');
+    Route::get('/proposal/{proposal}/reject', [ProposalController::class, 'rejectProposal'])->name('proposals.reject');
 
     //Freelacner Profile Routes
     Route::get('/freelancer/{freelancerId}/profile', [ProfileController::class, 'viewFreelancerProfile'])->name('freelancer.profile');
@@ -83,3 +84,12 @@ Route::prefix('client/contests')->name('client.contests.')->group(function () {
 Route::get('/billing',function(){
     return view('dashboards.client.billing');
 })->name('billing');
+
+// Show project page (with file upload form)
+// Route::get('/Users/Clients/project/{project}/show', [ContractController::class, 'show'])->name('client.project.show')->middleware('auth');
+
+//Handle file uploads
+Route::post('Clients/project/{project}/upload-file', [ContractController::class, 'uploadFile'])->name('client.project.tabs.file')->middleware('auth');
+
+//Handle task creation
+Route::post('Clients/project/{project}/task', [ContractController::class, 'createTask'])->name('client.project.tabs.task')->middleware('auth');

@@ -1,12 +1,14 @@
 <?php
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 
 class Milestone extends Model
 {
+    use CrudTrait;
     protected $fillable = [
         'project_id', 'title', 'description', 'amount', 'due_date', 'status'
     ];
@@ -15,9 +17,14 @@ class Milestone extends Model
         'due_date' => 'date',
     ];
 
+    public function __toString()
+    {
+        return $this->title ?? 'Unnamed Project';
+    }
+
     public function project(): BelongsTo
     {
-        return $this->belongsTo(Contract::class);
+        return $this->belongsTo(Contract::class, 'project_id');
     }
 
     public function request()

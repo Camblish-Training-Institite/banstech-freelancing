@@ -9,11 +9,11 @@
                 </div>
                 <div>
                     <p class="text-gray-500">In Progress</p>
-                    <p class="text-2xl font-bold text-gray-800">${{ 70 }}</p> {{-- number_format($project->milestones->where('status', 'in_progress')->sum('amount'), 2) --}}
+                    <p class="text-2xl font-bold text-gray-800">R{{ $project->milestones->where('status', '<>', 'released')->sum('amount') }}</p> {{-- number_format($project->milestones->where('status', 'in_progress')->sum('amount'), 2) --}}
                 </div>
                 <div>
                     <p class="text-gray-500">Released</p>
-                    <p class="text-2xl font-bold text-gray-800">${{ 400 }}</p> {{-- number_format($project->milestones->where('status', 'released')->sum('amount'), 2) --}}
+                    <p class="text-2xl font-bold text-gray-800">R{{ number_format($project->sumReleased(), 2) }}</p> {{-- number_format($project->milestones->where('status', 'released')->sum('amount'), 2) --}}
                 </div>
             </div>
         </div>

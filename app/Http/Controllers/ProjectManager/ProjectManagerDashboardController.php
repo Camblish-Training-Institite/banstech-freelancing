@@ -24,6 +24,29 @@ class ProjectManagerDashboardController extends Controller
         // Count of pending requests
         $pendingCount = $pendingRequests->count();
 
-        return view('project-manager.manager-dashboard', compact('managedProjects', 'pendingRequests', 'pendingCount'));
+        return view('project-manager.layouts.overview', compact('managedProjects', 'pendingRequests', 'pendingCount'));
+    }
+
+    public function requests() {
+        $user = auth()->user();
+
+        $pendingRequests = ManagementRequest::where('project_manager_id', $user->id)
+            ->where('status', 'pending')
+            ->with('project', 'client')
+            ->get();
+
+        // Count of pending requests
+        $pendingCount = $pendingRequests->count();
+
+        return view('project-manager.layouts.requests', compact('pendingRequests', 'pendingCount'));
+    }
+
+    public function projects() {
+        $user = auth()->user();
+
+        // Get all projects managed by this PM
+        $managedProjects = $user->managedProjects()->with('job.user', 'freelancer')->get();
+
+        return view('project-manager.layouts.managed-projects', compact('managedProjects'));
     }
 }

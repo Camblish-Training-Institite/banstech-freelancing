@@ -152,6 +152,16 @@
             transform: translateX(20px);
         }
 
+        .back-link {
+            color: #516aae;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
         .search-bar {
             position: relative;
             border: #2c2c2c
@@ -480,8 +490,12 @@
                         </label>
                     </div>
                     <div class="search-bar">
-                        <input type="text" placeholder="Search">
-                        <i class="fas fa-search"></i>
+                        <div class="flex items-center">
+                            <img src="https://img.icons8.com/ios/50/search--v1.png" alt="search--v1" class="fas fa-search ml-3" width="20" height="20"/>
+                            <input type="text" placeholder="Search" class="ml-4">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        
                     </div>
                     <i class="fas fa-bell notification-icon"></i>
                     {{-- The <div class="user-avatar"> block was previously here and has been removed. --}}
