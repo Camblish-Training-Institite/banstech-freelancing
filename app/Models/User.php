@@ -25,6 +25,11 @@ class User extends Authenticatable
         return $this->roles->pluck('name')->implode(', ');
     }
 
+    public function avatar(){
+        return $this->hasOne(Profile::class, 'user_id');
+        
+    }
+
     // Relationships
     public function managedProjects()
     {
