@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('table_project_fundings', function (Blueprint $table) {
+        Schema::create('project_fundings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('client_id');
+       $table->unsignedBigInteger('client_id');
             $table->decimal('amount', 10, 2);
             $table->unsignedBigInteger('job_id')->nullable();
             $table->unsignedBigInteger('contest_id')->nullable();
             $table->unsignedBigInteger('transaction_id')->nullable();
-            $table->enum('status', ['pending', 'deposited', 'refunded'])->default('pending');
+            $table->enum('status', ['pending', 'deposited', 'refunded','failed'])->default('pending');
             $table->timestamps();
 
             // Foreign keys
@@ -27,6 +27,7 @@ return new class extends Migration
             $table->foreign('contest_id')->references('id')->on('contests')->onDelete('cascade');
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
         });
+    
     }
 
     /**
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_project_fundings');
+        Schema::dropIfExists('project_fundings');
     }
 };

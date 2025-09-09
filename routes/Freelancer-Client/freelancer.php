@@ -7,7 +7,7 @@ use App\Http\Controllers\Client\ContestController;
 use App\Http\Controllers\Freelancer\FreelancerContestController;
 use App\Http\Controllers\Jobs\JobsController;
 use App\Http\Controllers\Jobs\ProposalController;
-
+use App\Http\Controllers\Payments\PayoutController;
 
 Route::prefix('freelancer')->name('freelancer.')->group(function () {
     //main nav links
@@ -41,11 +41,11 @@ Route::prefix('freelancer')->name('freelancer.')->group(function () {
     Route::get('/inbox', function(){
         return view('Users.Freelancers.pages.inbox');
     })->name('inbox');
-    //Earnings
-    Route::get('/earnings',function(){
-        return view('Users.Freelancers.pages.earnings');
-    })->name('earnings');
 
+    //Payouts Controllers for showing and updating payouts
+    //Earnings
+    Route::get('/earnings',[PayoutController::class, 'index'])->name('earnings');
+    Route::patch('/earnings/{id}',[PayoutController::class,'update'])->name('earnings.update');
 });
 
 //freelancer contests routes
@@ -74,6 +74,6 @@ Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(functi
  })->middleware('auth');
 
    //Earnings
-   Route::get('/earnings',function(){
-    return view('dashboards.freelancer.earnings');
-})->name('freelancer.earnings');
+//    Route::get('/earnings',function(){
+//     return view('dashboards.freelancer.earnings');
+// })->name('freelancer.earnings');

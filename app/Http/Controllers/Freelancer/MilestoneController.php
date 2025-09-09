@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Freelancer;
 
 use App\Models\Milestone;
 use App\Models\Contract;
+use App\Models\Payout;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -81,6 +82,14 @@ class MilestoneController extends Controller
     public function releasePayment(Contract $project, Milestone $milestone){
         $milestone->status = "released";
         $milestone->save();
+
+          Payout::create([
+            'freelancer_id'=> $project->user->id,           
+            'contract_id' => $project->id,
+            'amount' => $project->agreed_amount,
+            'requested_at' => now(),
+            // 'processed_at' => null,
+        ]);
 
         return back()->with('status', 'milestone payment released successfully');
     }

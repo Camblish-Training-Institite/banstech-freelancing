@@ -21,6 +21,17 @@
                 @csrf
 
                 <div class="form-group">
+    <label for="job_id">Select Job:</label>
+    <select id="job_id" name="job_id" class="payment-method">
+        <option value="">-- Select job --</option>
+        @foreach (Auth::user()->jobs as $job)
+            <option value="{{ $job->id }}" @selected(old('job_id') == $job->id)>
+                {{ $job->title }} (Ref: {{ $job->id }})
+            </option>
+        @endforeach
+    </select>
+</div>
+                <div class="form-group">
                     <label for="payment-method">Choose Payment Method:</label>
                     <select id="payment-method" name="payment-method" class="payment-method">
                         <option value="paypal" selected>PayPal</option>
