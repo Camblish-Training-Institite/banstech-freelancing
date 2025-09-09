@@ -242,11 +242,14 @@
                 <input type="text" placeholder="e.g., UI/UX Design" />
             </div>
             <div>
-                <label>Type</label>
+                <label>Categories</label>
                 <select>
-                    <option value="all">All Types</option>
-                    <option value="project">Projects</option>
-                    <option value="contest">Contests</option>
+                    <option value="all" disabled>All Categories</option>
+                    @forelse ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @empty
+                        
+                    @endforelse
                 </select>
             </div>
             <div>

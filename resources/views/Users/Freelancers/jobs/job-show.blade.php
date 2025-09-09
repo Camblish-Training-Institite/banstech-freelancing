@@ -12,7 +12,7 @@
     }
 
     .container {
-        max-width: 1000px;
+        width: 100%;
         margin: 30px auto;
         padding: 30px;
         background-color: #fff;
@@ -250,15 +250,14 @@
 
 
 
+<div class="flex w-full justify-start">
+    <a href="{{ route('jobs.listing') }}" class="back-link">← Back to Projects</a>
+</div>
+
 <div class="container mx-auto p-4 md:p-8">
-
+    <!-- header section -->
     <header class="mb-8">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-
-            <div class="flex w-full justify-start">
-                <a href="{{ route('jobs.listing') }}" class="back-link">← Back to Projects</a>
-            </div>
-
+        <div class="flex flex-wrap items-center pt-2 justify-between gap-4">
             <h1 class="text-3xl md:text-4xl font-bold text-gray-800">{{ $job->title ?? 'Job Title Not Available' }}</h1>
             <div class="flex items-center gap-4">
                 <span
@@ -275,6 +274,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-8">
 
+        <!-- main project details -->
         <main class="lg:col-span-2 space-y-8">
 
             <section class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -290,14 +290,14 @@
 
                 <div class="mt-6">
                     <h3 class="mb-3 text-lg font-semibold text-gray-700">Skills</h3>
-                    <div class="flex flex-wrap gap-2">
+                    <div class="tags flex flex-wrap gap-2">
                         @php
-                        $jobSkills = $job->skills ? explode(',',$job->skills) : [];
+                            $jobSkills = $job->skills ? explode(',',$job->skills) : [];
                         @endphp
                         @foreach($jobSkills as $skill)
-                        <span
-                            class="inline-block px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded-full">{{
-                            trim($skill) }}</span>
+                            <span
+                                class="inline-block px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded-full">{{
+                                trim($skill) }}</span>
                         @endforeach
                     </div>
                 </div>
@@ -320,53 +320,59 @@
                 </div>
             </section>
 
+            <!-- proposals section -->
             @if($job->proposals->count() > 0)
-            <section class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm text-center">
-                <h2 class="text-xl font-bold text-gray-800 mb-4">Proposals ({{ $job->proposals->count() }})</h2>
-                @foreach($job->proposals as $proposal)
+                <section class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm text-center">
+                    <h2 class="text-xl text-left font-bold text-gray-800 mb-4">Proposals ({{ $job->proposals->count() }})</h2>
+                    @foreach($job->proposals as $proposal)
 
-                <div class="space-y-6 py-4">
-                    <article class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <img class="w-16 h-16 rounded-full object-cover" width="64" height="64"
-                                src="https://ui-avatars.com/api/?name={{ $proposal->user->name }}&background=random&size=128"
-                                alt="{{ $proposal->User->name }}">
-                            <div class="flex-1 space-y-4">
-                                <div class="flex flex-wrap items-center justify-between gap-2">
-                                    <div>
-                                        <h4 class="text-lg font-semibold text-gray-900">{{$proposal->User->name}}</h4>
-                                        <div class="flex items-center mt-1">
-                                            @for ($i = 0; $i < 5; $i++) <svg class="w-4 h-4 text-yellow-400"
-                                                fill="currentColor" viewBox="0 0 20 20">
-                                                <path
-                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                </svg>
-                                                @endfor
-                                                <span class="ml-2 text-sm font-medium text-gray-600">5.0</span>
+                        <div class="space-y-6 py-4">
+                            <article class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <div class="flex flex-col sm:flex-row gap-4">
+                                    <div class="flex-1 space-y-4">
+                                        <div class="flex flex-wrap items-center justify-between gap-2">
+                                            <div>
+                                                <div class="flex items-center space-x-2">
+                                                    <div>
+                                                        <img class="w-16 h-16 rounded-full object-cover" width="64" height="64"
+                                                            src="{{ $proposal->user->profile ? asset('storage/' . $proposal->user->profile->avatar) : 'https://ui-avatars.com/api/?name= '.$proposal->user->name .'&background=random&size=128' }}"
+                                                            alt="{{ $proposal->User->name }}">
+                                                    </div>
+                                                    <div class="flex flex-col justify-start items-start">
+                                                        <h4 class="text-lg text-left font-semibold text-gray-900">{{$proposal->user->name}}</h4>
+                                                        <div class="flex items-center mt-1">
+                                                            @for ($i = 0; $i < 5; $i++) <svg class="w-4 h-4 text-yellow-400"
+                                                                fill="currentColor" viewBox="0 0 20 20">
+                                                                <path
+                                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                                </svg>
+                                                                @endfor
+                                                                <span class="ml-2 text-sm font-medium text-gray-600">5.0</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-sm sm:text-base font-semibold text-gray-700">
+                                                Bid amount: <span class="text-blue-600"> R{{ $proposal->bid_amount }}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="text-sm sm:text-base font-semibold text-gray-700">
-                                        Bid amount: <span class="text-blue-600"> R{{ $proposal->bid_amount }}</span>
+                                        <p class="text-left mt-4 text-gray-600 pl-4">
+                                            {{ $proposal->cover_letter }}
+                                        </p>
                                     </div>
                                 </div>
-                                <p class="mt-4 text-gray-600">
-                                    {{ $proposal->cover_letter }}
-                                </p>
-                            </div>
+                            </article>
                         </div>
-                    </article>
-                </div>
-                @endforeach
-                @else
+                    @endforeach
+                    @else
 
-                <h2 class="text-xl font-bold text-gray-800 mb-4">No Proposals Yet</h2>
-                <p class="text-gray-600">Be the first to submit a proposal for this job!</p>
-
-                @endif
-            </section>
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">No Proposals Yet</h2>
+                        <p class="text-gray-600">Be the first to submit a proposal for this job!</p>
+                </section>
+            @endif
         </main>
 
-        @include('Users.Freelancers.components.about-client')
+        @include('Users.Freelancers.components.about-client', $job)
 
     </div>
 </div>

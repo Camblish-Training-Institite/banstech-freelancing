@@ -77,3 +77,9 @@ Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(functi
    Route::get('/earnings',function(){
     return view('dashboards.freelancer.earnings');
 })->name('freelancer.earnings');
+
+
+//Myprofile
+Route::get('/freelancer/myprofile',function(){
+    return view('Users.Freelancers.layouts.user-profile');
+})->name('freelancer.myprofile');

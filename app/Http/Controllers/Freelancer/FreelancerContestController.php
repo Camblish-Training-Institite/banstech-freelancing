@@ -25,7 +25,8 @@ class FreelancerContestController extends Controller
 
         // dd($contest->client->name);
         // You might want to load entries here as well
-        return view('Users.Freelancers.contests.show', compact('contest'));
+        $user = $contest->client;
+        return view('Users.Freelancers.contests.show', compact('contest', 'user'));
     }
 
     /**

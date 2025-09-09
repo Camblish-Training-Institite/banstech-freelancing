@@ -10,7 +10,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                         </svg>
-                        <span>Johannesburg, South Africa</span>
+                        @php
+                            $userProfile = $user->profile ?? null;
+                        @endphp
+                        <span>{{ $userProfile ? $userProfile->location : "N/A"  }}</span>
                     </li>
                     <li class="flex items-center gap-3">
                         <div class="flex items-center">
@@ -29,7 +32,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M12 15.75h.008v.008H12v-.008z" />
                         </svg>
-                        <span>Member since: 14 Aug 2021</span>
+                        <span>Member since: {{ $user->created_at->format('d M, Y') }}</span>
                     </li>
                 </ul>
                 <hr class="my-4 border-gray-200">

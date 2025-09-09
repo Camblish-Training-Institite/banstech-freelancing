@@ -21,45 +21,25 @@
       <div class="my-1 px-1 w-full">
           <div class="bg-white rounded-lg shadow-md p-6">
               <div class="flex items-center space-x-2">
-                  <!-- Outer flex: left vs right -->
-                  <div class="flex items-center justify-between w-full">
+                    <!-- Outer flex: left vs right -->
+                    <div class="flex items-center justify-between w-full">
 
-                      <!-- LEFT SIDE (avatar + text) -->
-                      <div class="flex items-center space-x-2">
-                          <div class="flex items-center justify-center rounded-full object-cover overflow-hidden"
-                              style="width: 4rem; height:4rem;">
-                              <img class=""
-                                  src="{{$project->job->user->profile? asset('storage/'.$project->job->user->profile->avatar) : "
-                                  https://ui-avatars.com/api/?name=". $project->job->user->name . "
-                                  &background=random&size=128" }}" alt="{{ $project->job->user->name }}">
-                          </div>
-                          <div>
-                              <h2 class="text-2xl font-bold text-gray-800">{{ $project->job->title }}</h2>
-                              <p class="text-gray-600">Posted by {{ $project->job->user->name }}</p>
-                          </div>
-                      </div>
+                        <!-- LEFT SIDE (avatar + text) -->
+                        <div class="flex items-center space-x-2">
+                            <div class="flex items-center justify-center rounded-full object-cover overflow-hidden"
+                                style="width: 4rem; height:4rem;">
+                                <img class=""
+                                    src="{{$project->job->user->profile? asset('storage/'.$project->job->user->profile->avatar) : "
+                                    https://ui-avatars.com/api/?name=". $project->job->user->name . "
+                                    &background=random&size=128" }}" alt="{{ $project->job->user->name }}">
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800">{{ $project->job->title }}</h2>
+                                <p class="text-gray-600">Posted by {{ $project->job->user->name }}</p>
+                            </div>
+                        </div>
 
-                      <!-- RIGHT SIDE (buttons) -->
-                      <div class="flex space-x-2">
-                          <form action="{{ route('client.projects.cancel', $project->id) }}" method="POST">
-                              @csrf
-                              <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-400">
-                                  Cancel
-                              </button>
-                          </form>
-
-                          <form action="{{ route('client.projects.completed', $project->id) }}" method="POST">
-                              @csrf
-                              <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-300">
-                                  Completed
-                              </button>
-                          </form>
-                      </div>
-                  </div>
-                  <div>
-                      <h2 class="text-2xl font-bold text-gray-800">{{ $project->job->title }}</h2>
-                      <p class="text-gray-600">Posted by {{ $project->job->user->name }}</p>
-                  </div>
+                    </div>
               </div>
 
               <div class="mt-6">

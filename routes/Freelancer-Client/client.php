@@ -6,10 +6,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Client\ContestController;
 use App\Http\Controllers\Freelancer\MilestoneController;
 use App\Http\Controllers\Jobs\JobsController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Jobs\ProposalController; 
 use App\Http\Controllers\Client\ProjectController;
 use App\Models\Contract;
 
+Route::get('/client/job/subCategories', [CategoryController::class, 'getSubcategories'])->name('client.jobs.subcategories');
 
 Route::prefix('client')->name('client.')->group(function () {
     //client main nav links
@@ -21,7 +23,7 @@ Route::prefix('client')->name('client.')->group(function () {
     //client job routes
     Route::get('/my-jobs', [JobsController::class, 'index_client'])->name('jobs.list');
     Route::resource('jobs', JobsController::class);
-    Route::get('/job/subCategories', [JobsController::class, 'getSubcategories'])->name('jobs.subcategories');
+    
 
     //client project routes
     Route::get('/my-projects', [ContractController::class, 'index_client'])->name('projects.list');

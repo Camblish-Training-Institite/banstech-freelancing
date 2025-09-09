@@ -8,6 +8,7 @@ use App\Models\Contest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SubCategory;
+use App\Models\Category;
 
 class JobsController extends Controller
 {
@@ -34,13 +35,21 @@ class JobsController extends Controller
         }
 
         $user_id = Auth::user()->id; // Get the authenticated user's ID
+        
         $jobs = Job::where('user_id', '!=', $user_id)
         ->where('status', 'open') // Fetch all open jobs except those created by the user
+        ->where('deadline', '>=', now()) // Only include jobs with deadlines in the future
+        ->orderBy('deadline')
         ->paginate(10);
-        $contests = Contest::where('client_id', '!=', $user_id)->paginate(10);
+
+        $contests = Contest::where('client_id', '!=', $user_id)
+            ->orderBy('closing_date')
+            ->paginate(10);
+
+        $categories = Category::all();
 
         // dd($jobs);
-        return view('Users.Freelancers.layouts.body.job-listing', ['jobs' => $jobs, 'contests' => $contests]);
+        return view('Users.Freelancers.layouts.body.job-listing', ['jobs' => $jobs, 'contests' => $contests, 'categories' => $categories]);
     }
 
     //This is for showing single job
@@ -55,9 +64,9 @@ class JobsController extends Controller
     //This is for showing single job
     public function show_freelancer(int $id){
         $job = Job::findOrFail($id);
-
-        // dd($job);
-        return view('Users.Freelancers.jobs.job-show', ['job' => $job]);
+        $user = $job->user;
+        dd($user);
+        return view('Users.Freelancers.jobs.job-show', ['job' => $job, 'user' => $user]);
 
     }
 
@@ -65,7 +74,7 @@ class JobsController extends Controller
     public function create(){
         $subCategories = null;
         // dd($subCategories->count());
-        return view('client.createJobs', ['subCategories' => $subCategories]);
+        return view('Users.Clients.jobs.form', ['subCategories' => $subCategories]);
     }
 
     //This stores the instered data to the database (Job table using Job module)
@@ -77,7 +86,6 @@ class JobsController extends Controller
         'description' => 'required|string',
         'deadline' => 'nullable|date',
         'budget' => 'required|numeric',
-        'status' => 'required|string|in:open,in_progress,assigned,completed,cancelled',
         'skills' => 'string',
         ]);
 
@@ -90,7 +98,6 @@ class JobsController extends Controller
         'description'=> $request->description,
         'deadline' => $request->deadline,
         'budget' => $request->budget,
-        'status' => $request->status,
         'skills' => $skills,
         
         ]);

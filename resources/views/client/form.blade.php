@@ -36,19 +36,23 @@
             </p>
         </div>
 
-        <form action="" method="GET" id="category-form">
+        <form action="" id="category_form" method="">
+            {{-- CSRF Token --}}
+            @csrf
+
+
             @php
-            $categories = \App\Models\Category::all();
+                $categories = \App\Models\Category::all();
             @endphp
 
             <!-- Main Category Dropdown -->
             <div>
                 <label for="mainCategory_id" class="text-sm font-medium text-gray-700">Main Category</label>
-                <select id="mainCategory_id" name="mainCategory_id" class="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm
-        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <select id="mainCategory_id" name="mainCategory_id" class="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="" disabled selected>Select a main category...</option>
+                    
                     @foreach($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -56,18 +60,14 @@
 
         <!-- Subcategory Dropdown -->
         <div>
-
             <label for="subCategory" class="text-sm font-medium text-gray-700">Subcategory</label>
-            <select id="subCategory" name="subCategory" class="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm
-        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <select id="subCategory" name="subCategory" class="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="" disabled selected>First, select a main category...</option>
+
                 @if ($subCategories)
-                @foreach($subCategories as $key => $value)
-                <option value="{{ $key }}">{{ $value->name }}</option>
-                @endforeach
-
-                @else
-
+                    @foreach($subCategories as $subCategory)
+                        <option value="{{ $subCategory->id }}">{{ $subCategory->name }}</option>
+                    @endforeach
                 @endif
             </select>
         </div>
@@ -156,62 +156,68 @@
 
 {{-- Optional: Auto-focus on title input when page loads --}}
 <script>
-    // This is an example of what your JavaScript should be doing now.
-document.addEventListener('DOMContentLoaded', (function name() {
-    const form = document.getElementById('category-form');
-    const mainCategorySelect = document.getElementById('mainCategory_id');
-    console.log(mainCategorySelect.value);
-    const formData = new FormData(form);
-    const params = new URLSearchParams(formData).toString();
-    const fetchSubcategories = () => {
-        fetch('{{ route('client.jobs.subcategories')}}? ${params}`)
-        .then(response => response.text).catch(error => console.error('Error fetching subcategories:', error));
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+        const myform = document.getElementById('category_form');
+        const mainCategorySelect = document.getElementById('mainCategory_id');
+        const subCategorySelect = document.getElementById('subCategory'); // ← Fixed ID
+        console.log(`The form select element:`, myform);
+        console.log(`The mainCategory select element:`, mainCategorySelect);
+        console.log(`The subcategory select element:`, subCategorySelect);
 
-    mainCategorySelect.addEventListener('change', (event) => {
-        fetchSubcategories();
-    });
+        // Safety check: if elements don't exist, stop execution
+        if (!myform || !mainCategorySelect || !subCategorySelect) {
+            console.error('One or more required elements not found!');
+            return;
+        }
 
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        fetchSubcategories();
-    });
-})
+        console.log(`The value is ${mainCategorySelect.value}`);
 
-    
-{
-    const selectedCategoryId = event.target.value;
+        const fetchSubcategories = () => {
+            // Only send the mainCategory_id
+            const formData = new FormData(myform);
+            formData.append('mainCategory_id', mainCategorySelect.value);
 
-    // Clear previous subcategory options
-    subCategorySelect.innerHTML = '<option value="" disabled selected>Loading...</option>';
+            const params = new URLSearchParams(formData).toString();
 
-    if (selectedCategoryId) {
-        // Construct the new URL and fetch the subcategories
-        const url = `/api/categories/${selectedCategoryId}/subcategories`;
+            const url = `{{ route('client.jobs.subcategories') }}?${params}`;
 
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(subcategories => {
-                subCategorySelect.innerHTML = '<option value="" disabled selected>Select a subcategory...</option>';
-                subcategories.forEach(sub => {
-                    const option = document.createElement('option');
-                    option.value = sub.id;
-                    option.textContent = sub.name;
-                    subCategorySelect.appendChild(option);
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Subcategories received:', data);
+
+                    // Clear existing options
+                    subCategorySelect.innerHTML = '<option value="" disabled selected>First, select a main category...</option>';
+
+                    // Populate subcategories
+                    if (data.subcategories && Array.isArray(data.subcategories)) {
+                        data.subcategories.forEach(subcat => {
+                            const option = document.createElement('option');
+                            option.value = subcat.id;
+                            option.textContent = subcat.name; // Adjust based on model
+                            subCategorySelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching subcategories:', error);
                 });
-                subCategorySelect.disabled = false;
-            })
-            .catch(error => {
-                console.error('Error fetching subcategories:', error);
-                subCategorySelect.innerHTML = '<option value="" disabled selected>Failed to load subcategories</option>';
-            });
-    } else {
-        subCategorySelect.disabled = true;
-    }
-});
+        };
+
+        // Listen for changes on main category
+        mainCategorySelect.addEventListener('change', (event) => {
+            fetchSubcategories();
+        });
+
+        // Optional: Submit handling
+        myform.addEventListener('submit', (event) => {
+            event.preventDefault();
+            fetchSubcategories();
+        });
+    });
 </script>
