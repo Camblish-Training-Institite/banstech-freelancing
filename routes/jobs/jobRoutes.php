@@ -21,6 +21,9 @@ Route::resource('jobs', JobsController::class);
 // Route::get('job/{id}/delete', [JobsController::class, 'delete'])
 // ->name('job.delete');
 
+Route::get('geolocations', function () {
+    return view('geo_location.testing');
+})->name('geolocations');
 
 Route::prefix('freelancer')->group(function () {
     Route::get('jobs-listing', [JobsController::class, 'index'])->name('jobs.listing');
