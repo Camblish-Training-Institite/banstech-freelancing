@@ -70,6 +70,17 @@ class User extends Authenticatable
     }
 
 
+    // public function unreadNotifications()
+    // {
+    //     return $this->notifications()->whereNull('read_at');
+    // }
+
+    // public function markAsRead()
+    // {
+    //     return $this->notifications()->read_at = now();
+    // }
+
+
 
     /**
      * The attributes that are mass assignable.

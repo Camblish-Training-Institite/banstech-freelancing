@@ -372,7 +372,7 @@
             @endif
         </main>
 
-        @include('Users.Freelancers.components.about-client', $job)
+        @include('Users.Freelancers.components.about-client', [$job, $user])
 
     </div>
 </div>

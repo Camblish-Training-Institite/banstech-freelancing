@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Proposal;
 use App\Models\Job;
+use App\Notifications\NewProposalNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Contract;
+use App\Notifications\ProposalAcceptedNotification;
 
 class ProposalController extends Controller
 {
@@ -60,6 +62,13 @@ class ProposalController extends Controller
     }
 
     public function show(Proposal $proposal){
+        $user = Auth::user(); // Get the authenticated user's ID
+        $notification = $user->notifications()->where('data->proposal_id', $proposal->id)->first();
+
+        if($notification && is_null($notification->read_at)){
+            $notification->markAsRead();
+        }
+
         $proposal = proposal::findOrFail($proposal->id); // Fetch the job by ID
         return view('Users.Clients.proposals.view-proposal', ['proposal' => $proposal]);
     }
@@ -84,6 +93,12 @@ class ProposalController extends Controller
             'cover_letter' => $validatedData['cover_letter'],
             'status' => 'pending', // Default status
         ]);
+
+        $proposal = Proposal::latest()->first(); // Get the most recently created proposal
+        $job = $proposal->job;
+        $client = $job->user; // Assumes a 'client' relationship on the Job model
+
+        $client->notify(new NewProposalNotification($proposal));
 
         return redirect()->route('freelancer.proposals.index')->with('success', 'Proposal submitted successfully.');
     }
@@ -140,14 +155,29 @@ class ProposalController extends Controller
             'end_date' => $job->deadline,
         ]);
 
-        return redirect()->route('client.proposals.list')->with('success', 'Proposal accepted successfully.');
+        $freelancer = $proposal->user; // Assumes a 'user' relationship on the Proposal model
+        $freelancer->notify(new ProposalAcceptedNotification($proposal));
+
+        return redirect()->route('dashboards.client.billing')->with('success', 'Proposal rejected successfully.');
+        
     }
 
     public function rejectProposal(Proposal $proposal){
         $proposal->status = 'rejected'; // Update the proposal status to accepted
         $proposal->save();
 
-        return redirect()->route('dashboards.client.billing')->with('success', 'Proposal rejected successfully.');
+        if (!$proposal || !$proposal->job || !$proposal->user) {
+            return redirect()->back()->with('error', 'Invalid proposal data.');
+        }
+
+        $proposal = $proposal->load('job', 'user');
+        // dd($proposal);
+
+        $freelancer = $proposal->user; // Assumes a 'user' relationship on the Proposal model
+        // dd($freelancer);
+        $freelancer->notify(new ProposalAcceptedNotification($proposal));
+
+        return redirect()->route('client.proposals.list')->with('success', 'Proposal rejected successfully.');
     }
 
     public function withdrawProposal(Proposal $proposal){

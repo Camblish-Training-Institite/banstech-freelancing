@@ -65,7 +65,7 @@ class JobsController extends Controller
     public function show_freelancer(int $id){
         $job = Job::findOrFail($id);
         $user = $job->user;
-        dd($user);
+        // dd($user);
         return view('Users.Freelancers.jobs.job-show', ['job' => $job, 'user' => $user]);
 
     }

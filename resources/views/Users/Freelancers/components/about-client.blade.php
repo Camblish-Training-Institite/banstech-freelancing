@@ -3,6 +3,9 @@
                 <h3 class="text-lg font-bold text-gray-800 mb-4">About Client</h3>
                 <ul class="space-y-3 text-gray-600">
                     <li class="flex items-center gap-3">
+                        <h2 class="text-2xl font-bold text-gray-800">{{ $user->name }}</h2>
+                    </li>
+                    <li class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round"
