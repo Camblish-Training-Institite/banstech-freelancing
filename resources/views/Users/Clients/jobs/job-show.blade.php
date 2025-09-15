@@ -247,7 +247,7 @@
                     $job->proposals->count() }})</h3>
 
                 <div class="space-y-4">
-                    @foreach($job->proposals as $proposal)
+                    @foreach($job->proposals->where('status', 'pending') as $proposal)
                     <div class="border rounded-lg p-4 hover:bg-gray-50">
                         <div class="flex flex-col justify-between">
                             <div class="flex flex-col items-start justify-center space-x-2 w-full mb-2">

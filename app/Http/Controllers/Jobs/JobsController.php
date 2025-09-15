@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SubCategory;
 use App\Models\Category;
+use App\Notifications\AddFundsToJob;
 
 class JobsController extends Controller
 {
@@ -39,11 +40,11 @@ class JobsController extends Controller
         $jobs = Job::where('user_id', '!=', $user_id)
         ->where('status', 'open') // Fetch all open jobs except those created by the user
         ->where('deadline', '>=', now()) // Only include jobs with deadlines in the future
-        ->orderBy('deadline')
+        ->orderBy('created_at', 'desc')
         ->paginate(10);
 
         $contests = Contest::where('client_id', '!=', $user_id)
-            ->orderBy('closing_date')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         $categories = Category::all();
@@ -101,6 +102,11 @@ class JobsController extends Controller
         'skills' => $skills,
         
         ]);
+
+        $job = Job::latest()->first();
+        $client = $job->user;
+
+        $client->notify(new AddFundsToJob($job->id));
 
     return redirect()->route('client.jobs.list')->with('success','Job added!');
     

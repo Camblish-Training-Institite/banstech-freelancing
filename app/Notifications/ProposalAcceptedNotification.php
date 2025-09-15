@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Messages\BroadcastMessage; 
 
 class ProposalAcceptedNotification extends Notification
 {
@@ -17,16 +17,29 @@ class ProposalAcceptedNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(Proposal $proposal)
+    public function __construct(int $proposalId)
     {
-        $this->proposal->$proposal;
+        $this->proposal = Proposal::with(['job', 'user'])->findOrFail($proposalId);
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'data' => $this->toArray($notifiable)
+        ]);
+    }
+    
+    public function toArray(object $notifiable)
+    {
+        return [
+            'proposal_id' => $this->proposal->id,
+            'job_title' => $this->proposal->job->title,
+            'freelancer_name' => $this->proposal->user->name,
+            'message' => 'Your proposal is ' . $this->proposal->status. ' for job: "' . ($this->proposal->job->title) . '".',
+            'url' => route('freelancer.proposal.show', $this->proposal->id),
+        ];
+    } 
+
     public function via($notifiable)
     {
         return ['database', 'broadcast'];
@@ -42,27 +55,4 @@ class ProposalAcceptedNotification extends Notification
     //         ->action('Notification Action', url('/'))
     //         ->line('Thank you for using our application!');
     // }
-
-    public function toBroadcast($notifiable)
-    {
-        return new BroadcastMessage([
-            'data' => $this->toArray($notifiable)
-        ]);
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable)
-    {
-        return [
-            'proposal_id' => $this->proposal?->id,
-            'job_title' => $this->proposal?->job?->title ?? 'Unknown Job',
-            'freelancer_name' => $this->proposal?->user?->name ?? 'Unknown Freelancer',
-            'message' => 'Your proposal is "' . /*($this->proposal?->status ?? 'unknown').*/ '" for job: "' . ($this->proposal?->job?->title ?? 'unknown') . '".',
-            'url' => route('freelancer.proposal.show', $this->proposal?->id),
-        ];
-    }
 }

@@ -1,6 +1,11 @@
 @extends('dashboards.freelancer.dashboard')
+
 @section('body')
-    <style>
+
+
+    @include('Users.Freelancers.pages.freelancer_earnings')
+
+    {{-- <style>
         *, *::before, *::after {
             box-sizing: border-box;
         }
@@ -220,9 +225,9 @@
                 float: right;
             }
         }
-    </style>
+    </style> --}}
 
-    <div class="earnings-container">
+    {{-- <div class="earnings-container">
 
         <div class="section-selector">
             <label for="section-switcher">Select a View</label>
@@ -232,7 +237,7 @@
                 <option value="pending-payouts-section">Pending Payouts</option>
             </select>
         </div>
-{{-- this is for overview-section --}}
+        <!-- this is for overview-section -->
         <div id="overview-section" class="content-section active">
             <h2 class="section-title">My Earnings</h2>
             <div class="earnings-cards">
@@ -278,7 +283,7 @@
                 </form>
             </div>
         </div>
-{{-- This is for history-section --}}
+        <!-- This is for history-section -->
         <div id="history-section" class="content-section">
             <h3 class="section-title">Transaction History</h3>
             <div class="table-wrapper">
@@ -326,7 +331,7 @@
             </div>
         </div>
 
-{{-- This is for pending-payouts-section --}}
+        <!-- This is for pending-payouts-section -->
         <div id="pending-payouts-section" class="content-section">
             <h3 class="section-title">Pending Payouts</h3>
             <div class="table-wrapper">
@@ -377,5 +382,5 @@
                 }
             });
         });
-    </script>
+    </script> --}}
 @endsection

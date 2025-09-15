@@ -8,7 +8,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
         </svg> --}}
         <i class="fas fa-bell notification-icon"></i>
-        <div id="notification-badge" class="absolute top-1 right-1 px-1.5 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full {{ $user->notifications->whereNull('read_at')->count() > 0 ? '' : 'hidden' }}">{{ $user->notifications->whereNull('read_at')->count() }}</div>
+        <div id="notification-badge" class="absolute top-1 right-1 px-1.5 py-0.5 text-xs font-bold text-white bg-indigo-600 rounded-full {{ $user->notifications->whereNull('read_at')->count() > 0 ? '' : 'hidden' }}" style="background-color: #a764bf">{{ $user->notifications->whereNull('read_at')->count() }}</div>
     </button>
 
     <div id="notification-dropdown-panel" class="absolute right-0 z-20 w-80 mt-2 overflow-hidden bg-gray-800 rounded-lg shadow-xl hidden">
@@ -25,7 +25,10 @@
             @endphp
             <div id="notification-list" class="max-h-80 overflow-y-auto">
                 @forelse ($user->notifications as $notification)
-                    <a href="{{ $notification->data['url'] ?? '#' }}" class="flex items-center px-4 py-3 border-b hover:bg-gray-700 -mx-2 border-gray-700 {{ is_null($notification->read_at) ? 'bg-gray-700' : '' }}" data-id="{{ $notification->id }}"> 
+                    <a href="{{ $notification->data['url'] ?? '#' }}" 
+                        class="flex items-center px-4 py-3 border-b hover:bg-gray-700 -mx-2 border-gray-700 {{ is_null($notification->read_at) ? 'bg-gray-700' : '' }}" 
+                        data-id="{{ $notification->id }}"
+                    > 
                         @if (is_null($notification->read_at))
                             <div class="w-3 h-3 bg-blue-500 rounded-full mr-3 flex-shrink-0"></div>
                             <p class="text-sm text-gray-300 mx-2">{{ $notification->data['message'] ?? 'No message' }}</p>

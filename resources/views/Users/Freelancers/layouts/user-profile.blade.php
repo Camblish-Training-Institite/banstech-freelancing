@@ -34,7 +34,7 @@
             <div class="ml-6">
                 <h2 class="text-2xl font-bold text-gray-800">{{ $user->name }}</h2>
                 <p class="text-gray-600">Senior Laravel Developer</p>
-                <p class="text-sm text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-2"></i>{{ $user->profile ? $user->profile->location : 'N/A' }}</p>
+                <p class="text-sm text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-2"></i>{{ $user->profile ? $user->profile->location : 'N/A' }}<button class="text-gray-500 hover:text-gray-800 ml-2"><i class="fas fa-pencil-alt"></i></button></p>
             </div>
             <button class="ml-auto bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg text-sm transition-all duration-300">
                 <i class="fas fa-edit mr-2"></i>Edit Profile
@@ -65,12 +65,12 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Portfolio Item 1 -->
-                        @forelse ($user->contractsAsFreelancer as $contract)
+                        @forelse ($user->portfolio as $item)
                             <div class="border rounded-lg overflow-hidden group relative">
                                 <img src="https://placehold.co/600x400/E2E8F0/333333?text=Project+2" alt="Portfolio Item" class="w-full h-48 object-cover">
                                 <div class="p-4">
-                                    <h4 class="font-bold text-gray-800">{{ $contract->job->title }}</h4>
-                                    <p class="text-sm text-gray-600">{{ $contract->job->description }}</p>
+                                    <h4 class="font-bold text-gray-800">{{ $item->title }}</h4>
+                                    <p class="text-sm text-gray-600">{{ $item->description }}</p>
                                 </div>
                                 <div class="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button class="bg-white h-8 w-8 rounded-full flex items-center justify-center shadow-md hover:bg-gray-200"><i class="fas fa-pencil-alt text-xs"></i></button>

@@ -305,14 +305,14 @@
                 <!-- Action Buttons -->
                 <div class="pt-6 mt-6 text-right border-t border-gray-200 justify-between flex">
                     <a href="{{route('freelancer.proposal.create', $job->id)}}"
-                        class="send-proposal inline-flex items-center px-4 py-2 border border-blue-600 text-sm font-medium text-blue-600 hover:text-blue-800 border-r-4 rounded-2">Send
+                        class="send-proposal inline-flex items-center px-4 py-2 border border-blue-600 text-sm font-medium text-blue-600 hover:text-blue-800 rounded-2">Send
                         Proposal
                     </a>
                     <div>
-                        <button class="save-job inline-flex items-center px-4 py-2 border-gray-300 text-sm font-medium text-gray-600 hover:text-gray-800 border-r-4 rounded-lg">
+                        <button class="save-job inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 rounded-lg">
                             Save Job
                         </button>
-                        <a href="#" class="report-job inline-flex items-center px-4 py-2 text-sm font-medium text-red-600 hover:text-red-800 border-r-4 rounded-lg">
+                        <a href="#" class="report-job inline-flex items-center px-4 py-2 text-sm font-medium text-red-600 hover:text-red-800 rounded-lg">
                             Report Job
                         </a>
                     </div>

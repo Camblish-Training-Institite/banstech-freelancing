@@ -3,6 +3,9 @@
                 <h3 class="text-lg font-bold text-gray-800 mb-4">About Client</h3>
                 <ul class="space-y-3 text-gray-600">
                     <li class="flex items-center gap-3">
+                        <img class="w-16 h-16 rounded-full object-cover" width="60" height="60"
+                            src="{{ $user->profile ? asset('storage/' . $user->profile->avatar) : 'https://ui-avatars.com/api/?name= '.$user->name .'&background=random&size=128' }}"
+                            alt="{{ $user->name }}">
                         <h2 class="text-2xl font-bold text-gray-800">{{ $user->name }}</h2>
                     </li>
                     <li class="flex items-center gap-3">
@@ -40,23 +43,28 @@
                 </ul>
                 <hr class="my-4 border-gray-200">
                 <ul class="space-y-3">
-                    @php
-                    $verifications = [
-                    'Payment Verified', 'Deposit Mode', 'Email Verified',
-                    'Phone Verified', 'Profile Completed'
-                    ];
-                    @endphp
-                    @foreach ($verifications as $item)
+
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Verifications</h3>
                     <li class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <span class="text-sm text-gray-700">{{ $item }}</span>
+                        <i class="{{ $job->job_funded ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500' }}" ></i>
+                        <span class="text-sm text-gray-700">Payment Verified</span>
                     </li>
-                    @endforeach
+                    <li class="flex items-center gap-3">
+                        <i class="{{ $job->job_funded ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500' }}" ></i>
+                        <span class="text-sm text-gray-700">Deposit Made</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="{{ $user->email ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500' }}" ></i>
+                        <span class="text-sm text-gray-700">Email Verified</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="{{ $job->job_funded ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500' }}" ></i>
+                        <span class="text-sm text-gray-700">Phone Verified</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="{{ $user->profile ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500' }}" ></i>
+                        <span class="text-sm text-gray-700">Profile Completed</span>
+                    </li>
                 </ul>
             </div>
         </aside>

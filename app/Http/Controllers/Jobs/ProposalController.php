@@ -51,6 +51,9 @@ class ProposalController extends Controller
             return redirect()->back()->with('error', 'You do not have permission to view this proposal.');
         }
 
+        $notification = Auth::user()->notifications()->where('data->proposal_id', $proposal->id)->first();
+        $notification?->markAsRead();
+
         
 
         return view('Users.Freelancers.proposals.view-proposal', ['proposal' => $proposal]);
@@ -130,6 +133,10 @@ class ProposalController extends Controller
 
     public function acceptProposal(Proposal $proposal){
         $user_id = Auth::user()->id; // Get the authenticated user's ID
+
+        if (!$proposal || !$proposal->job || !$proposal->user) {
+            return redirect()->back()->with('error', 'Invalid proposal data.');
+        }
         
         if($proposal->job->status == "assigned" || $proposal->job->status == "in_progress"){
             return redirect()->back()->with('error', 'cannot accept freelancer to a project that is already assigned');
@@ -156,7 +163,12 @@ class ProposalController extends Controller
         ]);
 
         $freelancer = $proposal->user; // Assumes a 'user' relationship on the Proposal model
-        $freelancer->notify(new ProposalAcceptedNotification($proposal));
+        $client = $proposal->job->user;
+
+        $freelancer->notify(new ProposalAcceptedNotification($proposal->id));
+        if(!$proposal->job->job_funded){
+            $client->notify(new ProposalAcceptedNotification($proposal->id));
+        }
 
         return redirect()->route('dashboards.client.billing')->with('success', 'Proposal rejected successfully.');
         
@@ -170,12 +182,9 @@ class ProposalController extends Controller
             return redirect()->back()->with('error', 'Invalid proposal data.');
         }
 
-        $proposal = $proposal->load('job', 'user');
-        // dd($proposal);
-
         $freelancer = $proposal->user; // Assumes a 'user' relationship on the Proposal model
         // dd($freelancer);
-        $freelancer->notify(new ProposalAcceptedNotification($proposal));
+        $freelancer->notify(new ProposalAcceptedNotification($proposal->id));
 
         return redirect()->route('client.proposals.list')->with('success', 'Proposal rejected successfully.');
     }

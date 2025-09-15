@@ -20,6 +20,8 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://unpkg.com/alpinejs@3.10.5/dist/cdn.min.js" defer></script>
+        
     </head>
     <body class="font-sans antialiased">
         <div class="flex flex-row min-h-screen bg-gray-100 dark:bg-gray-900"

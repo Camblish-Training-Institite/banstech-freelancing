@@ -40,7 +40,7 @@ class ContractController extends Controller
     public function show_client(int $id){
         $contract = Contract::find($id);
         if ($contract) {
-            return view('Users.Clients.projects.view', ['project' => $contract]);
+            return view('Users.Clients.projects.view', ['project' => $contract, 'tab' => 'details']);
         }
         return redirect()->back()->with('error', 'Contract not found.');
     }
@@ -48,7 +48,7 @@ class ContractController extends Controller
     public function show(int $id){
         $contract = Contract::find($id);
         if ($contract) {
-            return view('Users.Freelancers.projects.view', ['project' => $contract]);
+            return view('Users.Freelancers.projects.view', ['project' => $contract, 'tab' => 'details']);
         }
         return redirect()->back()->with('error', 'Contract not found.');
     }
@@ -88,7 +88,7 @@ class ContractController extends Controller
 
     public function completeContract(Request $request, int $id){
         $contract = Contract::find($id);
-        if ($contract && $contract->job->user->user_id == Auth::id()) {
+        if ($contract && $contract->job->user->id == Auth::id()) {
             $contract->status = 'completed';
             $contract->save();
             return redirect()->back()->with('success', 'Contract completed successfully.');

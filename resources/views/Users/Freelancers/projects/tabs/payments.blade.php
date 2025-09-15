@@ -30,6 +30,7 @@
                     <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</th>
                     <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
                     <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                    <th class="px-6 py-3 border-b-2 border-gray-300"></th>
                 </tr>
             </thead>
             <tbody class="bg-white">
@@ -46,6 +47,9 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${{ number_format($milestone->amount, 2) }}</td>
+                        <td class="px-6 py-4 whitespace-no-wrap text-center border-b border-gray-200 text-sm leading-5 font-medium">
+                            <a href="{{route('freelancer.milestone.show', [$milestone])}}" class="text-indigo-600 hover:text-indigo-900">View</a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

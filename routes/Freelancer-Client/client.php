@@ -66,6 +66,7 @@ Route::prefix('client')->name('client.')->group(function () {
 
     //Earnings routes
     Route::get('/earnings',function(){
+        
         return view('Users.Clients.pages.earnings');
     })->name('earnings');
 
@@ -83,7 +84,7 @@ Route::prefix('client/contests')->name('client.contests.')->group(function () {
 })->middleware('auth');
 
 //This is for billing page situated under dashboards/clients...
-Route::get('/billing',function(){
+Route::get('/client/billing',function(){
     return view('dashboards.client.billing');
 })->name('billing');
 
