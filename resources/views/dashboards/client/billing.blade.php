@@ -2,9 +2,15 @@
 
 @section('body')
 
-<div class="billing-wrapper">
+    @include('Users.Clients.pages.client_billing')
 
-    {{-- Dropdown Section Selector --}}
+{{-- ------------------------------------------------------------------------------------------------------------------------ --}}
+
+
+
+{{-- <div class="billing-wrapper">
+
+    <!-- Dropdown Section Selector -->
     <div class="section-selector">
         <label for="section-switcher">Select a View</label>
         <select id="section-switcher">
@@ -13,7 +19,7 @@
         </select>
     </div>
 
-    {{-- Section 1: Proceed To Payments (Default View) --}}
+    <!-- Section 1: Proceed To Payments (Default View) -->
     <div id="payment-section" class="content-section active">
         <div class="payment-container">
             <h2>Proceed To Payments</h2>
@@ -67,7 +73,7 @@
         </div>
     </div>
 
-    {{-- Section 2: Payment History --}}
+    <!-- Section 2: Payment History -->
     <div id="history-section" class="content-section">
         <div class="payment-container">
             <h2>Payment History</h2>
@@ -111,9 +117,9 @@
              </div>
         </div>
     </div>
-</div>
+</div> --}}
 
-<style>
+{{-- <style>
     *, *::before, *::after {
         box-sizing: border-box;
     }
@@ -347,7 +353,7 @@
             float: right;
         }
     }
-</style>
+</style> --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

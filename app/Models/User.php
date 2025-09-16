@@ -69,6 +69,22 @@ class User extends Authenticatable
         return $this->hasMany(Review::class, 'user_id');
     }
 
+    public function portfolio()
+    {
+        return $this->hasMany(Portfolio::class, 'user_id');
+    }
+
+
+    // public function unreadNotifications()
+    // {
+    //     return $this->notifications()->whereNull('read_at');
+    // }
+
+    // public function markAsRead()
+    // {
+    //     return $this->notifications()->read_at = now();
+    // }
+
 
 
     /**

@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Jobs\ContractController;
@@ -6,20 +6,24 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Client\ContestController;
 use App\Http\Controllers\Freelancer\MilestoneController;
 use App\Http\Controllers\Jobs\JobsController;
-use App\Http\Controllers\Jobs\ProposalController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Jobs\ProposalController; 
+use App\Http\Controllers\Client\ProjectController;
 use App\Models\Contract;
 
-
-
+Route::get('/client/job/subCategories', [CategoryController::class, 'getSubcategories'])->name('client.jobs.subcategories');
 
 Route::prefix('client')->name('client.')->group(function () {
     //client main nav links
 
+    //cancel and complete buttons
+    Route::post('/project/{project}/completed', [ContractController::class, 'completeContract'])->name('projects.completed');
+    Route::post('/project/{project}/cancel', [ContractController::class,'cancelContract'])->name('projects.cancel');
 
     //client job routes
     Route::get('/my-jobs', [JobsController::class, 'index_client'])->name('jobs.list');
     Route::resource('jobs', JobsController::class);
-    Route::get('/job/subCategories', [JobsController::class, 'getSubcategories'])->name('jobs.subcategories');
+    
 
     //client project routes
     Route::get('/my-projects', [ContractController::class, 'index_client'])->name('projects.list');
@@ -62,6 +66,7 @@ Route::prefix('client')->name('client.')->group(function () {
 
     //Earnings routes
     Route::get('/earnings',function(){
+        
         return view('Users.Clients.pages.earnings');
     })->name('earnings');
 
@@ -79,7 +84,7 @@ Route::prefix('client/contests')->name('client.contests.')->group(function () {
 })->middleware('auth');
 
 //This is for billing page situated under dashboards/clients...
-Route::get('/billing',function(){
+Route::get('/client/billing',function(){
     return view('dashboards.client.billing');
 })->name('billing');
 

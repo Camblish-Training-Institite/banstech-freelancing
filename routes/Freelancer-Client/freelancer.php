@@ -5,6 +5,7 @@ use App\Http\Controllers\Jobs\ContractController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Client\ContestController;
 use App\Http\Controllers\Freelancer\FreelancerContestController;
+use App\Http\Controllers\Freelancer\MilestoneController;
 use App\Http\Controllers\Jobs\JobsController;
 use App\Http\Controllers\Jobs\ProposalController;
 
@@ -21,6 +22,7 @@ Route::prefix('freelancer')->name('freelancer.')->group(function () {
 
     //freelancer project milestone routes
     Route::get('/projects/{project}/milestone', [ContractController::class, 'requestMilestone'])->name('projects.milestone.request');
+    Route::get('/project/milestone/{milestone}', [MilestoneController::class, 'show'])->name('milestone.show');
 
     //freelancer proposal routes
     Route::resource('/proposals', ProposalController::class);
@@ -77,3 +79,9 @@ Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(functi
    Route::get('/earnings',function(){
     return view('dashboards.freelancer.earnings');
 })->name('freelancer.earnings');
+
+
+//Myprofile
+Route::get('/freelancer/myprofile',function(){
+    return view('Users.Freelancers.layouts.user-profile');
+})->name('freelancer.myprofile');

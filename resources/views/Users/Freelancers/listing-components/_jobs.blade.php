@@ -1,27 +1,22 @@
 
 
 <!-- Opportunity Cards -->
-@foreach ($jobs as $job)
+@forelse ($jobs as $job)
     @php
         // Attempt to decode the skills field as JSON
         $jobSkills = $job->skills ? explode(',', $job->skills) : [];
         // dd($jobSkills);
-        $jobSkills = str_replace('\"', '"', $jobSkills); // Replace escaped quotes
+        $jobSkills = str_replace('\"', '"', $jobSkills); 
 
-        // If json_decode fails (e.g., invalid JSON), fallback to manual parsing
-        // if (!$jobSkills || !is_array($jobSkills)) {
-        //     // Remove surrounding brackets and backslashes, then explode by commas
-        //     $jobSkills = trim($job->skills, '[]'); // Remove square brackets
-        //     $jobSkills = str_replace('\"', '"', $jobSkills); // Replace escaped quotes
-        //     $jobSkills = explode(',', $jobSkills); // Split by comma
-        //     $jobSkills = array_map('trim', $jobSkills); // Trim whitespace
-        // }
-        // dd($jobSkills);
+        // $deadline = \Carbon\Carbon::parse($job->deadline);
         
     @endphp
     <div class="opportunity-card">
         <div class="content-block">
-            <h2>{{ $job->title }}</h2>
+            <div class="flex flex-col w-full justify-between items-start mb-2">
+                <h2 class="m-0">{{ $job->title }}</h2>
+                <h5 class="text-xs text-gray-600 font-bold">End Date: {{  \Carbon\Carbon::parse($job->deadline)->diffForHumans() }}</h5>
+            </div>
             <p>{{$job->description}}</p>
             <div class="tags">
                 @forelse ($jobSkills as $skill)
@@ -40,7 +35,9 @@
             </div>
         </div>
     </div>
-@endforeach
+@empty
+    <p>No jobs available at the moment. Please check back later.</p>
+@endforelse
 
 <!-- Pagination -->
 <div class="pagination">

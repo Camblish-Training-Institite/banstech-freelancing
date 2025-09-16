@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notification;
 class ProjectManagementRequested extends Notification
 {
     use Queueable;
+    
 
     public function __construct(public ManagementRequest $request)
     {

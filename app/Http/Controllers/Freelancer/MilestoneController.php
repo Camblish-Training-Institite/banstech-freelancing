@@ -6,6 +6,7 @@ use App\Models\Milestone;
 use App\Models\Contract;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Notifications\MilestoneReleased;
 
 class MilestoneController extends Controller
 {
@@ -48,8 +49,13 @@ class MilestoneController extends Controller
 
     public function show(Milestone $milestone)
     {
-        $this->authorizeRequester($milestone);
-        return view('Users.Freelancers.milestones.show', compact('milestone'));
+        // $this->authorizeRequester($milestone);
+
+        $notification = auth()->user()->unreadNotifications->where('data.milestone_id', $milestone->id)->first();
+        if ($notification) {
+            $notification->markAsRead();
+        }
+        return view('Users.Freelancers.projects.milestone-show', compact('milestone'));
     }
 
     public function edit(Contract $project, Milestone $milestone)
@@ -81,6 +87,9 @@ class MilestoneController extends Controller
     public function releasePayment(Contract $project, Milestone $milestone){
         $milestone->status = "released";
         $milestone->save();
+
+        $freelancer = $milestone->project->user;
+        $freelancer->notify(new MilestoneReleased($milestone->id));
 
         return back()->with('status', 'milestone payment released successfully');
     }

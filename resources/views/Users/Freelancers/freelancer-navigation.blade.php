@@ -133,19 +133,19 @@
     }
 </style>
 
+@php
+    $user = Auth::user();
+@endphp
+
 <aside class="sidebar">
     <div> {{-- This div now wraps all top content to be pushed up --}}
         <div class="user-details">
             <div class="user-avatar rounded-full bg-white ">
-                @if (Auth::user()->profile)
-                    <img width="100%" src="{{ asset('storage/' . Auth::user()->profile->avatar) }}" alt="{{Auth::user()->name}}">
-                @else
-                    <img width="100%" src="" alt="{{Auth::user()->name}}">
-                @endif
+                <img width="100%" src="{{ $user->profile ? asset('storage/' . $user->profile->avatar) : 'https://ui-avatars.com/api/?name='. $user->name .'&background=random&size=128' }}" alt="{{$user->name}}">
             </div>
             <div>
-                <div class="font-medium text-base text-gray-200">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-base text-gray-200">{{ $user->name }}</div>
+                <div class="font-medium text-sm text-gray-500">{{ $user->email }}</div>
             </div>
         </div>
         <div class="sidebar-header">Main Menu</div>

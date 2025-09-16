@@ -153,8 +153,8 @@
                                 <a href="{{ Storage::url($submission->file_path) }}" target="_blank"
                                     class="text-blue-600 text-sm hover:underline">View File</a>
                                 @endif
-                                <a href="{{ route('client.contests.submission.show', [$contest, $submission]) }}"
-                                    class="text-indigo-600 text-sm hover:underline">Review</a>
+                                <a href=""
+                                    class="text-indigo-600 text-sm hover:underline">Review</a> {{-- {{ route('client.contests.submission.show', [$contest, $submission]) }} --}}
                             </div>
                         </div>
                     </div>

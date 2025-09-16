@@ -20,6 +20,7 @@ class Job extends Model
         'status',
         'deadline',
         'skills',
+        'job_funded',
     ];
 
     protected $casts = [
@@ -51,7 +52,7 @@ class Job extends Model
     // Function to get the minimum bid amount
     public function lowestBid()
     {
-        return $this->proposals()->min('bid_amount');
+        return $this->proposals()->where('status','pending')->min('bid_amount');
     }
 
     // Function to get the latest submission date
