@@ -41,9 +41,16 @@ class Contest extends Model
         return $this->hasMany(ContestSubmission::class);
     }
 
+public function payouts()
+
+{
+    return $this->hasMany(Payout::class, 'contest_id');
+}
+
 
 // public function getIsActiveAttribute()
 // {
 //     return now()->lessThanOrEqualTo($this->end_date);
 // }
+
 }

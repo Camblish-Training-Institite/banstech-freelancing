@@ -24,6 +24,9 @@ class User extends Authenticatable
         // Pluck the 'name' from each role and join them with a comma.
         return $this->roles->pluck('name')->implode(', ');
     }
+    public function avatar(){
+        return $this->hasOne(Profile::class, 'user_id');
+    }
 
     // Relationships
     public function managedProjects()
@@ -52,7 +55,6 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(Contract::class, Job::class);
     }
-
     
     public function submissions(){
         return $this->hasMany(ContestSubmission::class, 'freelancer_id');
@@ -69,24 +71,11 @@ class User extends Authenticatable
         return $this->hasMany(Review::class, 'user_id');
     }
 
+ 
     public function portfolio()
     {
         return $this->hasMany(Portfolio::class, 'user_id');
-    }
-
-
-    // public function unreadNotifications()
-    // {
-    //     return $this->notifications()->whereNull('read_at');
-    // }
-
-    // public function markAsRead()
-    // {
-    //     return $this->notifications()->read_at = now();
-    // }
-
-
-
+    } 
     /**
      * The attributes that are mass assignable.
      *
