@@ -1,110 +1,4 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Jobs Map — Physical & Remote</title>
-
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-  <style>
-    /* Basic responsive layout */
-    body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; }
-    .app { display:flex; flex-direction:column; height:100vh; }
-    .topbar { display:flex; align-items:center; gap:12px; padding:10px; border-bottom:1px solid #eee; background:#fff; }
-    .title { font-weight:600; font-size:1rem; }
-    .controls { margin-left:auto; display:flex; gap:8px; align-items:center; }
-    .map-and-list { display:flex; flex:1; overflow:hidden; }
-    .map { flex:1; min-height:0; } /* allow flex to shrink on mobile */
-    .side { width:360px; max-width:40%; border-left:1px solid #eee; overflow:auto; background:#fafafa; }
-
-    /* Mobile layout */
-    @media (max-width:900px){
-      .map-and-list{ flex-direction:column; }
-      .side{ width:100%; max-width:100%; border-left:0; border-top:1px solid #eee; height:40vh; }
-    }
-
-    #map { width:100%; height:100%; }
-
-    .controls .btn { padding:8px 10px; border-radius:8px; border:1px solid #ddd; background:#fff; cursor:pointer; }
-    .controls .btn.primary{ background:#0b74de; color:#fff; border-color:transparent; }
-
-    .filter-row{ display:flex; gap:10px; align-items:center; padding:8px; }
-    .job-item{ padding:10px; border-bottom:1px solid #eee; cursor:pointer; }
-    .job-item:hover{ background:#fff; }
-    .badge { display:inline-block; padding:3px 6px; border-radius:6px; font-size:12px; }
-    .badge.physical{ background:#e6f4ff; color:#0366d6; }
-    .badge.remote{ background:#f3e8ff; color:#6b21a8; }
-
-    .range-label{ font-size:13px; }
-  </style>
-</head>
-<body>
-  <div id="app" class="app">
-    <div class="topbar">
-      <div class="title">Jobs Map</div>
-
-      <div style="display:flex; gap:8px; margin-left:16px;">
-        {{-- it has to be Physical Jobs --}}
-        <button class="btn" :class="{primary:activeTab==='map'}" @click="activeTab='map'">Map</button> 
-        <button class="btn" :class="{primary:activeTab==='remote'}" @click="activeTab='remote'">Remote Jobs</button>
-      </div>
-
-      <div class="controls">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <label style="display:flex;align-items:center;gap:6px;">
-            <input type="checkbox" v-model="filterPhysicalOnly" />
-            <small>Physical only</small>
-          </label>
-        </div>
-
-        <div style="display:flex;flex-direction:column;align-items:flex-end;">
-          {{-- <div class="range-label">Radius: {{ radiusKm }} km</div> --}}
-          <input type="range" min="1" max="200" v-model.number="radiusKm" />
-        </div>
-
-        <button class="btn" @click="findMe">Find Me</button>
-      </div>
-    </div>
-{{-- ================================================ --}}
-    <div class="map-and-list">
-      <div class="map" v-show="activeTab==='map'">
-        <div id="map"></div>
-      </div>
-
-      <!-- Side panel / list: shows filtered jobs or remote-only when remote tab active -->
-      <div class="side">
-        <div class="filter-row">
-          <div style="font-weight:600">Showing</div>
-          {{-- <div style="color:#666">{{ filteredJobs.length }} jobs</div> --}}
-        </div>
-
-        <div v-for="job in filteredJobs" :key="job.id" class="job-item" @click="panToJob(job)">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div>
-              {{-- <div style="font-weight:600">{{ job.title }}</div> --}}
-              {{-- <div style="font-size:13px;color:#666">{{ job.address || job.type }}</div> --}}
-            </div>
-            {{-- <div>
-              <span :class="['badge', job.type === 'physical' ? 'physical' : 'remote']">{{ job.type }}</span>
-              <div style="font-size:12px;color:#333;margin-top:6px;text-align:right;">{{ formatDistance(job.distance) }}</div>
-            </div> --}}
-          </div>
-        </div>
-
-        <div v-if="filteredJobs.length===0" style="padding:12px;color:#666">
-          No jobs match the current filters.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Vue (CDN) -->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-  <script>
+ <script>
   const { createApp, ref, reactive, onMounted } = Vue;
 
   createApp({
@@ -146,26 +40,28 @@
     methods: {
       initMap(){
         this.map = L.map('map', { zoomControl: true });
-        // default view (world)
-        this.map.setView([0,0], 2);
+        // default view (South Africa)
+        this.map.setView([-30.5595,22.9375], 5);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19,
-          attribution: '&copy; OpenStreetMap contributors'
+         
         }).addTo(this.map);
 
         this.markersLayer = L.layerGroup().addTo(this.map);
 
+        
         // click to set as user location (for quick testing)
-        this.map.on('click', (e)=>{
-          this.setUserLocation(e.latlng.lat, e.latlng.lng);
-        });
+        // this.map.on('click', (e)=>{
+        //   this.setUserLocation(e.latlng.lat, e.latlng.lng);
+        // });
+ 
 
         // redraw markers when map ready or when filters change
-        this.$watchers = [];
-        this.$watchers.push(this.$watch('filterPhysicalOnly', () => this.renderMarkers()));
-        this.$watchers.push(this.$watch('radiusKm', () => this.renderMarkers()));
-        this.$watchers.push(this.$watch('activeTab', () => this.onTabChange()));
+        // this.$watchers = [];
+        // this.$watchers.push(this.$watch('filterPhysicalOnly', () => this.renderMarkers()));
+        // this.$watchers.push(this.$watch('radiusKm', () => this.renderMarkers()));
+        // this.$watchers.push(this.$watch('activeTab', () => this.onTabChange()));
       },
 
       onTabChange(){
@@ -281,5 +177,3 @@
     }
   }).mount('#app');
   </script>
-</body>
-</html>
