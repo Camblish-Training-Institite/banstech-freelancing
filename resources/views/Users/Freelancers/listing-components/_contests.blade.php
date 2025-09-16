@@ -1,7 +1,7 @@
 
 
 <!-- Opportunity Cards -->
-@foreach ($contests as $contest)
+@forelse ($contests as $contest)
     @php
         // Attempt to decode the requried_skills field as JSON
         $contestSkills = $contest->requried_skills ? explode(',', $contest->requried_skills) : [];
@@ -21,7 +21,10 @@
     @endphp
     <div class="opportunity-card">
         <div class="content-block">
-            <h2>{{ $contest->title }}</h2>
+            <div class="flex flex-col w-full justify-between items-start mb-2">
+                <h2 class="m-0">{{ $contest->title }}</h2>
+                <h5 class="text-xs text-gray-600 font-bold">End Date: {{  \Carbon\Carbon::parse($contest->closing_date)->diffForHumans() }}</h5>
+            </div>
             <p>{{$contest->description}}</p>
             <div class="tags">
                 @forelse ($contestSkills as $skill)
@@ -35,12 +38,14 @@
             <div class="price">R {{ number_format($contest->prize_money, 2) }}</div>
             <div class="proposals">{{$contest->entries->count()}} Enries</div>
             <div class="buttons-block">
-                <a href="{{ route('freelancer.contests.show', $contest->id) }}" class="view-contest">View contest</a>
+                <a href="{{ route('freelancer.contests.show', $contest->id) }}" class="view-job">View contest</a>
                 <button class="send-proposal" onclick="location.href='{{  route('freelancer.contests.submit.show', $contest) }}'">Send Submission</button>
             </div>
         </div>
     </div>
-@endforeach
+@empty
+    <p>No contests available at the moment. Please check back later.</p>
+@endforelse
 
 <!-- Pagination -->
 <div class="pagination">

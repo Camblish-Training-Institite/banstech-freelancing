@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody class="bg-white divide-y divide-gray-200">
-        @forelse ($job->proposals as $proposal)
+        @forelse ($job->proposals->where('status', 'pending') as $proposal)
             @php
                 $endDate = new DateTime($proposal->created_at);
                 $formattedEndDate = $endDate->format('M d Y');
@@ -47,7 +47,7 @@
                         <div class="icon-box">
                     </div>
                     <div class="flex flex-col items-center">
-                        <p>No Proposals yet</p>
+                        <p>No Proposals</p>
                     </div>
                     </div>
                 </td>

@@ -37,14 +37,20 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">R {{ number_format($project->agreed_amount, 2) }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $formattedEndDate }}</td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center space-x-2">
-                        <div class="" style="width:100%; height:3px; border-radius:2px; background-color:#ddd; font-weight:bold;">
-                            <div class="" style="width:{{$percentage}}%; height:100%; border-radius:2px; background-color:#7A4D8B; font-weight:bold;"></div>
+                    @if ($project->status == 'active')
+                        <div class="flex items-center space-x-2">
+                            <div class="" style="width:100%; height:3px; border-radius:2px; background-color:#ddd; font-weight:bold;">
+                                <div class="" style="width:{{$percentage}}%; height:100%; border-radius:2px; background-color:#7A4D8B; font-weight:bold;"></div>
+                            </div>
+                            <div>
+                                <p class="text-sm">{{$percentage}}%</p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="text-sm">{{$percentage}}%</p>
-                        </div>
-                    </div>
+                    @elseif($project->status == 'completed')
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            Completed
+                        </span>
+                    @endif
                 </td>
             </tr>
         @empty

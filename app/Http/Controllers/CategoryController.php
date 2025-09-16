@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\SubCategory;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -40,15 +42,25 @@ class CategoryController extends Controller
 
     }
 
-    public function getSubcategories(Request $request, $categoryId)
+    public function getSubcategories(Request $request)
     {
-        $mainCategory_id = $request->input('mainCategory_id');
+        // \Log::info('Subcategory request received', [
+        //     'mainCategory_id' => $request->input('mainCategory_id'),
+        //     'all_input' => $request->all(),
+        // ]);
+
+        $mainCategoryId = $request->input('mainCategory_id');
+
         $query = SubCategory::query()->select('*');
-        if ($mainCategory_id) {
-            $query->where('parent_id', $mainCategory_id);
+        if ($mainCategoryId) {
+            $query->where('parent_id', $mainCategoryId);
         }
+
         $subcategories = $query->get();
-        dd($subcategories);
-        return redirect()->route('clients.jobs.create', ['subcategories' => $subcategories ]);
+
+        // Return JSON instead of redirect
+        return response()->json([
+            'subcategories' => $subcategories
+        ]);
     }
 }

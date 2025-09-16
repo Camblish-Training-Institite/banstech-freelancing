@@ -159,8 +159,11 @@
         <div class="flex w-full justify-start mb-4">
             <a href="{{ url()->previous() }}" class="back-link">← Back</a>
         </div>
-        <div class="header-title flex flex-col">
+        <div class="header-title flex">
             <h1>{{ $proposal->job->title ?? 'Job Title Not Available' }}</h1>
+            <div>
+                <span class="px-4 py-2 rounded-full text-md {{ ($proposal->status == 'accepted' ? 'text-green-800 bg-green-200' : $proposal->status == 'rejected') ? 'text-red-800 bg-red-100' : 'text-yellow-800 bg-yellow-300' }}">{{$proposal->status}}</span>
+            </div>
         </div>
 
         <!-- Job Info -->
