@@ -11,7 +11,8 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm text-gray-500">Total Spent</p>
-                    <p class="text-2xl font-bold text-gray-800">R 15,200.00</p>
+                     {{-- <p class="text-2xl font-bold text-gray-800">R 1200</p> --}}
+                    <p class="text-2xl font-bold text-gray-800">R {{ number_format($totalSpent ?? 0,2) }}</p>
                 </div>
             </div>
         </div>
@@ -22,7 +23,8 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm text-gray-500">Funds in Escrow</p>
-                    <p class="text-2xl font-bold text-gray-800">R 4,500.00</p>
+                    {{-- <p class="text-2xl font-bold text-gray-800">R 1000</p> --}}
+                    <p class="text-2xl font-bold text-gray-800">R {{ number_format($fundsInEscrow ?? 0,2)}}</p>
                 </div>
             </div>
         </div>
@@ -33,7 +35,8 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm text-gray-500">Available Balance</p>
-                    <p class="text-2xl font-bold text-gray-800">R 8,000.00</p>
+                     {{-- <p class="text-2xl font-bold text-gray-800">R2000 </p> --}}
+                    <p class="text-2xl font-bold text-gray-800">R {{ number_format($availableBalance ?? 0,2)}}</p>
                 </div>
             </div>
         </div>

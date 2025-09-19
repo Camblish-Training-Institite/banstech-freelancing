@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Payments;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,6 +9,31 @@ use App\Models\ProjectFunding;
 
 class ProjectFundingController extends Controller
 {
+
+public function index(){
+
+$clientId = Auth::id();
+$fundings = ProjectFunding::where('client_id', $clientId)->get();
+
+//Available balance
+$availableBalance = $fundings
+->where('status', 'deposited')
+->sum('amount');
+
+//Escrowed funds
+ $fundsInEscrow = $fundings
+ ->where('status', 'pending')
+ ->sum('amount');
+
+ //Total Spent
+ $totalSpent = $fundings
+//  ->where('status','deposited') released
+ ->sum('amount'); 
+
+
+ return view('dashboards.client.billing', compact('totalSpent', 'fundsInEscrow', 'availableBalance'));
+    
+    }
     // this is handles deposits and refunds for project funding
   public function createDeposit(Request $request)
 {
@@ -99,5 +125,8 @@ public function requestRefund($id)
         ], 500);
     }
 }
+
+
+
 
 }

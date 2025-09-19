@@ -15,7 +15,12 @@ class PayoutController extends Controller
 
         $payouts = Payout::where('freelancer_id', $userId->id)->get();
         // dd($payouts);
-        return view('dashboards.freelancer.earnings',['payouts'=> $payouts]);        
+ 
+        $TotalEarnings =  $payouts->sum('amount'); //nullable to be recheck
+        $PendingPayouts = $payouts ->where('status','pending')->sum('amount');
+        $AvailableWithdrawals = $payouts->where('status','processed')->sum('amount');
+        
+        return view('dashboards.freelancer.earnings',compact('payouts','PendingPayouts','AvailableWithdrawals','TotalEarnings'));        
     }
 
     public function markAsProcessed($id)

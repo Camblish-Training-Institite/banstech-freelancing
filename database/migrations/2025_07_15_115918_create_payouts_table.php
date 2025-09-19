@@ -21,6 +21,7 @@ return new class extends Migration
             $table->timestamp('processed_at') -> nullable();
 
             $table->foreign('freelancer_id') -> references('id') -> on('users') -> onDelete('cascade');
+        
         });
     }
 
