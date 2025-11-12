@@ -131,30 +131,30 @@
         
 
         <!-- Contest Submissions Section -->
-        @if($contest->submissions->isNotEmpty())
+        @if($contest->entries->isNotEmpty())
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
             <div class="p-6 border-b border-gray-200">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Submissions Received ({{
-                    $contest->submissions->count() }})</h3>
+                    $contest->entries->count() }})</h3>
 
                 <div class="space-y-4">
-                    @foreach($contest->submissions as $submission)
+                    @foreach($contest->entries as $entry)
                     <div class="border rounded-lg p-4 hover:bg-gray-50">
                         <div class="flex justify-between">
                             <div>
-                                <p class="font-medium">{{ $submission->title }}</p>
-                                <p class="text-sm text-gray-600 mt-1">{{ Str::limit($submission->description, 120) }}
+                                <p class="font-medium">{{ $entry->title }}</p>
+                                <p class="text-sm text-gray-600 mt-1">{{ Str::limit($entry->description, 120) }}
                                 </p>
-                                <p class="text-xs text-gray-500 mt-2">Submitted by: {{ $submission->freelancer->name }}
+                                <p class="text-xs text-gray-500 mt-2">Submitted by: {{ $entry->freelancer->name }}
                                 </p>
                             </div>
                             <div class="flex space-x-2">
-                                @if($submission->file_path)
-                                <a href="{{ Storage::url($submission->file_path) }}" target="_blank"
+                                @if($entry->file_path)
+                                <a href="{{ Storage::url($entry->file_path) }}" target="_blank"
                                     class="text-blue-600 text-sm hover:underline">View File</a>
                                 @endif
                                 <a href=""
-                                    class="text-indigo-600 text-sm hover:underline">Review</a> {{-- {{ route('client.contests.submission.show', [$contest, $submission]) }} --}}
+                                    class="text-indigo-600 text-sm hover:underline">Review</a> {{-- {{ route('client.contests.submission.show', [$contest, $entry]) }} --}}
                             </div>
                         </div>
                     </div>

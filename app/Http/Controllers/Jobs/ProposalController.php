@@ -170,7 +170,7 @@ class ProposalController extends Controller
             $client->notify(new ProposalAcceptedNotification($proposal->id));
         }
 
-        return redirect()->route('dashboards.client.billing')->with('success', 'Proposal rejected successfully.');
+        return redirect()->route('billing')->with('success', 'Proposal rejected successfully.');
         
     }
 
