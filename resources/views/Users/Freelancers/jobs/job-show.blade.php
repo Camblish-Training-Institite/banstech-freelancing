@@ -249,10 +249,12 @@
 </div> --}}
 
 
+ 
 
 <div class="flex w-full justify-start">
     <a href="{{ route('jobs.listing') }}" class="back-link">← Back to Projects</a>
 </div>
+ 
 
 <div class="container mx-auto p-4 md:p-8">
     <!-- header section -->
@@ -372,8 +374,15 @@
             @endif
         </main>
 
-        @include('Users.Freelancers.components.about-client', [$job, $user])
-
+ 
+        <div class="flex flex-col gap-6 mb-6 mt-8 lg:mt-0">
+            @include('Users.Freelancers.components.about-client')
+            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+               <a href="{{url('/main_map')}}" style="display: block; text-decoration: none; color: inherit;">>
+                @include('geo_location.mini_map')
+            </a>
+            </div> 
+        </div> 
     </div>
 </div>
 @endsection

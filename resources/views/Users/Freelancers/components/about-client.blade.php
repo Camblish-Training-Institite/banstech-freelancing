@@ -66,5 +66,6 @@
                         <span class="text-sm text-gray-700">Profile Completed</span>
                     </li>
                 </ul>
-            </div>
+            </div>         
+
         </aside>

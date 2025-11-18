@@ -346,20 +346,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td data-label="Date">2025-08-15</td>
-                            <td data-label="Project">###</td>
-                            <td data-label="milestone">frontpage</td>
-                            <td data-label="Amount">R200.00</td>
-                            <td data-label="Status"><span class="status pending">Pending</span></td>
-                        </tr>
-                        <tr>
-                            <td data-label="Date">2025-08-10</td>
-                            <td data-label="Project">###</td>
-                            <td data-label="milestone">Paymentpage</td>
-                            <td data-label="Amount">R500.00</td>
-                            <td data-label="Status"><span class="status In-progress">Processing</span></td>
-                        </tr>
+                        @forelse ($payouts as $payout)
+                            <tr>
+                                <td data-label="Date">{{$payout->requested_at}}</td>
+                                <td data-label="Project">{{$payout->contract->job->title}}</</td>
+                                <td data-label="milestone">frontpage</td>
+                                <td data-label="Amount">{{$payout->amount}}</td>
+                                <td data-label="Status"><span class="status pending">{{$payout->status}}</span></td>
+                            </tr>
+                        @empty
+                            <p>
+                                No pending payouts found.
+                            </p>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
