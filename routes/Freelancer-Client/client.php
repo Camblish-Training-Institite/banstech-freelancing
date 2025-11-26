@@ -83,6 +83,14 @@ Route::prefix('client/contests')->name('client.contests.')->group(function () {
     Route::get('/{contest}/show', [ContestController::class, 'show'])->name('show');
 })->middleware('auth');
 
+
+//freelancer and project manager routes
+Route::prefix('client/find-users')->name('client.find.users.')->group(function () {
+    Route::get('/', function(){
+        return view('Users.Clients.layouts.body.users_listing');
+    })->name('index');
+});
+
 //This is for billing page situated under dashboards/clients...
 Route::get('/client/billing',function(){
     return view('dashboards.client.billing');
