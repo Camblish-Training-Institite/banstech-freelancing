@@ -3,10 +3,10 @@
         <div>
             <h3 class="text-xl font-bold text-gray-800">Payment Summary</h3>
             <div class="flex space-x-8 mt-4">
-                <div>
+                {{-- <div>
                     <p class="text-gray-500">Requested</p>
-                    <p class="text-2xl font-bold text-gray-800">$0.00</p>
-                </div>
+                    <p class="text-2xl font-bold text-gray-800">R0.00</p>
+                </div> --}}
                 <div>
                     <p class="text-gray-500">In Progress</p>
                     <p class="text-2xl font-bold text-gray-800">R{{ $project->milestones->where('status', '<>', 'released')->sum('amount') }}</p> {{-- number_format($project->milestones->where('status', 'in_progress')->sum('amount'), 2) --}}

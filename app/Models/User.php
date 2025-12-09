@@ -86,6 +86,8 @@ class User extends Authenticatable
         'email',
         'password',
         'user_type',
+        'messengerColor',
+        'dark_mode',
     ];
 
     /**
