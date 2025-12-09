@@ -8,6 +8,7 @@ use App\Models\Payout;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Notifications\MilestoneReleased;
+use App\Notifications\EndProjecetReminder;
 
 class MilestoneController extends Controller
 {
@@ -93,13 +94,19 @@ class MilestoneController extends Controller
         $freelancer = $milestone->project->user;
         $freelancer->notify(new MilestoneReleased($milestone->id));
  
-          Payout::create([
+        Payout::create([
             'freelancer_id'=> $project->user->id,           
             'contract_id' => $project->id,
             'amount' => $project->agreed_amount,
             'requested_at' => now(),
             // 'processed_at' => null,
         ]);
+
+        if($project->milestones->count() == $project->milestones->where('status', 'released')->count())
+        {
+            $client = User::find($project->job->user->id);
+            $client->notify(new EndProjecetReminder($project));
+        }
  
 
         return back()->with('status', 'milestone payment released successfully');

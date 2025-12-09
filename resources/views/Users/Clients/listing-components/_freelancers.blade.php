@@ -26,16 +26,26 @@
                     <div class="flex w-full space-x-2">
                         @if ($freelancer->reviews->count() > 0)
                             @php
+                                $averageRating = $freelancer->reviews->avg('rating'); // Replace with your actual average rating variable
+                                $fullStars = floor($averageRating);
+                                $hasHalfStar = ($averageRating - $fullStars) >= 0.5;
+                                $totalDisplayStars = $fullStars + ($hasHalfStar ? 1 : 0);
+
                                 $averageRating = $freelancer->reviews()->avg('rating');
                                 $roundedRating = round($averageRating);
                             @endphp
 
-                            @for ($i = 1; $i <= 5; $i++)
-                                @if ($i <= $roundedRating)
-                                    <i class="fas fa-star text-yellow-500"></i>
-                                @else
-                                    <i class="far fa-star text-yellow-500"></i>
-                                @endif
+                            
+                            @for ($i = 0; $i < $fullStars; $i++)
+                               <i class="fas fa-star"></i>
+                            @endfor
+
+                            @if ($hasHalfStar)
+                                <i class="fas fa-star-half-alt"></i>
+                            @endif
+
+                            @for ($i = 0; $i < (5 - $totalDisplayStars); $i++)
+                                <i class="far fa-star"></i>
                             @endfor
                             <span class="text-sm text-gray-600">({{ number_format($averageRating, 1) }} out of 5)</span>
                         @else

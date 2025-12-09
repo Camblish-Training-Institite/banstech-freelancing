@@ -9,6 +9,7 @@ use App\Http\Controllers\Jobs\JobsController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Jobs\ProposalController; 
 use App\Http\Controllers\Client\ProjectController;
+use App\Http\Controllers\Client\ReviewController;
 use App\Models\Contract;
 
 Route::get('/client/job/subCategories', [CategoryController::class, 'getSubcategories'])->name('client.jobs.subcategories');
@@ -89,6 +90,15 @@ Route::prefix('client/find-users')->name('client.find.users.')->group(function (
     Route::get('/', function(){
         return view('Users.Clients.layouts.body.users_listing');
     })->name('index');
+});
+
+
+//Client reviewing freelancer routes
+Route::prefix('client/reviews')->name('client.reviews.')->group(function () {
+    Route::get('/create/{project}', [ReviewController::class, 'create'])->name('create');
+    Route::post('/store', [ReviewController::class, 'store'])->name('store');
+
+    Route::get('create/pm/{project}', [ReviewController::class, 'pmCreate'])->name('pm.create');
 });
 
 //This is for billing page situated under dashboards/clients...
