@@ -21,12 +21,13 @@
             <tr class="hover:bg-gray-50 cursor-pointer text-left">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     <div class="flex items-center">
-                        <div class="flex items-center justify-center rounded-full w-8 h-8 object-cover overflow-hidden">
-                            @if ($proposal->user->profile)
+                        <div class="flex flex-col items-center justify-center rounded-full">
+                            {{-- @if ($proposal->user->profile)
                                 <img src="{{ asset('storage/' . $proposal->user->profile->avatar) }}" alt="">
                             @else
                                 <img src="https://ui-avatars.com/api/?name={{ $proposal->user->name }}&background=random&size=128" alt="">
-                            @endif
+                            @endif --}}
+                            @include('components.user-avatar', ['user' => $proposal->user, 'width' => '2rem', 'height' => '2rem'])
                         </div>
                         <p class="mx-2">{{ $proposal->user->name }}</p>
                     </div>

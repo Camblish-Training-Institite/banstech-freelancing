@@ -76,7 +76,7 @@
                                     </div>
                                     <p class="text-sm text-gray-600">
                                         @if ($project->status == 'completed')
-                                            completed {{ $project->end_date->diffForHumans() }}
+                                            completed {{ \Carbon\Carbon::parse($project->end_date)->diffForHumans() }}
                                         @else
                                             in progress
                                         @endif
@@ -100,37 +100,36 @@
 
                 <!-- Reviews -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Reviews (3)</h3>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Reviews ({{ $freelancer->reviews->count() }})</h3>
                     <div class="space-y-6">
                         <!-- Review 1 -->
-                        <div class="flex">
-                            <img class="h-12 w-12 rounded-full object-cover mr-4" src="https://placehold.co/100x100/4B5563/FFFFFF?text=AS" alt="Alice">
-                            <div>
-                                <div class="flex items-center mb-1">
-                                    <h4 class="font-bold text-gray-800 mr-2">Alice Smith</h4>
-                                    <div class="flex text-yellow-400">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        @forelse ($freelancer->reviews as $review)
+                            @php
+                                $countRating = $review->rating;
+                            @endphp
+                            <div class="flex flex-col space-x-2">
+                                {{-- <img class="rounded-full mr-4" style="width:3rem; height:3rem;" src="{{ $review->job->user->profile ?  asset('storage/' . $review->job->user->profile->avatar) : 'https://placehold.co/100x100/4B5563/FFFFFF?text='.$review->job->user->profile->name }}" alt="{{ $review->job->user->profile->name }}"> --}}
+                                @include('components.user-avatar', ['user' => $review->job->user, 'height' => '2.5rem', 'width' => '2.5rem'])
+                                <div>
+                                    <div class="flex items-center mb-1">
+                                        <h4 class="font-bold text-gray-800 mr-2">{{ $review->job->user->name }}</h4>
+                                        <div class="flex text-yellow-400">
+                                            @for ($i = 0; $i < 5; $i++)
+                                                @if ($i < $review->rating)
+                                                    <i class="fas fa-star"></i>
+                                                @else
+                                                    <i class="far fa-star"></i> 
+                                                @endif
+                                            @endfor
+                                        </div>
                                     </div>
+                                    <p class="text-sm text-gray-600">"{{ $review->comment }}"</p>
+                                    <p class="text-xs text-gray-400 mt-2">For: {{ $review->job->title }}</p>
                                 </div>
-                                <p class="text-sm text-gray-600">"Bobby was fantastic to work with. He delivered the project ahead of schedule and the quality was exceptional. Highly recommended!"</p>
-                                <p class="text-xs text-gray-400 mt-2">For: SEO Audit and Strategy</p>
                             </div>
-                        </div>
-                            <div class="border-t border-gray-200"></div>
-                        <!-- Review 2 -->
-                        <div class="flex">
-                            <img class="h-12 w-12 rounded-full object-cover mr-4" src="https://placehold.co/100x100/4B5563/FFFFFF?text=MS" alt="Mark">
-                            <div>
-                                <div class="flex items-center mb-1">
-                                    <h4 class="font-bold text-gray-800 mr-2">Mark Johnson</h4>
-                                    <div class="flex text-yellow-400">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                                    </div>
-                                </div>
-                                <p class="text-sm text-gray-600">"Good communication and solid technical skills. There were a few minor revisions needed but they were handled promptly."</p>
-                                <p class="text-xs text-gray-400 mt-2">For: Superman Poster Design</p>
-                            </div>
-                        </div>
+                        @empty
+                            
+                        @endforelse
                     </div>
                 </div>
 
@@ -141,23 +140,46 @@
                 <!-- Stats -->
                 <div class="bg-white rounded-lg shadow-md p-6 text-center">
                         <h3 class="text-xl font-bold text-gray-800 mb-4">Overall Rating</h3>
-                        <div class="text-4xl font-bold accent-purple-text mb-2">4.9 <span class="text-2xl text-gray-400">/ 5</span></div>
+                        <div class="text-4xl font-bold accent-purple-text mb-2">{{ number_format($freelancer->reviews->avg('rating'), 1) }} <span class="text-2xl text-gray-400">/ 5</span></div>
                         <div class="flex justify-center text-yellow-400 text-lg">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            @include('components.review-stars', ['averageRating' => $freelancer->reviews->avg('rating')])
+                            @php
+                                // $averageRating = $freelancer->reviews->avg('rating'); // Replace with your actual average rating variable
+                                // $fullStars = floor($averageRating);
+                                // $hasHalfStar = ($averageRating - $fullStars) >= 0.5;
+                                // $totalDisplayStars = $fullStars + ($hasHalfStar ? 1 : 0);
+
+                                //calculate job completion
+                                $jobsCompleted = $freelancer->contractsAsFreelancer->where('status', 'completed')->count();
+                                $totalJobs = $freelancer->contractsAsFreelancer->count();
+                                $percentage = $totalJobs > 0 ? ($jobsCompleted / $totalJobs) * 100 : 0;
+                            @endphp
+                            {{-- @for ($i = 0; $i < $fullStars; $i++)
+                               <i class="fas fa-star"></i>
+                            @endfor
+
+                            @if ($hasHalfStar)
+                                <i class="fas fa-star-half-alt"></i>
+                            @endif
+
+                            @for ($i = 0; $i < (5 - $totalDisplayStars); $i++)
+                                <i class="far fa-star"></i>
+                            @endfor --}}
+                             {{-- <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i> --}}
                         </div>
-                        <p class="text-sm text-gray-500 mt-2">(Based on 3 reviews)</p>
+                        <p class="text-sm text-gray-500 mt-2">(Based on {{ $freelancer->reviews->count() }} reviews)</p>
                         <div class="mt-6 grid grid-cols-3 gap-4 text-sm">
                         <div>
-                            <p class="font-bold text-lg text-gray-800">12</p>
-                            <p class="text-gray-500">Jobs Done</p>
+                            <p class="font-bold text-lg text-gray-800">{{ $jobsCompleted }}</p>
+                            <p class="text-gray-500">Jobs Completed</p>
                         </div>
                             <div>
-                            <p class="font-bold text-lg text-gray-800">100%</p>
-                            <p class="text-gray-500">On Time</p>
+                            <p class="font-bold text-lg text-gray-800">{{ $totalJobs }}</p>
+                            <p class="text-gray-500">Total Jobs</p>
                         </div>
                             <div>
-                            <p class="font-bold text-lg text-gray-800">98%</p>
-                            <p class="text-gray-500">Success</p>
+                            <p class="font-bold text-lg text-gray-800">{{ number_format($percentage, 2) }}%</p>
+                            <p class="text-gray-500">Completion rate</p>
                         </div>
                         </div>
                 </div>
