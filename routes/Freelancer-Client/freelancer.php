@@ -50,7 +50,7 @@ Route::prefix('freelancer')->name('freelancer.')->group(function () {
     Route::patch('/earnings/{id}',[PayoutController::class,'update'])->name('earnings.update');
 });
 
-//freelancer contests routes
+//freelancer  contests routes
 Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(function () {
     Route::get('/', [FreelancerContestController::class, 'index'])->name('index');
     Route::get('/{contest}', [FreelancerContestController::class, 'show'])->name('show');

@@ -68,4 +68,8 @@ class Job extends Model
     // }
     
     
+    public function contract()
+    {
+        return $this->hasOne(Contract::class, 'job_id');
+    }
 }

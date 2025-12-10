@@ -28,7 +28,7 @@ $availableBalance = $fundings
  //Total Spent
  $totalSpent = $fundings
 //  ->where('status','deposited') released
- ->sum('amount'); 
+ ->sum('amount');  //TotalSpent = TotalSpent - AvailableBalance
 
 
  return view('dashboards.client.billing', compact('totalSpent', 'fundsInEscrow', 'availableBalance'));
@@ -125,8 +125,5 @@ public function requestRefund($id)
         ], 500);
     }
 }
-
-
-
 
 }

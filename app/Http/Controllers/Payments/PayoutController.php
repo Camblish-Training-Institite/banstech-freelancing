@@ -15,14 +15,40 @@ class PayoutController extends Controller
 
         $payouts = Payout::where('freelancer_id', $userId->id)->get();
         // dd($payouts);
+        
+//This is for Recent Payouts
+        $latestPayout = Payout::where('freelancer_id', $userId->id)->where('status','processed')->latest()->first();
  
-        $TotalEarnings =  $payouts->sum('amount'); //nullable to be recheck
+        $TotalEarnings =  $payouts->where('status','processed')->sum('amount'); 
         $PendingPayouts = $payouts ->where('status','pending')->sum('amount');
         $AvailableWithdrawals = $payouts->where('status','processed')->sum('amount');
         
         return view('dashboards.freelancer.earnings',compact('payouts','PendingPayouts','AvailableWithdrawals','TotalEarnings'));        
+    
     }
 
+    public function transection(){
+    }
+    
+    // This function updates the payout status, typically called after a payout request is made
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'method' => 'required|string|max:255',                                                  
+        ]);
+        // Find the payout record or return 404
+        $payout = Payout::findOrFail($id);              
+        // Update the payout details
+        $payout->amount = $request->input('amount');
+        $payout->method = $request->input('method');
+        $payout->status = 'pending'; // Set status to pending when a payout is          
+        $payout->requested_at = now(); // Set the requested_at timestamp
+        $payout->save();
+        return redirect()->route('freelancer.earnings')->with('success', 'Payout request submitted successfully.');
+    }
+
+  
     public function markAsProcessed($id)
 {
     // Find payout or return 404
