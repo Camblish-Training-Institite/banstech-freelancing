@@ -8,6 +8,7 @@ use App\Models\Payout;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Notifications\MilestoneReleased;
+use Illuminate\Support\Facades\Auth;
 use App\Notifications\EndProjecetReminder;
 
 class MilestoneController extends Controller
@@ -53,7 +54,7 @@ class MilestoneController extends Controller
     {
         // $this->authorizeRequester($milestone);
 
-        $notification = auth()->user()->unreadNotifications->where('data.milestone_id', $milestone->id)->first();
+        $notification = Auth::user()->unreadNotifications->where('data.milestone_id', $milestone->id)->first();
         if ($notification) {
             $notification->markAsRead();
         }
@@ -97,7 +98,7 @@ class MilestoneController extends Controller
         Payout::create([
             'freelancer_id'=> $project->user->id,           
             'contract_id' => $project->id,
-            'amount' => $project->agreed_amount,
+            'amount' => $milestone->amount,
             'requested_at' => now(),
             // 'processed_at' => null,
         ]);

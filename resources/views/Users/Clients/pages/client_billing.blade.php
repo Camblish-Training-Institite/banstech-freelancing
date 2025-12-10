@@ -11,7 +11,8 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm text-gray-500">Total Spent</p>
-                    <p class="text-2xl font-bold text-gray-800">R 15,200.00</p>
+                     {{-- <p class="text-2xl font-bold text-gray-800">R 1200</p> --}}
+                    <p class="text-2xl font-bold text-gray-800">R {{ number_format($totalSpent ?? 0,2) }}</p>
                 </div>
             </div>
         </div>
@@ -22,7 +23,8 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm text-gray-500">Funds in Escrow</p>
-                    <p class="text-2xl font-bold text-gray-800">R 4,500.00</p>
+                    {{-- <p class="text-2xl font-bold text-gray-800">R 1000</p> --}}
+                    <p class="text-2xl font-bold text-gray-800">R {{ number_format($fundsInEscrow ?? 0,2)}}</p>
                 </div>
             </div>
         </div>
@@ -33,7 +35,8 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm text-gray-500">Available Balance</p>
-                    <p class="text-2xl font-bold text-gray-800">R 8,000.00</p>
+                     {{-- <p class="text-2xl font-bold text-gray-800">R2000 </p> --}}
+                    <p class="text-2xl font-bold text-gray-800">R {{ number_format($availableBalance ?? 0,2)}}</p>
                 </div>
             </div>
         </div>
@@ -48,57 +51,37 @@
                     <h3 class="text-xl font-bold text-gray-800">Active Jobs & Milestones</h3>
                 </div>
                 <div class="p-6 space-y-6">
-                    <!-- Job 1 -->
+{{-- List of Jobs from DB --}}
+                    @php
+                        $jobs=Auth::user()->jobs; // Fetch jobs associated with the authenticated user
+                    @endphp
+                   @forelse ($jobs as $job)
+                   
                     <div>
-                        <h4 class="font-bold text-gray-800">E-commerce Platform</h4>
+                        <h4 class="font-bold text-gray-800">{{$job->title}}</h4>
                         <p class="text-sm text-gray-500 mb-4">Freelancer: Bobby Drake</p>
                         <ul class="space-y-3">
-                            <li class="p-4 border rounded-lg flex items-center justify-between">
+                            {{-- @forelse ($job->contract->milestones as $index => $milestone)
+                               <li class="p-4 border rounded-lg flex items-center justify-between">
                                 <div>
-                                    <p class="font-semibold">Phase 1: UI/UX Design</p>
+                                    <p class="font-semibold">Phase {{$index+1}}: {{$milestone->title}} </p>
                                     <p class="text-sm text-gray-500">R 1,500.00</p>
                                 </div>
                                 <div class="flex items-center">
                                     <span class="bg-green-100 text-green-800 text-xs font-medium mr-4 px-2.5 py-0.5 rounded-full"><i class="fas fa-check-circle mr-1"></i>Released</span>
                                 </div>
-                            </li>
-                            <li class="p-4 border rounded-lg flex items-center justify-between bg-blue-50 border-blue-200">
-                                <div>
-                                    <p class="font-semibold">Phase 2: Backend Dev</p>
-                                    <p class="text-sm text-gray-500">R 2,500.00</p>
-                                </div>
-                                <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg text-sm">
-                                    <i class="fas fa-lock-open mr-2"></i>Release Funds
-                                </button>
-                            </li>
-                            <li class="p-4 border rounded-lg flex items-center justify-between">
-                                <div>
-                                    <p class="font-semibold">Phase 3: Deployment</p>
-                                    <p class="text-sm text-gray-500">R 1,000.00</p>
-                                </div>
-                                <button class="accent-purple hover:opacity-90 text-white font-bold py-2 px-4 rounded-lg text-sm">
-                                    <i class="fas fa-money-bill-wave mr-2"></i>Fund Milestone
-                                </button>
-                            </li>
+                            </li> 
+                            @empty
+                                
+                            @endforelse --}}
+                            
                         </ul>
                     </div>
-                    <div class="border-t border-gray-200"></div>
-                    <!-- Job 2 -->
-                        <div>
-                        <h4 class="font-bold text-gray-800">CRM System</h4>
-                        <p class="text-sm text-gray-500 mb-4">Freelancer: Bobby Drake</p>
-                        <ul class="space-y-3">
-                                <li class="p-4 border rounded-lg flex items-center justify-between bg-blue-50 border-blue-200">
-                                <div>
-                                    <p class="font-semibold">Final Milestone</p>
-                                    <p class="text-sm text-gray-500">R 2,000.00</p>
-                                </div>
-                                <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg text-sm">
-                                    <i class="fas fa-lock-open mr-2"></i>Release Funds
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+                    <div class="border-t border-gray-200"></div>   
+                   @empty
+                       
+                   @endforelse
+                    
                 </div>
             </div>
         </div>
@@ -116,7 +99,7 @@
                     <label for="method" class="block mb-2 text-sm font-medium text-gray-900">Payment Method</label>
                     <p class="text-sm text-gray-600 p-2.5 bg-gray-50 rounded-lg border">Visa ending in 4242</p>
                 </div>
-                <button class="w-full accent-purple hover:opacity-90 text-white font-bold py-2.5 px-4 rounded-lg text-sm transition-all duration-300">
+                <button class="w-full accent-purple hover:opacity-90 text-black font-bold py-2.5 px-4 rounded-lg text-sm transition-all duration-300">
                     <i class="fas fa-plus-circle mr-2"></i>Add Funds
                 </button>
             </div>

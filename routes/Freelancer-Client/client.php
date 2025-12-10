@@ -7,10 +7,12 @@ use App\Http\Controllers\Client\ContestController;
 use App\Http\Controllers\Freelancer\MilestoneController;
 use App\Http\Controllers\Jobs\JobsController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\Jobs\ProposalController; 
+use App\Http\Controllers\Jobs\ProposalController;
+use App\Http\Controllers\Payments\ProjectFundingController;
 use App\Http\Controllers\Client\ProjectController;
 use App\Http\Controllers\Client\ReviewController;
 use App\Models\Contract;
+use App\Models\ProjectFunding;
 
 Route::get('/client/job/subCategories', [CategoryController::class, 'getSubcategories'])->name('client.jobs.subcategories');
 
@@ -102,9 +104,12 @@ Route::prefix('client/reviews')->name('client.reviews.')->group(function () {
 });
 
 //This is for billing page situated under dashboards/clients...
-Route::get('/client/billing',function(){
-    return view('dashboards.client.billing');
-})->name('billing');
+// Route::get('/client/billing',function(){
+//     return view('dashboards.client.billing');
+// })->name('billing');
+
+//testing route for billing page
+Route::get('client/billing', [ProjectFundingController::class, 'index'])->name('billing')->middleware('auth');
 
 // Show project page (with file upload form)
 // Route::get('/Users/Clients/project/{project}/show', [ContractController::class, 'show'])->name('client.project.show')->middleware('auth');
@@ -113,4 +118,6 @@ Route::get('/client/billing',function(){
 Route::post('Clients/project/{project}/upload-file', [ContractController::class, 'uploadFile'])->name('client.project.tabs.file')->middleware('auth');
 
 //Handle task creation
-Route::post('Clients/project/{project}/task', [ContractController::class, 'createTask'])->name('client.project.tabs.task')->middleware('auth');
+Route::post('Clients/project/{project}/task', [ContractController::class, 'createTask'])
+->name('client.project.tabs.task')->middleware('auth');
+
