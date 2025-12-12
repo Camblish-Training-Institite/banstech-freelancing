@@ -90,7 +90,7 @@
                 </div>
                     @if ($project->status == "completed")
                         <div class="flex w-full py-2 mb-2 justify-end space-x-2">
-                            <a href="{{route('client.reviews.create', $project)}}" class="flex rounded-md text-white bg-indigo-600 hover:bg-indigo-300 {{ $project->user->reviews ? 'hidden' : '' }}" style="padding: 0.45rem 1rem;">Review Freelancer</a>
+                            <a href="{{route('client.reviews.create', $project)}}" class="flex rounded-md text-white bg-indigo-600 hover:bg-indigo-300 {{ ($project->user->reviews->count() > 0) ? 'hidden' : '' }}" style="padding: 0.45rem 1rem;">Review Freelancer</a>
                             <a href="{{route('client.reviews.pm.create', $project)}}" class="flex rounded-md text-black bg-gray-200 hover:bg-gray-300 {{ $project->project_manager_id ? '' : 'hidden'}}" style="padding: 0.45rem 1rem;">Review Project Manager</a>
                         </div>
                     @endif

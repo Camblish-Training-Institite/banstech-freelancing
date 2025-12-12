@@ -181,74 +181,6 @@
     }
 </style>
 
-{{-- <div class="container"> --}}
-    <!-- Header-title -->
-    {{-- <div class="flex w-full justify-start mb-4">
-        <a href="{{ route('jobs.listing') }}" class="back-link">← Back to Jobs</a>
-    </div>
-    <div class="header-title flex flex-col">
-        <h1>{{ $job->title ?? 'Job Title Not Available' }}</h1>
-    </div> --}}
-
-    <!-- Job Info -->
-    {{-- <div class="job-info">
-        <div>
-            <label>Client</label>
-            <span>{{ $job->user->name ?? 'Anonymous' }}</span>
-        </div>
-        <div>
-            <label>Posted On</label>
-            <span>{{ $job->created_at?->format('M d, Y') ?? 'N/A' }}</span>
-        </div> --}}
-        {{-- <div>
-            <label>Type</label>
-            <span>{{ ucfirst($job->type ?? 'project') }}</span>
-        </div>
-        <div>
-            <label>Location</label>
-            <span>{{ $job->location ?? 'Remote' }}</span>
-        </div> --}}
-        {{--
-    </div> --}}
-
-    <!-- Description -->
-    {{-- <div class="description">
-        {!! nl2br(e($job->description ?? 'No description provided.')) !!}
-    </div> --}}
-
-    <!-- Tags -->
-    {{-- @if(!empty($job->skills))
-    <div class="tags">
-        @php
-        $jobSkills = $job->skills ? explode(',',$job->skills) : [];
-        @endphp
-        @foreach($jobSkills as $skill)
-        <span>{{ trim($skill) }}</span>
-        @endforeach
-    </div>
-    @endif --}}
-
-    <!-- Budget & Proposals -->
-    {{-- <div class="meta"> --}}
-        {{-- <div class="price">
-            {{ 'R' . number_format($job->budget) . ' ZAR' }}
-        </div> --}}
-        {{-- <div class="proposals">
-            {{ $job->proposals_count ?? 0 }} Proposal{{ $job->proposals_count != 1 ? 's' : '' }}
-        </div> --}}
-        {{-- </div> --}}
-
-    <!-- Action Buttons -->
-    {{-- <div class="actions">
-        <a href="{{route('freelancer.proposal.create', $job->id)}}" class="send-proposal">Send Proposal</a> {{
-        route('proposals.create', ['job_id' => $job->id]) }}
-        <button class="save-job">Save Job</button>
-        <button class="report-job">Report Job</button>
-    </div> --}}
-    {{--
-</div> --}}
-
-
  
 
 <div class="flex w-full justify-start">
@@ -324,7 +256,7 @@
 
             <!-- proposals section -->
             @if($job->proposals->count() > 0)
-                <section class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm text-center">
+                <section class="p-6 bg-white text-center">
                     <h2 class="text-xl text-left font-bold text-gray-800 mb-4">Proposals ({{ $job->proposals->count() }})</h2>
                     @foreach($job->proposals as $proposal)
 
@@ -336,21 +268,18 @@
                                             <div>
                                                 <div class="flex items-center space-x-2">
                                                     <div>
-                                                        <img class="w-16 h-16 rounded-full object-cover" width="64" height="64"
+                                                        {{-- <img class="w-16 h-16 rounded-full object-cover" width="64" height="64"
                                                             src="{{ $proposal->user->profile ? asset('storage/' . $proposal->user->profile->avatar) : 'https://ui-avatars.com/api/?name= '.$proposal->user->name .'&background=random&size=128' }}"
-                                                            alt="{{ $proposal->User->name }}">
+                                                            alt="{{ $proposal->User->name }}"> --}}
+                                                            @include('components.user-avatar', ['user' => $proposal->user, 'width' => '64', 'height' => '64'])
                                                     </div>
                                                     <div class="flex flex-col justify-start items-start">
                                                         <h4 class="text-lg text-left font-semibold text-gray-900">{{$proposal->user->name}}</h4>
-                                                        <div class="flex items-center mt-1">
-                                                            @for ($i = 0; $i < 5; $i++) <svg class="w-4 h-4 text-yellow-400"
-                                                                fill="currentColor" viewBox="0 0 20 20">
-                                                                <path
-                                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                                </svg>
-                                                                @endfor
-                                                                <span class="ml-2 text-sm font-medium text-gray-600">5.0</span>
-                                                        </div>
+                                                        @if ($proposal->user->reviews->count() > 0)
+                                                            @include('components.review-stars', ['averageRating' => $proposal->user->reviews->avg('rating')])
+                                                        @else
+                                                            <span class="text-sm text-gray-500">No reviews yet</span>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -377,11 +306,11 @@
  
         <div class="flex flex-col gap-6 mb-6 mt-8 lg:mt-0">
             @include('Users.Freelancers.components.about-client')
-            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-               <a href="{{url('/main_map')}}" style="display: block; text-decoration: none; color: inherit;">>
-                @include('geo_location.mini_map')
-            </a>
-            </div> 
+            {{-- <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <a href="{{url('/main_map')}}" style="display: block; text-decoration: none; color: inherit;">
+                    @include('geo_location.mini_map')
+                </a>
+            </div>  --}}
         </div> 
     </div>
 </div>

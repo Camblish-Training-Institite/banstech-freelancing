@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\SubCategory;
 use App\Models\Category;
 use App\Notifications\AddFundsToJob;
+use Geocoder\Laravel\Facades\Geocoder;
+use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class JobsController extends Controller
 {
@@ -81,6 +83,8 @@ class JobsController extends Controller
     //This stores the instered data to the database (Job table using Job module)
     public function store(Request $request){
 
+        // dd($request);
+
         //converting comma-separated string to array before validation
         $request->validate([
         'title' => 'required|string|max:255',
@@ -88,19 +92,44 @@ class JobsController extends Controller
         'deadline' => 'nullable|date',
         'budget' => 'required|numeric',
         'skills' => 'string',
+        'job_type' => 'string',
+        'job_type' => 'string|in:online,physical',
+        'job_address' => 'nullable|string',
+        'radius' => 'nullable|numeric',
         ]);
+
+        if($request->job_type == 'physical' && $request->has('job_address')){
+
+            //convert address to geo location
+            $results = Geocoder::geocode($request->job_address)->get();
+
+            if ($results->isEmpty()) {
+                return back()->withErrors(['job_address' => 'Could not find this address.']);
+            }
+
+            // 2. Get the first result (best match)
+            $coordinates = $results->first()->getCoordinates();
+            
+            // 3. Create the spatial Point
+            $point = new Point($coordinates->getLatitude(), $coordinates->getLongitude());
+
+        } 
+
+        
 
         $req_skills = $request->input('skills');
         $skills = is_array($req_skills) ? implode(',', $req_skills) : $req_skills;
 
         Job::create([
-        'user_id' => auth()->id(),
-        'title' => $request->title,
-        'description'=> $request->description,
-        'deadline' => $request->deadline,
-        'budget' => $request->budget,
-        'skills' => $skills,
-        
+            'user_id' => auth()->id(),
+            'title' => $request->title,
+            'description'=> $request->description,
+            'deadline' => $request->deadline,
+            'budget' => $request->budget,
+            'skills' => $skills,
+            'job_type' => $request->job_type,
+            'freelancer_radius' => $request->radius ?? null,
+            'location' => $point ?? null,
         ]);
 
         $job = Job::latest()->first();

@@ -38,6 +38,33 @@
                     required>{{ old('description', $job->description ?? '') }}</textarea>
             </div>
 
+
+
+            {{-- Job Type, Physical or  online --}}
+            <div class="mb-6">
+                <div>
+                    <label for="job_type" class="block text-sm font-semibold text-gray-600 mb-2">physical job?</label>
+                    <input type="hidden" name="job_type" value="online">
+                    <input type="checkbox" name="job_type" id="is_physical_job"
+                        class="p-1 border rounded border-gray-300 focus:outline-none focus:ring-blue-500"
+                        value="physical" {{ old('job_type', $job->job_type ?? 'online') == 'physical' ? 'checked' : '' }} required>
+                </div>
+
+                <!-- Hidden Div (to show/hide) -->
+                <div id="physical-job-fields" style="display: none;" class="space-y-2">
+                    <div class="form-group">
+                        <label for="job_address">Job Location Address</label>
+                        <input type="text" name="job_address" class="w-full p-1  border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter street address">
+                    </div>
+                    <div class="form-group">
+                        <label>Please enter the maximum distance away we should show you proposals from (km)</label>
+                        <input type="number" name="freelancer_radius" class="w-full p-1  border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., Durban">
+                    </div>
+                </div>
+            </div>
+
+
+
             {{-- Job Category --}}
             <div>
                 <h3 class="text-lg font-medium text-gray-900">Job Category</h3>
@@ -162,6 +189,23 @@
 
 <!-- tag script -->
 @include('components.tag-script')
+
+
+<!-- Script for physical job checkbox -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkbox = document.getElementById('is_physical_job');
+        const physicalFields = document.getElementById('physical-job-fields');
+
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                physicalFields.style.display = 'block';
+            } else {
+                physicalFields.style.display = 'none';
+            }
+        });
+    });
+</script>
 
 {{-- Optional: Auto-focus on title input when page loads --}}
 <script>
