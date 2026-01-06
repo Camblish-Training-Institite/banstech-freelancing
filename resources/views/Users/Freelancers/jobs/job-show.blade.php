@@ -13,11 +13,12 @@
 
     .container {
         width: 100%;
+        height: auto;
         margin: 30px auto;
         padding: 30px;
         background-color: #fff;
         border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
     }
 
     /* Header-title */
@@ -256,7 +257,7 @@
 
             <!-- proposals section -->
             @if($job->proposals->count() > 0)
-                <section class="p-6 bg-white text-center">
+                <section class="p-6 bg-white border-gray-200 rounded-lg shadow-sm text-center">
                     <h2 class="text-xl text-left font-bold text-gray-800 mb-4">Proposals ({{ $job->proposals->count() }})</h2>
                     @foreach($job->proposals as $proposal)
 
@@ -306,11 +307,11 @@
  
         <div class="flex flex-col gap-6 mb-6 mt-8 lg:mt-0">
             @include('Users.Freelancers.components.about-client')
-            {{-- <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-                <a href="{{url('/main_map')}}" style="display: block; text-decoration: none; color: inherit;">
-                    @include('geo_location.mini_map')
+            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <a href="{{route('freelancer.job.map', $job->id)}}" style="display: block; text-decoration: none; color: inherit;">
+                    @include('geo_location.mini_map', ['job' => $job ?? null])
                 </a>
-            </div>  --}}
+            </div> 
         </div> 
     </div>
 </div>

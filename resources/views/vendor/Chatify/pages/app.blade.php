@@ -68,7 +68,7 @@
                                 <a href="#" class="show-listView"><i class="fas fa-arrow-left"></i></a>
                                 <div class="avatar av-s header-avatar" style="margin: 0px 10px; margin-top: -5px; margin-bottom: -5px;">
                                     @if ($user)
-                                        <img src="{{ $user->profile ? asset('storage/'.$user->profile->avatar) : 'https://ui-avatars.com/api/?name='. $freelancer->name .'&background=random&size=128' }}" alt="">
+                                        <img src="{{ $user->profile ? asset('storage/'.$user->profile->avatar) : asset('storage/avatars/default-avatar.png') }}" alt="">
                                     @endif
                                 </div>
                                 <a href="#" class="user-name">{{ config('chatify.name') }}</a>

@@ -102,6 +102,7 @@ class JobsController extends Controller
 
             //convert address to geo location
             $results = Geocoder::geocode($request->job_address)->get();
+            // dd($results, $request->job_address);
 
             if ($results->isEmpty()) {
                 return back()->withErrors(['job_address' => 'Could not find this address.']);
