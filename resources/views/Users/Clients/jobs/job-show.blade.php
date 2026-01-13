@@ -263,9 +263,10 @@
         <div class="flex flex-col gap-6 mb-6 mt-8 lg:mt-0">
             {{-- @include('Users.Freelancers.components.about-client') --}}
             <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-                <a href="{{route('freelancer.job.map', $job->id)}}" style="display: block; text-decoration: none; color: inherit;">
+                {{-- <a href="{{route('freelancer.job.map', $job->id)}}" style="display: block; text-decoration: none; color: inherit;">
                     @include('geo_location.mini_map')
-                </a>
+                </a> --}}
+                <a href="{{ route('client.job.map', $job->id) }}" class="flex px-4 py-2 items-center justify-center bg-blue-600 text-white rounded-md hover:bg-blue-900">View on Map</a>
             </div> 
         </div> 
     </div>

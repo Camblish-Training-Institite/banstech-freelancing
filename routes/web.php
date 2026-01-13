@@ -58,14 +58,15 @@ Route::get('project-manager/dashboard', function() {
     return view('dashboards.manager-dashboard');
 })->name('manager.dashboard');
 
-Route::get('/category', [CategoryController::class, 'index'])
-    ->name('Components.category');
+// Route::get('/category', [CategoryController::class, 'index'])
+//     ->name('Components.category');
 
 require __DIR__.'/auth.php';
 require __DIR__.'/jobs/jobRoutes.php';
 require __DIR__.'/jobs/jobMapRoutes.php';
 require __DIR__.'/jobs/notifications.php';
 require __DIR__.'/admin/project-manager.php';
+require __DIR__.'/admin/admin-routes.php';
 require __DIR__.'/Freelancer-Client/freelancer.php';
 require __DIR__.'/Freelancer-Client/client.php';
 require __DIR__.'/api.php';
