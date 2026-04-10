@@ -9,11 +9,12 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    
     public function up(): void
     {
         Schema::create('project_fundings', function (Blueprint $table) {
             $table->id();
-       $table->unsignedBigInteger('client_id');
+            $table->unsignedBigInteger('client_id');
             $table->decimal('amount', 10, 2);
             $table->unsignedBigInteger('job_id')->nullable();
             $table->unsignedBigInteger('contest_id')->nullable();

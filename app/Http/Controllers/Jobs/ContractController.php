@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Jobs;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\ReviewFreelancerReminder;
 use Illuminate\Http\Request;
 use App\Models\Contract;
 use App\Models\User;
@@ -38,17 +39,17 @@ class ContractController extends Controller
     }
 
     public function show_client(int $id){
-        $contract = Contract::find($id);
-        if ($contract) {
-            return view('Users.Clients.projects.view', ['project' => $contract, 'tab' => 'details']);
+        $project = Contract::find($id);
+        if ($project) {
+            return view('Users.Clients.projects.view', ['project' => $project, 'tab' => 'details']);
         }
         return redirect()->back()->with('error', 'Contract not found.');
     }
 
     public function show(int $id){
-        $contract = Contract::find($id);
-        if ($contract) {
-            return view('Users.Freelancers.projects.view', ['project' => $contract, 'tab' => 'details']);
+        $project = Contract::find($id);
+        if ($project) {
+            return view('Users.Freelancers.projects.view', ['project' => $project, 'tab' => 'details']);
         }
         return redirect()->back()->with('error', 'Contract not found.');
     }
@@ -77,20 +78,24 @@ class ContractController extends Controller
     }
 
     public function cancelContract(Request $request, int $id){
-        $contract = Contract::find($id);
-        if ($contract && $contract->job->user->user_id == Auth::id()) {
-            $contract->status = 'cancelled';
-            $contract->save();
+        $project = Contract::find($id);
+        if ($project && $project->job->user->user_id == Auth::id()) {
+            $project->status = 'cancelled';
+            $project->save();
             return redirect()->back()->with('success', 'Contract cancelled successfully.');
         }
         return redirect()->back()->with('error', 'Contract not found or you do not have permission to cancel it.');
     }
 
     public function completeContract(Request $request, int $id){
-        $contract = Contract::find($id);
-        if ($contract && $contract->job->user->id == Auth::id()) {
-            $contract->status = 'completed';
-            $contract->save();
+        $project = Contract::find($id);
+        if ($project && $project->job->user->id == Auth::id()) {
+            $project->status = 'completed';
+            $project->save();
+
+            $client = User::find($project->user_id);
+            $client->notify(new ReviewFreelancerReminder($project));
+
             return redirect()->back()->with('success', 'Contract completed successfully.');
         }
         return redirect()->back()->with('error', 'Contract not found or you do not have permission to complete it.');

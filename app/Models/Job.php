@@ -5,12 +5,14 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
+use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class Job extends Model
 {
     use CrudTrait;
     /** @use HasFactory<\Database\Factories\JobFactory> */
-    use HasFactory;
+    use HasFactory, HasSpatial;
 
     protected $fillable = [ 
         'user_id',
@@ -21,12 +23,14 @@ class Job extends Model
         'deadline',
         'skills',
         'job_funded',
+        'location'
     ];
 
     protected $casts = [
         'facilities' => 'json',
         'completion_date' => 'date',
         'skills' => 'array',
+        'location' => Point::class,
     ];
 
     public function user()
@@ -67,5 +71,9 @@ class Job extends Model
     //     return $this->proposals()->latest('created_at')->first();
     // }
     
-    
+
+    public function contract()
+    {
+        return $this->hasOne(Contract::class, 'job_id');
+    }
 }

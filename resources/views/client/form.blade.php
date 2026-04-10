@@ -64,10 +64,12 @@
             <select id="subCategory" name="subCategory" class="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="" disabled selected>First, select a main category...</option>
 
-                @if ($subCategories)
+                @if ($subCategories ?? false)
                     @foreach($subCategories as $subCategory)
                         <option value="{{ $subCategory->id }}">{{ $subCategory->name }}</option>
                     @endforeach
+                @else
+                    <option value="" disabled>No subcategories available</option>
                 @endif
             </select>
         </div>

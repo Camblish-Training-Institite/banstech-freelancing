@@ -16,10 +16,10 @@
 </style>
 
 
-<div class="container mx-auto px-4 md:px-12">
+<div class="container mx-auto px-2 md:px-12">
     <!-- Project Details -->
     <div class="my-1 px-1 w-full">
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="rounded-md shadow-md p-6" style="background-color:#2c2c2c;">
             <div class="flex items-center space-x-2">
                     <!-- Outer flex: left vs right -->
                     <div class="flex items-center justify-between w-full">
@@ -34,8 +34,8 @@
                                     &background=random&size=128" }}" alt="{{ $project->job->user->name }}">
                             </div>
                             <div>
-                                <h2 class="text-2xl font-bold text-gray-800">{{ $project->job->title }}</h2>
-                                <p class="text-gray-600">Posted by {{ $project->job->user->name }}</p>
+                                <h2 class="text-2xl font-bold text-gray-200">{{ $project->job->title }}</h2>
+                                <p class="text-gray-400">Posted by {{ $project->job->user->name }}</p>
                             </div>
                         </div>
 
@@ -44,16 +44,16 @@
 
             <div class="mt-6">
                 <div class="flex items-center justify-between">
-                    <span class="text-gray-600">Budget</span>
-                    <span class="text-lg font-bold text-gray-800">${{ number_format($project->agreed_amount, 2)
+                    <span class="text-gray-400">Budget</span>
+                    <span class="text-lg font-bold text-gray-200">R{{ number_format($project->agreed_amount, 2)
                         }}</span>
                 </div>
                 @php
                 $endDate = new DateTime($project->job->deadline);
                 @endphp
                 <div class="flex items-center justify-between mt-2">
-                    <span class="text-gray-600">Ends in</span>
-                    <span class="text-gray-800">{{ $endDate->format('M d, Y') }}</span>
+                    <span class="text-gray-400">Ends in</span>
+                    <span class="text-gray-200">{{ $endDate->format('M d, Y') }}</span>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-@extends('dashboards.client.dashboard')
+@extends('dashboards.freelancer.dashboard')
 
 @section('body')
     <div class="flex flex-col h-full">

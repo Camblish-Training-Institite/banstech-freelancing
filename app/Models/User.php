@@ -20,6 +20,10 @@ class User extends Authenticatable
     use CrudTrait;
     // use HasBackpackUser; // Add this trait for Backpack user access logic
 
+    public function milestones()
+    {
+        return $this->hasMany(Milestone::class, 'user_id');
+    }   
 
     public function getRoleNamesAttribute()
     {
@@ -88,6 +92,8 @@ class User extends Authenticatable
         'email',
         'password',
         'user_type',
+        'messengerColor',
+        'dark_mode',
     ];
 
     /**

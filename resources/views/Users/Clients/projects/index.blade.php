@@ -23,13 +23,14 @@
             <tr class="hover:bg-gray-50 cursor-pointer text-left" onclick="window.location.href='{{route('client.project.show', $project->id)}}'"> {{-- {{ route('client.projects.show', $project) }} --}}
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     <div class="flex items-center">
-                        <div class="flex items-center justify-center rounded-full w-8 h-8 object-cover overflow-hidden">
+                        {{-- <div class="flex items-center justify-center rounded-full w-8 h-8 object-cover overflow-hidden">
                             @if ($project->user->profile)
                                 <img src="{{ asset('storage/' . $project->user->profile->avatar) }}" alt="">
                             @else
                                 <img src="https://ui-avatars.com/api/?name={{ $project->user->name }}&background=random&size=128" alt="">
                             @endif
-                        </div>
+                        </div> --}}
+                        @include('components.user-avatar', ['user' => $project->user, 'width' => '2rem', 'height' => '2rem'])
                         <p class="mx-2">{{ $project->user->name }}</p>
                     </div>
                 </td>

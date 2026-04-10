@@ -17,4 +17,24 @@ class Review extends Model
         'rating',
         'comment',
     ];
+
+    public function project()
+    {
+        return $this->belongsTo(Contract::class, 'contract_id');
+    }
+
+    public function job()
+    {
+        return $this->belongsTo(Job::class, 'job_id');
+    }
+
+    public function freelancer()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function averageRating()
+    {
+        return $this->avg('rating');
+    }
 }
