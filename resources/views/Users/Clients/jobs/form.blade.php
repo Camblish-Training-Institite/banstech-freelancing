@@ -54,7 +54,7 @@
                 <form action="" id="category_form" method="">
                     {{-- CSRF Token --}}
                     @csrf
-                    <label for="mainCategory_id" class="text-sm font-medium text-gray-700">Main Category</label>
+                <label for="mainCategory_id" class="text-sm font-medium text-gray-700">Main Category</label>
                     <select id="mainCategory_id" name="mainCategory_id" class="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="" disabled selected>Select a main category...</option>
                         
@@ -62,6 +62,7 @@
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
+                    
                 </form>
             </div>
 

@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use App\Models\Skill;
+use App\Models\Qualification;
+use App\Models\Portfolio;
 
 class ProfileController extends Controller
 {
@@ -26,6 +29,30 @@ class ProfileController extends Controller
         $profile = $user->profile ?? new Profile(); // empty profile if none
 
         return view('profile.edit', compact('user', 'profile'));
+    }
+
+    public function updateAddress(Request $request)
+    {
+        $user = Auth::user();
+        $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
+
+        $request->validate([
+            'street' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'zip_code' => 'nullable|string|max:20',
+            'state' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
+        ]);
+
+        // Update profile fields
+        $profile->address = $request->input('street');
+        $profile->city = $request->input('city');
+        $profile->zip_code = $request->input('zip_code');
+        $profile->state = $request->input('state');
+        $profile->country = $request->input('country');
+        $profile->save();
+
+        return back()->with('status', 'Address updated successfully.');
     }
 
     // public function update(Request $request)
@@ -70,29 +97,218 @@ class ProfileController extends Controller
     //     return redirect()->route('dashboard')->with('status', 'Profile updated successfully.');
     // }
 
-    public function update(Request $request)
-    {
-        $user = Auth::user();
-        // dd($user);
-        $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
-        try {
+    // public function update(Request $request)
+    // {
+    //     $user = Auth::user();
+    //     // dd($user);
+    //     $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
+    //     try {
             
+    //         // Validate the request data
+    //         $validatedData = $request->validate([
+    //             'bio'       => 'nullable|string',
+    //             'address'   => 'nullable|string|max:255',
+    //             'city'      => 'nullable|string|max:255',
+    //             'zip_code'  => 'nullable|string|max:20',
+    //             'state'     => 'nullable|string|max:255',
+    //             'country'   => 'nullable|string|max:255',
+    //             'company'   => 'nullable|string|max:255',
+    //             'location'  => 'nullable|string|max:255',
+    //             'timezone'  => 'nullable|string|max:50',
+    //             'avatar'    => 'nullable|image|max:2048', // Max file size: 2MB
+    //         ]);
+
+    //         // Update profile fields except for 'avatar'
+    //         $profile->fill($request->except('avatar'));
+
+    //         // Handle avatar upload
+    //         if ($request->hasFile('avatar')) {
+    //             // Delete old avatar if it exists
+    //             if ($profile->avatar && Storage::disk('public')->exists($profile->avatar)) {
+    //                 Storage::disk('public')->delete($profile->avatar);
+    //             }
+
+    //             // Store the new avatar
+    //             $avatarPath = $request->file('avatar')->store('avatars', 'public');
+    //             $profile->avatar = $avatarPath;
+    //         }
+
+    //         // Save the profile
+    //         $profile->save();
+
+    //         // Redirect with success message
+    //         return redirect()->route('freelancer.dashboard')->with('status', 'Profile updated successfully.');
+
+    //     } catch (\Illuminate\Validation\ValidationException $validationException) {
+    //         // Handle validation errors
+    //         return back()->withErrors($validationException->errors())->withInput();
+    //     } catch (\Exception $e) {
+    //         // Handle other unexpected errors
+    //         Log::error('Error updating profile: ' . $e->getMessage());
+    //         return back()->with('error', 'An error occurred while updating your profile. Please try again later.');
+    //     }
+    // }
+
+    //Method to update Certifications
+    public function updateCertifications(Request $request){
+        try {
+            $user = Auth::user();
+            $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
+
             // Validate the request data
             $validatedData = $request->validate([
-                'bio'       => 'nullable|string',
-                'address'   => 'nullable|string|max:255',
-                'city'      => 'nullable|string|max:255',
-                'zip_code'  => 'nullable|string|max:20',
-                'state'     => 'nullable|string|max:255',
-                'country'   => 'nullable|string|max:255',
-                'company'   => 'nullable|string|max:255',
-                'location'  => 'nullable|string|max:255',
-                'timezone'  => 'nullable|string|max:50',
-                'avatar'    => 'nullable|image|max:2048', // Max file size: 2MB
+                'certifications' => 'nullable|array',
+                'certifications.*' => 'string|max:255',
             ]);
 
-            // Update profile fields except for 'avatar'
-            $profile->fill($request->except('avatar'));
+            // Update profile fields
+            $profile->certifications = isset($validatedData['certifications']) ? json_encode($validatedData['certifications']) : $profile->certifications;
+            $profile->save();
+
+            return back()->with('status', 'Certifications updated successfully.');
+
+        } catch (\Illuminate\Validation\ValidationException $validationException) {
+            // Handle validation errors
+            return response()->json(['errors' => $validationException->errors()], 422);
+        } catch (\Exception $e) {
+            // Handle other unexpected errors
+            Log::error('Error updating certifications: ' . $e->getMessage());
+            return response()->json(['error' => 'An error occurred while updating your certifications. Please try again later.'], 500);
+        }
+    }
+
+    //Method to update Qualifications
+    public function updateQualifications(Request $request){
+        // dd($request);
+        try {
+            $user = Auth::user();
+            $qualification = $user->qualification ?? new Qualification(['user_id' => $user->id]);
+            // Validate the request data
+            $validatedData = $request->validate([
+                'degree' => 'required|string|max:255',
+                'institution' => 'required|string|max:255',
+                'year_of_completion' => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 1),
+            ]);
+
+            // Update profile fields
+            $qualification->degree = $request->input('degree');
+            $qualification->institution = $request->input('institution');
+            $qualification->year_of_completion = $request->input('year_of_completion');
+            $qualification->save();
+
+            return back()->with('status', 'Qualifications updated successfully.');
+
+        } catch (\Illuminate\Validation\ValidationException $validationException) {
+            // Handle validation errors
+            Log::error('Error updating qualifications: ' . $validationException->getMessage());
+            return response()->json(['errors' => $validationException->errors()], 422);
+        } catch (\Exception $e) {
+            // Handle other unexpected errors
+            Log::error('Error updating qualifications: ' . $e->getMessage());
+            return response()->json(['error' => 'An error occurred while updating your qualifications. Please try again later.'], 500);
+        }
+    }
+
+    // Method to update the skills
+    public function updateSkills(Request $request)
+{
+    try {
+        $user = Auth::user();
+        $profile = $user->profile ?? Profile::create(['user_id' => $user->id]);
+
+        $validated = $request->validate([
+            'skills' => 'nullable|string', // JSON string
+        ]);
+
+        // Decode JSON
+        $skillNames = json_decode($validated['skills'], true) ?? [];
+
+        // Create or find skills
+        $skillIds = [];
+        foreach ($skillNames as $name) {
+            $skill = Skill::firstOrCreate(['name' => trim($name)]);
+            $skillIds[] = $skill->id;
+        }
+
+        // Sync pivot table
+        $profile->skills()->sync($skillIds);
+
+        return back()->with('status', 'Skills updated successfully.');
+        
+    } catch (\Exception $e) {
+        Log::error("Error updating skills: ".$e->getMessage());
+        return back()->with('error', 'Something in skills went wrong.');
+    }
+}
+
+    // Method to update About me section
+    public function updateAboutMe(Request $request){
+        try {
+            $user = Auth::user();
+            $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
+
+            // Validate the request data
+            $validatedData = $request->validate([
+                'bio' => 'nullable|string|max:1000',
+            ]);
+
+            // Update profile fields
+            $profile->bio = $validatedData['bio'];
+            $profile->save();
+
+            return back()->with('status', 'About Me section updated successfully.');
+
+        } catch (\Illuminate\Validation\ValidationException $validationException) {
+            // Handle validation errors
+            return response()->json(['errors' => $validationException->errors()], 422);
+        } catch (\Exception $e) {
+            // Handle other unexpected errors
+            Log::error('Error updating About Me section: ' . $e->getMessage());
+            return response()->json(['error' => 'An error occurred while updating your About Me section. Please try again later.'], 500);
+        }
+    }
+
+    public function updateProfile(Request $request)
+{
+    try {
+        $user = Auth::user();
+        $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
+
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name'  => 'required|string|max:255',
+            'title'      => 'nullable|string|max:255',
+            'location'   => 'nullable|string|max:255',
+        ]);
+
+        // Update Profile (not User)
+        $profile->first_name = $validated['first_name'];
+        $profile->last_name  = $validated['last_name'];
+        $profile->title      = $validated['title'];
+        $profile->location   = $validated['location'];
+
+        $profile->save();
+
+        return back()->with('status', 'Profile updated successfully.');
+
+    } catch (\Illuminate\Validation\ValidationException $validationException) {
+        return response()->json(['errors' => $validationException->errors()], 422);
+    } catch (\Exception $e) {
+        Log::error('Error updating profile: ' . $e->getMessage());
+        return response()->json(['error' => 'An error occurred.'], 500);
+    }
+}
+
+
+    // Separate method to handle avatar update
+    public function updateAvatar(Request $request){
+        try{
+            $request->validate([
+                'avatar' => 'required|image|max:2048', // Max file size: 2MB
+            ]);
+
+            $user = Auth::user();
+            $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
 
             // Handle avatar upload
             if ($request->hasFile('avatar')) {
@@ -109,16 +325,90 @@ class ProfileController extends Controller
             // Save the profile
             $profile->save();
 
-            // Redirect with success message
-            return redirect()->route('freelancer.dashboard')->with('status', 'Profile updated successfully.');
+            return back()->with('status', 'Avatar updated successfully.');
 
         } catch (\Illuminate\Validation\ValidationException $validationException) {
             // Handle validation errors
-            return back()->withErrors($validationException->errors())->withInput();
+            return response()->json(['errors' => $validationException->errors()], 422);
         } catch (\Exception $e) {
             // Handle other unexpected errors
-            Log::error('Error updating profile: ' . $e->getMessage());
-            return back()->with('error', 'An error occurred while updating your profile. Please try again later.');
+            Log::error('Error updating avatar: ' . $e->getMessage());
+            return response()->json(['error' => 'An error occurred while updating your avatar. Please try again later.'], 500);
         }
+
+    }
+
+    //Update the certificate field in profile table
+    public function updateCertificate(Request $request){
+        try {
+            $user = Auth::user();
+            $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
+
+            // Validate the request data
+            $validatedData = $request->validate([
+                'certificate' => 'nullable|string|max:255',
+            ]);
+
+            // Update profile fields
+            $profile->certificate = $validatedData['certificate'] ?? $profile->certificate;
+            $profile->save();
+
+            return back()->with('status', 'Address updated successfully.');
+
+        } catch (\Illuminate\Validation\ValidationException $validationException) {
+            // Handle validation errors
+            return response()->json(['errors' => $validationException->errors()], 422);
+        } catch (\Exception $e) {
+            // Handle other unexpected errors
+            Log::error('Error updating certificate: ' . $e->getMessage());
+            return response()->json(['error' => 'An error occurred while updating your certificate. Please try again later.'], 500);
+        }
+    }
+
+    //update the Edoucation field in profile table
+    public function updateEducation(Request $request){
+        try {
+            $user = Auth::user();
+            $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
+
+            // Validate the request data
+            $validatedData = $request->validate([
+                'education' => 'nullable|string|max:255',
+            ]);
+
+            // Update profile fields
+            $profile->education = $validatedData['education'] ?? $profile->education;
+            $profile->save();
+
+            return response()->json(['message' => 'Education updated successfully.'], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $validationException) {
+            // Handle validation errors
+            return response()->json(['errors' => $validationException->errors()], 422);
+        } catch (\Exception $e) {
+            // Handle other unexpected errors
+            Log::error('Error updating education: ' . $e->getMessage());
+            return response()->json(['error' => 'An error occurred while updating your education. Please try again later.'], 500);
+        }
+    }
+
+    public function storePortfolio(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'imageURL' => 'nullable|url',
+            'file_url' => 'nullable|url',
+        ]);
+
+        Portfolio::create([
+            'user_id' => Auth::id(),
+            'title' => $request->title,
+            'description' => $request->description,
+            'imageURL' => $request->imageURL,
+            'file_url' => $request->file_url,
+        ]);
+
+        return redirect()->back()->with('success', 'Portfolio item added successfully!');
     }
 }
