@@ -161,7 +161,7 @@
             </ul>
             <div class="sidebar-header">Preference</div>
             <ul>
-                <li><a href="{{ route('freelancer.profile.edit') }}"><i class="fas fa-user-circle"></i> <span>Profile Management</span></a></li>
+                <li><a href="{{ route('freelancer.myprofile') }}"><i class="fas fa-user-circle"></i> <span>Profile Management</span></a></li>
                 <li><a href="#"><i class="fas fa-hands-helping"></i> <span>Support & Assistance</span></a></li>
                 <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
             </ul>

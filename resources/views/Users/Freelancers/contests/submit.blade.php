@@ -118,7 +118,8 @@
                                     @enderror
                                 </div>
 
-                                <div class="mb-4">
+                                //hidden section for subscribed users
+                                <div class="mb-4 ">
                                     <h3 class="fs-5 fw-semibold text-gray-800 mb-3">Promote my entry
                                     </h3>
                                     <div class="promo-card">

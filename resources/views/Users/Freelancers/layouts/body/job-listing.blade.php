@@ -33,6 +33,10 @@
                 <label>Categories</label>
                 <select>
                     <option value="all" disabled>All Categories</option>
+                    @php
+                    $categories = \App\Models\Category::all();
+                    @endphp
+                    
                     @forelse ($categories as $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @empty

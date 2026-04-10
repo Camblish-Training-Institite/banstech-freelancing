@@ -60,6 +60,11 @@ Route::get('project-manager/dashboard', function() {
 
 // Route::get('/category', [CategoryController::class, 'index'])
 //     ->name('Components.category');
+Route::middleware(['auth'])->group(function () {
+    // ... other profile routes
+
+    Route::post('/myprofile/portfolio', [App\Http\Controllers\ProfileController::class, 'storePortfolio'])->name('profile.portfolio.store');
+});
 
 require __DIR__.'/auth.php';
 require __DIR__.'/jobs/jobRoutes.php';
@@ -70,4 +75,5 @@ require __DIR__.'/admin/admin-routes.php';
 require __DIR__.'/Freelancer-Client/freelancer.php';
 require __DIR__.'/Freelancer-Client/client.php';
 require __DIR__.'/api.php';
+
 

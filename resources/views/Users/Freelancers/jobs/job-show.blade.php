@@ -182,12 +182,78 @@
     }
 </style>
 
- 
+{{-- <div class="container"> --}}
+    <!-- Header-title -->
+    {{-- <div class="flex w-full justify-start mb-4">
+        <a href="{{ route('jobs.listing') }}" class="back-link">← Back to Jobs</a>
+    </div>
+    <div class="header-title flex flex-col">
+        <h1>{{ $job->title ?? 'Job Title Not Available' }}</h1>
+    </div> --}}
+
+    <!-- Job Info -->
+    {{-- <div class="job-info">
+        <div>
+            <label>Client</label>
+            <span>{{ $job->user->name ?? 'Anonymous' }}</span>
+        </div>
+        <div>
+            <label>Posted On</label>
+            <span>{{ $job->created_at?->format('M d, Y') ?? 'N/A' }}</span>
+        </div> --}}
+        {{-- <div>
+            <label>Type</label>
+            <span>{{ ucfirst($job->type ?? 'project') }}</span>
+        </div>
+        <div>
+            <label>Location</label>
+            <span>{{ $job->location ?? 'Remote' }}</span>
+        </div> --}}
+        {{--
+    </div> --}}
+
+    <!-- Description -->
+    {{-- <div class="description">
+        {!! nl2br(e($job->description ?? 'No description provided.')) !!}
+    </div> --}}
+
+    <!-- Tags -->
+    {{-- @if(!empty($job->skills))
+    <div class="tags">
+        @php
+        $jobSkills = $job->skills ? explode(',',$job->skills) : [];
+        @endphp
+        @foreach($jobSkills as $skill)
+        <span>{{ trim($skill) }}</span>
+        @endforeach
+    </div>
+    @endif --}}
+
+    <!-- Budget & Proposals -->
+    {{-- <div class="meta"> --}}
+        {{-- <div class="price">
+            {{ 'R' . number_format($job->budget) . ' ZAR' }}
+        </div> --}}
+        {{-- <div class="proposals">
+            {{ $job->proposals_count ?? 0 }} Proposal{{ $job->proposals_count != 1 ? 's' : '' }}
+        </div> --}}
+        {{-- </div> --}}
+
+    <!-- Action Buttons -->
+    {{-- <div class="actions">
+        <a href="{{route('freelancer.proposal.create', $job->id)}}" class="send-proposal">Send Proposal</a> {{
+        route('proposals.create', ['job_id' => $job->id]) }}
+        <button class="save-job">Save Job</button>
+        <button class="report-job">Report Job</button>
+    </div> --}}
+    {{--
+</div> --}}
+
+
 
 <div class="flex w-full justify-start">
     <a href="{{ route('jobs.listing') }}" class="back-link">← Back to Projects</a>
 </div>
- 
 
 <div class="container mx-auto p-4 md:p-8">
     <!-- header section -->
@@ -303,8 +369,11 @@
                 </section>
             @endif
         </main>
+        
+        <!-- about the client -->
+        @include('Users.Freelancers.components.about-client', [$job, $user])
 
- 
+
         <div class="flex flex-col gap-6 mb-6 mt-8 lg:mt-0">
             @include('Users.Freelancers.components.about-client')
             <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">

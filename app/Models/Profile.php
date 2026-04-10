@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\belongsToMany;
+
+
 
 class Profile extends Model
 {
@@ -11,6 +14,7 @@ class Profile extends Model
         'user_id',
         'first_name',
         'last_name',
+        'title',
         'bio',
         'address',
         'city',
@@ -32,5 +36,15 @@ class Profile extends Model
     public function getFullNameAttribute()
     {
         return trim("{$this->first_name} {$this->last_name}");
+    }
+
+    public function skills(): belongsToMany
+    {
+        return $this->belongsToMany(Skill::class, '[profile_skill');
+    }
+
+    public function qualifications(): hasMany
+    {
+        return $this->hasMany(Qualification::class);
     }
 }

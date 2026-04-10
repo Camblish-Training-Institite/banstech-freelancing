@@ -46,11 +46,11 @@
 
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Verifications</h3>
                     <li class="flex items-center gap-3">
-                        <i class="{{ $job->job_funded ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500' }}" ></i>
+                        <i class="{{ $job?->job_funded ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500' }}" ></i>
                         <span class="text-sm text-gray-700">Payment Verified</span>
                     </li>
                     <li class="flex items-center gap-3">
-                        <i class="{{ $job->job_funded ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500' }}" ></i>
+                        <i class="{{ $job?->job_funded ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500' }}" ></i>
                         <span class="text-sm text-gray-700">Deposit Made</span>
                     </li>
                     <li class="flex items-center gap-3">
@@ -58,7 +58,7 @@
                         <span class="text-sm text-gray-700">Email Verified</span>
                     </li>
                     <li class="flex items-center gap-3">
-                        <i class="{{ $job->job_funded ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500' }}" ></i>
+                        <i class="{{ $job?->job_funded ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500' }}" ></i>
                         <span class="text-sm text-gray-700">Phone Verified</span>
                     </li>
                     <li class="flex items-center gap-3">
@@ -66,6 +66,5 @@
                         <span class="text-sm text-gray-700">Profile Completed</span>
                     </li>
                 </ul>
-            </div>         
-
+            </div>
         </aside>

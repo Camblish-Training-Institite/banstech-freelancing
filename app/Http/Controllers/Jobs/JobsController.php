@@ -8,6 +8,7 @@ use App\Models\Contest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SubCategory;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Category;
 use App\Notifications\AddFundsToJob;
 use Geocoder\Laravel\Facades\Geocoder;
@@ -25,6 +26,7 @@ class JobsController extends Controller
 
         $clientId = Auth::user()->id;
         $jobs = Job::where('user_id', $clientId)->paginate(10);
+
         // dd($jobs);
 
         
@@ -38,29 +40,66 @@ class JobsController extends Controller
         }
 
         $user_id = Auth::user()->id; // Get the authenticated user's ID
-        
-        $jobs = Job::where('user_id', '!=', $user_id)
+
+        $jobs = Job::with('proposals')->where('user_id', '!=', $user_id)
         ->where('status', 'open') // Fetch all open jobs except those created by the user
-        ->where('deadline', '>=', now()) // Only include jobs with deadlines in the future
-        ->orderBy('created_at', 'desc')
         ->paginate(10);
 
-        $contests = Contest::where('client_id', '!=', $user_id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $contests = Contest::where('client_id', '!=', $user_id)->paginate(10);
+        $type = request()->query('type');
+        $query = Job::query();
 
-        $categories = Category::all();
+        if ($type=='physical'){
+            $query->physical();
+        } elseif ($type=='online'){
+            $query->online();
+        }
+
+        if (request()->wantsJson()){
+            return response()->json($query->paginate(10));
+        }
+
+
 
         // dd($jobs);
-        return view('Users.Freelancers.layouts.body.job-listing', ['jobs' => $jobs, 'contests' => $contests, 'categories' => $categories]);
+        return view('Users.Freelancers.layouts.body.job-listing', ['jobs' => $jobs, 'contests' => $contests]);
+    }
+
+    public function getNearbyJobs(Request $request)
+    {
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+        $radius = $request->input('radius', 10); // Default radius is 10 km if not provided
+
+        // Validate inputs
+        $validator = Validator::make($request->all(), [
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+            'radius' => 'nullable|numeric|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Invalid input parameters'], 400);
+        }
+
+        // Haversine formula to calculate distance
+        $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(ST_Y(location))) * cos(radians(ST_X(location)) - radians(?)) + sin(radians(?)) * sin(radians(ST_Y(location)))))";
+
+        $jobs = Job::select('*')
+            ->join('job_geolocations', 'jobs.id', '=', 'job_geolocations.job_id')
+            ->whereRaw("$haversine < ?", [$latitude, $longitude, $latitude, $radius])
+            ->with('geolocation') // Eager load geolocation relationship
+            ->get();
+
+        return response()->json($jobs);
     }
 
     //This is for showing single job
     public function show(int $id){
         $job = Job::findOrFail($id);
-
+        $user = $job->user;
         // dd($job);
-        return view('Users.Clients.jobs.job-show', ['job' => $job]);
+        return view('Users.Clients.jobs.job-show', ['job' => $job, 'user' => $user]);
 
     }
 
@@ -68,7 +107,7 @@ class JobsController extends Controller
     public function show_freelancer(int $id){
         $job = Job::findOrFail($id);
         $user = $job->user;
-        // dd($user);
+        // dd($job);
         return view('Users.Freelancers.jobs.job-show', ['job' => $job, 'user' => $user]);
 
     }
@@ -77,7 +116,7 @@ class JobsController extends Controller
     public function create(){
         $subCategories = null;
         // dd($subCategories->count());
-        return view('Users.Clients.jobs.form', ['subCategories' => $subCategories]);
+        return view('client.createJobs', ['subCategories' => $subCategories]);
     }
 
     //This stores the instered data to the database (Job table using Job module)
@@ -91,6 +130,7 @@ class JobsController extends Controller
         'description' => 'required|string',
         'deadline' => 'nullable|date',
         'budget' => 'required|numeric',
+        'status' => 'required|string|in:open,in_progress,assigned,completed,cancelled',
         'skills' => 'string',
         'job_type' => 'string',
         'job_type' => 'string|in:online,physical',
@@ -122,6 +162,7 @@ class JobsController extends Controller
         $skills = is_array($req_skills) ? implode(',', $req_skills) : $req_skills;
 
         Job::create([
+
             'user_id' => auth()->id(),
             'title' => $request->title,
             'description'=> $request->description,
@@ -132,11 +173,6 @@ class JobsController extends Controller
             'freelancer_radius' => $request->radius ?? null,
             'location' => $point ?? null,
         ]);
-
-        $job = Job::latest()->first();
-        $client = $job->user;
-
-        $client->notify(new AddFundsToJob($job->id));
 
     return redirect()->route('client.jobs.list')->with('success','Job added!');
     
