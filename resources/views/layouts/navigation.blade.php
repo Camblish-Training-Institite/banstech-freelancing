@@ -1,3 +1,11 @@
+@php
+    $settingsRoute = request()->routeIs('client.*')
+        ? route('client.settings.edit')
+        : (Auth::user()?->user_type === 'project-manager'
+            ? route('pm.settings.edit')
+            : route('freelancer.settings.edit'));
+@endphp
+
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,6 +44,10 @@
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="$settingsRoute">
+                            {{ __('Settings') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -82,6 +94,10 @@
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="$settingsRoute">
+                    {{ __('Settings') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->

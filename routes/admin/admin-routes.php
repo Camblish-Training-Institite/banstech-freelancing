@@ -6,6 +6,8 @@ use App\Http\Controllers\BanstechAdmin\LoginController;
 use App\Http\Controllers\BanstechAdmin\JobController;
 use App\Http\Controllers\BanstechAdmin\UserController; 
 use App\Http\Controllers\BanstechAdmin\ContractController;
+use App\Http\Controllers\BanstechAdmin\MilestoneController;
+use App\Http\Controllers\SettingsController;
 
 Route::get('/banstech-admin/dashboard', function() {
     return view('admin.dashboard');
@@ -39,8 +41,21 @@ Route::resource('/banstech-admin/projects', ContractController::class, [
     'as' => 'admin'
 ]);
 
+// Admin milestone management routes
+Route::resource('/banstech-admin/milestones', MilestoneController::class, [
+    'as' => 'admin'
+])->except(['create', 'store']);
+Route::get('/banstech-admin/projects/{project}/milestones/create', [MilestoneController::class, 'create'])
+    ->name('admin.projects.milestones.create');
+Route::post('/banstech-admin/projects/{project}/milestones', [MilestoneController::class, 'store'])
+    ->name('admin.projects.milestones.store');
+Route::patch('/banstech-admin/milestones/{milestone}/status', [MilestoneController::class, 'updateStatus'])
+    ->name('admin.milestones.update-status');
+
 
 // Admin profile management routes
 Route::get('/banstech-admin/profile', [ProfileController::class, 'edit'])->name('admin.profile.edit');
 Route::patch('/banstech-admin/profile', [ProfileController::class, 'update'])->name('admin.profile.update');
 Route::delete('/banstech-admin/profile', [ProfileController::class, 'destroy'])->name('admin.profile.destroy');
+Route::get('/banstech-admin/settings', [SettingsController::class, 'edit'])->name('admin.settings.edit');
+Route::patch('/banstech-admin/settings', [SettingsController::class, 'update'])->name('admin.settings.update');

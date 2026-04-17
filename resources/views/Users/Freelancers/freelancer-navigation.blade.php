@@ -1,7 +1,7 @@
 <style>
     /* Sidebar Styles */
     .sidebar {
-        background-color: #2c2c2c; /* Dark background */
+        background-color: var(--theme-sidebar-bg); /* Dark background */
         color: #f0f0f0;
         padding: 20px 1rem;;
         display: flex;
@@ -14,7 +14,7 @@
     .sidebar-header {
         text-transform: uppercase;
         font-size: 0.8em;
-        color: #888;
+        color: var(--theme-sidebar-muted);
         padding: 15px 20px 5px;
         margin-top: 15px;
     }
@@ -35,7 +35,7 @@
     }
 
     .sidebar-nav ul li a:hover {
-        background-color: #444;
+        background-color: var(--theme-sidebar-hover);
     }
 
     .sidebar-nav ul li a i {
@@ -46,7 +46,7 @@
     /* New styles for the pushed-down Logout link */
     .sidebar-logout {
         padding: 20px; /* Matches previous footer padding, creates space */
-        border-top: 1px solid #444; /* Optional: Adds a separator line */
+        border-top: 1px solid var(--theme-sidebar-border); /* Optional: Adds a separator line */
         margin-bottom: 40px; /* Pushes it up further from the very bottom */
     }
 
@@ -60,7 +60,7 @@
     }
 
     .sidebar-logout a:hover {
-        background-color: #444; /* Match hover of other menu items */
+        background-color: var(--theme-sidebar-hover); /* Match hover of other menu items */
     }
 
     .sidebar-logout a i {
@@ -106,7 +106,7 @@
         }
 
         .sidebar-logout:hover {
-            background-color: #444
+            background-color: var(--theme-sidebar-hover)
         }
         .sidebar-logout button span {
             display: none;
@@ -118,7 +118,7 @@
     .user-details{
         display: flex;
         font-size: 0.8em;
-        color: #888;
+        color: var(--theme-sidebar-muted);
         padding: 0.125rem 1rem 0.5rem;
         margin-top: 15px;
         align-items: center;
@@ -163,7 +163,7 @@
             <ul>
                 <li><a href="{{ route('freelancer.profile.edit') }}"><i class="fas fa-user-circle"></i> <span>Profile Management</span></a></li>
                 <li><a href="#"><i class="fas fa-hands-helping"></i> <span>Support & Assistance</span></a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                <li><a href="{{ route('freelancer.settings.edit') }}"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
             </ul>
         </nav>
     </div>

@@ -1,5 +1,6 @@
+@php($activeTheme = auth()->check() ? (auth()->user()->theme ?? 'default') : 'default')
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ $activeTheme }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,8 +21,9 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link rel="stylesheet" href="{{ asset('theme.css') }}">
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased" data-nav-context="project-manager">
         <div class="flex min-h-screen w-full bg-gray-100">
             @include('project-manager.layouts.pr-navigation')
 

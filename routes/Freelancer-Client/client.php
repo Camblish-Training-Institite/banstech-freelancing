@@ -11,6 +11,7 @@ use App\Http\Controllers\Jobs\ProposalController;
 use App\Http\Controllers\Payments\ProjectFundingController;
 use App\Http\Controllers\Client\ProjectController;
 use App\Http\Controllers\Client\ReviewController;
+use App\Http\Controllers\SettingsController;
 use App\Models\Contract;
 use App\Models\ProjectFunding;
 
@@ -56,6 +57,8 @@ Route::prefix('client')->name('client.')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
     //client services routes
     Route::get('/services',function(){
@@ -120,4 +123,3 @@ Route::post('Clients/project/{project}/upload-file', [ContractController::class,
 //Handle task creation
 Route::post('Clients/project/{project}/task', [ContractController::class, 'createTask'])
 ->name('client.project.tabs.task')->middleware('auth');
-

@@ -1,0 +1,415 @@
+:root,
+html[data-theme="default"] {
+    --theme-app-bg: #eef3f8;
+    --theme-app-bg-soft: #f7f9fc;
+    --theme-surface: #ffffff;
+    --theme-surface-soft: #f8fafc;
+    --theme-surface-muted: #eef2f7;
+    --theme-border: #d7dfeb;
+    --theme-border-strong: #b4c0d3;
+    --theme-text-primary: #182340;
+    --theme-text-muted: #52607a;
+    --theme-text-subtle: #7e8aa3;
+    --theme-sidebar-bg: #182340;
+    --theme-sidebar-muted: #9ba8c7;
+    --theme-sidebar-hover: #223257;
+    --theme-sidebar-border: #30446f;
+    --theme-header-bg: #ffffff;
+    --theme-header-border: #dfe6f2;
+    --theme-accent: #3f67d8;
+    --theme-accent-strong: #2f52b8;
+    --theme-accent-soft: #e8efff;
+    --theme-accent-soft-strong: #a0a5b1;
+    --theme-accent-secondary: #1fa97a;
+    --theme-accent-secondary-strong: #188863;
+    --theme-danger: #d13b5c;
+    --theme-danger-strong: #982a42;
+    --theme-warning: #d48a17;
+    --theme-shadow: 0 16px 40px rgba(24, 35, 64, 0.08);
+    --theme-nav-surface: #182340;
+    --theme-nav-hover: #223257;
+    --theme-nav-border: #30446f;
+    --theme-nav-text: #f8fafc;
+    --theme-nav-muted: #9ba8c7;
+    --theme-nav-active-surface: #3f67d8;
+    --theme-nav-active-text: #ffffff;
+}
+
+html[data-theme="ocean"] {
+    --theme-app-bg: #e8f3f4;
+    --theme-app-bg-soft: #f4fbfb;
+    --theme-surface: #ffffff;
+    --theme-surface-soft: #f1f8fa;
+    --theme-surface-muted: #e0eff3;
+    --theme-border: #c7dde2;
+    --theme-border-strong: #9ebfc8;
+    --theme-text-primary: #102a43;
+    --theme-text-muted: #38566f;
+    --theme-text-subtle: #618094;
+    --theme-sidebar-bg: #102a43;
+    --theme-sidebar-muted: #9fc3d7;
+    --theme-sidebar-hover: #153a5c;
+    --theme-sidebar-border: #24557d;
+    --theme-header-bg: #ffffff;
+    --theme-header-border: #d4e5eb;
+    --theme-accent: #0f766e;
+    --theme-accent-strong: #115e59;
+    --theme-accent-soft: #d9f5f2;
+    --theme-accent-soft-strong: #94a8a6;
+    --theme-accent-secondary: #2563eb;
+    --theme-accent-secondary-strong: #1d4ed8;
+    --theme-danger: #c2410c;
+    --theme-danger-strong: #852b08;
+    --theme-warning: #d97706;
+    --theme-shadow: 0 18px 42px rgba(15, 118, 110, 0.10);
+    --theme-nav-surface: #102a43;
+    --theme-nav-hover: #153a5c;
+    --theme-nav-border: #24557d;
+    --theme-nav-text: #f3fbff;
+    --theme-nav-muted: #9fc3d7;
+    --theme-nav-active-surface: #0f766e;
+    --theme-nav-active-text: #ffffff;
+}
+
+html[data-theme="sunset"] {
+    --theme-app-bg: #fff4ed;
+    --theme-app-bg-soft: #fffaf5;
+    --theme-surface: #ffffff;
+    --theme-surface-soft: #fff7f1;
+    --theme-surface-muted: #fee9d7;
+    --theme-border: #f3ceb4;
+    --theme-border-strong: #e8b892;
+    --theme-text-primary: #4a1d1f;
+    --theme-text-muted: #7a4d3f;
+    --theme-text-subtle: #a16f59;
+    --theme-sidebar-bg: #4a1d1f;
+    --theme-sidebar-muted: #efc4ab;
+    --theme-sidebar-hover: #6d2d2f;
+    --theme-sidebar-border: #8b3b3d;
+    --theme-header-bg: #ffffff;
+    --theme-header-border: #f0d7c5;
+    --theme-accent: #dd6b20;
+    --theme-accent-strong: #c2410c;
+    --theme-accent-soft: #ffedd5;
+    --theme-accent-soft-strong: #998e81;
+    --theme-accent-secondary: #b45309;
+    --theme-accent-secondary-strong: #92400e;
+    --theme-danger: #c2410c;
+    --theme-danger-strong: #772809;
+    --theme-warning: #d97706;
+    --theme-shadow: 0 18px 44px rgba(186, 92, 35, 0.12);
+    --theme-nav-surface: #4a1d1f;
+    --theme-nav-hover: #6d2d2f;
+    --theme-nav-border: #8b3b3d;
+    --theme-nav-text: #fff7f0;
+    --theme-nav-muted: #efc4ab;
+    --theme-nav-active-surface: #dd6b20;
+    --theme-nav-active-text: #ffffff;
+}
+
+body[data-nav-context="freelancer"] {
+    /* --theme-nav-surface: #182340; */
+    /* --theme-nav-hover: #233558; */
+    /* --theme-nav-border: #314975; */
+    --theme-nav-text: #f8fafc;
+    --theme-nav-muted: #a7b6d3;
+    --theme-nav-active-surface: #3f67d8;
+    --theme-nav-active-text: #ffffff;
+}
+
+body[data-nav-context="client"] {
+    /* --theme-nav-surface: #182340; */
+    /* --theme-nav-hover: #233558; */
+    /* --theme-nav-border: #314975; */
+    --theme-nav-text: #f8fafc;
+    --theme-nav-muted: #a7b6d3;
+    --theme-nav-active-surface: #3f67d8;
+    --theme-nav-active-text: #ffffff;
+}
+
+body[data-nav-context="project-manager"] {
+    --theme-nav-surface: #163328;
+    --theme-nav-hover: #1f4a3a;
+    --theme-nav-border: #2d6650;
+    --theme-nav-text: #f3fff9;
+    --theme-nav-muted: #a7d5c0;
+    --theme-nav-active-surface: #1fa97a;
+    --theme-nav-active-text: #ffffff;
+}
+
+body[data-nav-context="admin"] {
+    --theme-nav-surface: #4a1036;
+    --theme-nav-hover: #68194c;
+    --theme-nav-border: #8e2f6b;
+    --theme-nav-text: #fff6fb;
+    --theme-nav-muted: #efbfd5;
+    --theme-nav-active-surface: #b83b7d;
+    --theme-nav-active-text: #ffffff;
+}
+
+html,
+body {
+    background: var(--theme-app-bg);
+    color: var(--theme-text-primary);
+}
+
+body {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+a {
+    color: var(--theme-accent);
+}
+
+.bg-white {
+    background-color: var(--theme-surface) !important;
+}
+
+.bg-gray-50,
+.bg-gray-100 {
+    background-color: var(--theme-surface-soft) !important;
+}
+
+.bg-gray-200 {
+    background-color: var(--theme-surface-muted) !important;
+}
+
+.bg-gray-800,
+.bg-gray-900,
+.message-btn,
+.notification-float-btn,
+.main-nav-tabs {
+    background-color: var(--theme-sidebar-bg) !important;
+}
+
+.text-gray-900,
+.text-gray-800,
+.text-slate-950 {
+    color: var(--theme-text-primary) !important;
+}
+
+.text-gray-700,
+.text-gray-600,
+.text-slate-700 {
+    color: var(--theme-text-muted) !important;
+}
+
+.text-gray-500,
+.text-gray-400,
+.text-slate-400 {
+    color: var(--theme-text-subtle) !important;
+}
+
+.border-gray-100,
+.border-gray-200,
+.border-gray-300,
+.border-gray-700 {
+    border-color: var(--theme-border) !important;
+}
+
+.bg-indigo-600,
+.bg-blue-600,
+.bg-blue-500,
+.find-opportunities-btn {
+    background-color: var(--theme-accent) !important;
+}
+
+.hover\:bg-indigo-700:hover,
+.hover\:bg-blue-700:hover,
+.hover\:bg-blue-600:hover,
+.hover\:bg-primary-p-darker:hover,
+.find-opportunities-btn:hover {
+    background-color: var(--theme-accent-strong) !important;
+}
+
+.text-indigo-600,
+.text-blue-500,
+.text-blue-600,
+.text-primary-p,
+.back-link {
+    color: var(--theme-accent) !important;
+}
+
+.bg-indigo-100,
+.bg-blue-50 {
+    background-color: var(--theme-accent-soft) !important;
+}
+
+.text-blue-700 {
+    color: var(--theme-accent-strong) !important;
+}
+
+.bg-green-600,
+.bg-green-500,
+.bg-complimentary,
+.btn-success {
+    background-color: var(--theme-accent-secondary) !important;
+    border-color: var(--theme-accent-secondary) !important;
+}
+
+.hover\:bg-green-700:hover,
+.hover\:bg-green-600:hover {
+    background-color: var(--theme-accent-secondary-strong) !important;
+}
+
+.text-green-600,
+.text-green-700,
+.text-green-800,
+.text-complimentary {
+    color: var(--theme-accent-secondary) !important;
+}
+
+.bg-red-500,
+.bg-red-600 {
+    background-color: var(--theme-danger) !important;
+}
+
+.text-red-600,
+.text-red-700 {
+    color: var(--theme-danger) !important;
+}
+
+.bg-complimentary-nav {
+    background-color: var(--theme-nav-surface) !important;
+}
+
+.bg-complimentary-nav-darker {
+    background-color: var(--theme-nav-active-surface) !important;
+}
+
+.dashboard-container,
+.main-content,
+.dashboard-body,
+.active-projects-section,
+.header,
+.search-bar input,
+.main-nav-tabs ul li.active::after,
+.floating-widgets button,
+.theme-shell-card {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dashboard-container,
+.main-content {
+    background-color: var(--theme-surface) !important;
+}
+
+.dashboard-body {
+    background-color: var(--theme-app-bg-soft) !important;
+}
+
+.header {
+    background-color: var(--theme-header-bg) !important;
+    border-bottom-color: var(--theme-header-border) !important;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05) !important;
+}
+
+.dashboard-title,
+.welcome-message,
+.active-projects-heading {
+    color: var(--theme-text-primary) !important;
+}
+
+.notification-icon,
+.search-bar .fas.fa-search {
+    color: var(--theme-text-subtle) !important;
+}
+
+.search-bar input,
+input,
+select,
+textarea {
+    border-color: var(--theme-border);
+    color: var(--theme-text-primary);
+}
+
+input,
+select,
+textarea {
+    background-color: var(--theme-surface);
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.focus\:ring-indigo-500:focus,
+.focus\:border-indigo-500:focus {
+    border-color: var(--theme-accent) !important;
+    box-shadow: 0 0 0 3px var(--theme-accent-soft) !important;
+    outline: none;
+}
+
+.sidebar {
+    background-color: var(--theme-nav-surface) !important;
+    color: var(--theme-nav-text) !important;
+}
+
+.sidebar-header {
+    color: var(--theme-nav-muted) !important;
+}
+
+.sidebar-nav ul li a,
+.sidebar-logout a,
+.sidebar-logout button {
+    color: var(--theme-nav-text) !important;
+}
+
+.sidebar-nav ul li a:hover,
+.sidebar-logout a:hover,
+.sidebar-logout button:hover {
+    background-color: var(--theme-nav-hover) !important;
+}
+
+.sidebar-logout {
+    border-top-color: var(--theme-nav-border) !important;
+}
+
+.main-nav-tabs ul li.active::after {
+    background-color: var(--theme-accent) !important;
+}
+
+.message-btn,
+.notification-float-btn {
+    color: #fff !important;
+    box-shadow: var(--theme-shadow) !important;
+}
+
+.notification-float-btn .badge {
+    border-color: var(--theme-sidebar-bg) !important;
+}
+
+.switch .slider {
+    background-color: var(--theme-border-strong) !important;
+}
+
+input:checked + .slider {
+    background-color: var(--theme-accent) !important;
+}
+
+.profile-card,
+.bg-slate-900\/50,
+.bg-slate-950,
+.bg-slate-900 {
+    background-color: var(--theme-surface) !important;
+}
+
+.admin-nav-link {
+    color: var(--theme-nav-text);
+}
+
+.admin-nav-link:hover {
+    background-color: var(--theme-nav-hover);
+    color: var(--theme-nav-text);
+}
+
+.admin-nav-link-active {
+    background-color: var(--theme-nav-active-surface);
+    color: var(--theme-nav-active-text);
+}
+
+.rounded-xl,
+.rounded-2xl,
+.rounded-3xl,
+.rounded-lg {
+    box-shadow: inherit;
+}

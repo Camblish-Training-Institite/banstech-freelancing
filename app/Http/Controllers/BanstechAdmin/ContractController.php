@@ -8,33 +8,58 @@ use App\Models\Contract;
 use App\Models\Job;
 use App\Models\User;
 use App\Notifications\ReviewFreelancerReminder;
+use Illuminate\Database\Eloquent\Builder;
 
 class ContractController extends Controller
 {
     public function index(Request $request){
 
-        $projects = Contract::query();
+        $projects = Contract::query()->with(['job.user', 'user', 'projectManager', 'milestones']);
 
         if($request->filled('search')){
-            $projects->where('title', 'like', '%' . $request->search . '%')
-                     ->orWhere('description', 'like', '%' . $request->search . '%');
+            $search = $request->search;
+
+            $projects->where(function (Builder $query) use ($search) {
+                $query->whereHas('job', function (Builder $jobQuery) use ($search) {
+                    $jobQuery->where('title', 'like', '%' . $search . '%')
+                        ->orWhere('description', 'like', '%' . $search . '%');
+                })->orWhereHas('job.user', function (Builder $clientQuery) use ($search) {
+                    $clientQuery->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%');
+                })->orWhereHas('user', function (Builder $freelancerQuery) use ($search) {
+                    $freelancerQuery->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%');
+                });
+            });
         }
 
         if($request->filled('status')){
             $projects->where('status', $request->status);
         }
 
-        if($request->filled('project_manager')){
+        if($request->filled('project_manager_id')){
             $projects->where('project_manager_id', $request->project_manager_id);
         }
 
         $projects = $projects->latest()->paginate(10);
 
-        return view('admin.projects.index', compact('projects'));
+        $pagetitle = 'Project Management';
+        $managers = User::where('user_type', 'project-manager')->orderBy('name')->get();
+
+        return view('admin.projects.index', compact('projects', 'pagetitle', 'managers'));
     }
 
     public function show(Contract $project)
     {
+        $project->load([
+            'job.user',
+            'user',
+            'projectManager',
+            'milestones' => fn ($query) => $query->latest(),
+            'files',
+            'tasks',
+        ]);
+
         return view('admin.projects.show', ['project' => $project]);
     }
 
@@ -43,7 +68,7 @@ class ContractController extends Controller
         $jobs = Job::where('status', 'open')->get();
         $freelancers = User::where('user_type', 'freelancer-client')->get();
         $managers = User::where('user_type', 'project-manager')->get();
-        return view('admin.projects.form', ['pagetitle' => 'Create', 'action' => 'Create', 'jobs' => $jobs, 'freelancers' => $freelancers, 'managers' => $managers, 'project' => $project]);
+        return view('admin.projects.form', ['pagetitle' => 'Create Project', 'action' => 'Create', 'jobs' => $jobs, 'freelancers' => $freelancers, 'managers' => $managers, 'project' => $project]);
     }
 
     public function store(Request $request){

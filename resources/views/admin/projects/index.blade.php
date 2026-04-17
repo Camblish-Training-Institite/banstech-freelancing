@@ -8,23 +8,27 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 uppercase">Search</label>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Title or Description..." class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Job, client or freelancer..." class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700 uppercase">Status</label>
                     <select name="status" class="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <option value="">All Statuses</option>
-                        <option value="open" {{ request('status') == 'open' ? 'selected' : '' }}>Open</option>
-                        <option value="assigned" {{ request('status') == 'assigned' ? 'selected' : '' }}>Assigned</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
                         <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-700 uppercase">project Type</label>
-                    <select name="project_type" class="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="">All Types</option>
-                        <option value="online" {{ request('project_type') == 'online' ? 'selected' : '' }}>Online</option>
-                        <option value="physical" {{ request('project_type') == 'physical' ? 'selected' : '' }}>Physical</option>
+                    <label class="block text-xs font-medium text-gray-700 uppercase">Project Manager</label>
+                    <select name="project_manager_id" class="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="">All Managers</option>
+                        @foreach ($managers as $manager)
+                            <option value="{{ $manager->id }}" {{ request('project_manager_id') == $manager->id ? 'selected' : '' }}>
+                                {{ $manager->name }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="flex items-end space-x-2">
@@ -83,11 +87,11 @@
                                     ${{ number_format($project->agreed_amount, 2) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                    {{ App\Models\User::find($project->project_manager_id)?->name ?? 'N/A' }}
+                                    {{ $project->projectManager?->name ?? 'N/A' }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        {{ $project->status == 'completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                        {{ $project->status == 'completed' ? 'bg-green-100 text-green-800' : ($project->status == 'cancelled' ? 'bg-red-100 text-red-800' : ($project->status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800')) }}">
                                         {{ ucfirst($project->status) }}
                                     </span>
                                 </td>
@@ -100,7 +104,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-12 text-center text-gray-500">No projects found matching your criteria.</td>
+                                <td colspan="9" class="px-6 py-12 text-center text-gray-500">No projects found matching your criteria.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -108,9 +112,6 @@
             </div>
         </div>
 
-        <div class="mt-4">
-            {{ $projects->links() }}
-        </div>
         <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
             {{ $projects->appends(request()->query())->links() }}
         </div>

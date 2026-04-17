@@ -9,6 +9,7 @@ use App\Http\Controllers\Freelancer\MilestoneController;
 use App\Http\Controllers\Jobs\JobsController;
 use App\Http\Controllers\Jobs\ProposalController;
 use App\Http\Controllers\Payments\PayoutController; 
+use App\Http\Controllers\SettingsController;
 
 Route::prefix('freelancer')->name('freelancer.')->group(function () {
     //main nav links
@@ -33,6 +34,8 @@ Route::prefix('freelancer')->name('freelancer.')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
     //services
     Route::get('/services',function(){

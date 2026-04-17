@@ -39,7 +39,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
+            background-color: var(--theme-app-bg);
             /* Light grey background */
             display: flex;
             /* Use flexbox for body */
@@ -59,7 +59,7 @@
             height: 100vh;
             /* Full viewport height */
             width: 100%;
-            background-color: #fff;
+            background-color: var(--theme-surface);
             /* Match the sidebar width to push the content */
             box-sizing: border-box;
             /* Include padding and border in the width calculation */
@@ -83,12 +83,12 @@
 
         /* Header Styles */
         .header {
-            background-color: #fff;
+            background-color: var(--theme-header-bg);
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--theme-header-border);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             flex-shrink: 0;
             /* Prevent header from shrinking */
@@ -97,7 +97,7 @@
         .dashboard-title {
             font-size: 1.2em;
             font-weight: bold;
-            color: #333;
+            color: var(--theme-text-primary);
         }
 
         .header-right {
@@ -133,7 +133,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
+            background-color: var(--theme-border-strong);
             -webkit-transition: .4s;
             transition: .4s;
             border-radius: 20px;
@@ -153,12 +153,12 @@
         }
 
         input:checked+.slider {
-            background-color: #6a0dad;
+            background-color: var(--theme-accent);
             /* Purple */
         }
 
         input:focus+.slider {
-            box-shadow: 0 0 1px #6a0dad;
+            box-shadow: 0 0 1px var(--theme-accent);
         }
 
         input:checked+.slider:before {
@@ -174,7 +174,7 @@
         .search-bar input {
             padding: 8px 10px 8px 30px;
             /* Left padding for icon */
-            border: 1px solid #ddd;
+            border: 1px solid var(--theme-border);
             border-radius: 20px;
             font-size: 0.9em;
             outline: none;
@@ -185,12 +185,12 @@
             left: 10px;
             top: 50%;
             transform: translateY(-50%);
-            color: #888;
+            color: var(--theme-text-subtle);
         }
 
         .notification-icon {
             font-size: 1.2em;
-            color: #555;
+            color: var(--theme-text-muted);
             cursor: pointer;
         }
 
@@ -198,7 +198,7 @@
         .dashboard-body {
             padding: 20px;
             flex-grow: 1;
-            background-color: #fdfdfd;
+            background-color: var(--theme-app-bg-soft);
             overflow-y: auto;
             /* Enable scrolling for content if it overflows */
         }
@@ -207,12 +207,12 @@
             font-size: 1.5em;
             font-weight: bold;
             margin-bottom: 20px;
-            color: #333;
+            color: var(--theme-text-primary);
         }
 
         /* Navigation Tabs Styles */
         .main-nav-tabs {
-            background-color: #2c2c2c;
+            background-color: var(--theme-sidebar-bg);
             /* Black horizontal line/background */
             padding: 0 20px;
             /* Match left/right padding of dashboard-body */
@@ -254,7 +254,7 @@
         }
 
         .main-nav-tabs ul li a:hover {
-            color: #ccc;
+            color: var(--theme-sidebar-muted);
             /* Slightly lighter white on hover */
         }
 
@@ -271,7 +271,7 @@
             /* Place at the very bottom of the li */
             width: 100%;
             height: 3px;
-            background-color: #6a0dad;
+            background-color: var(--theme-accent);
             /* Purple indicator line */
             border-radius: 2px;
         }
@@ -282,7 +282,7 @@
             /* Matches the size in the image */
             font-weight: bold;
             /* Often headings are bold */
-            color: #333;
+            color: var(--theme-text-primary);
             margin-top: 30px;
             /* Space from the tabs above */
             margin-bottom: 20px;
@@ -291,7 +291,7 @@
         }
 
         .active-projects-section {
-            background-color: #fff;
+            background-color: var(--theme-surface);
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -323,18 +323,18 @@
 
         .no-projects-message .icon-box {
             font-size: 6em;
-            color: #ccc;
+            color: var(--theme-border-strong);
             margin-bottom: 20px;
         }
 
         .no-projects-message p {
             font-size: 1.2em;
-            color: #555;
+            color: var(--theme-text-muted);
             margin-bottom: 30px;
         }
 
         .find-opportunities-btn {
-            background-color: #6a0dad;
+            background-color: var(--theme-accent);
             /* Purple */
             color: #fff;
             padding: 12px 25px;
@@ -346,7 +346,7 @@
         }
 
         .find-opportunities-btn:hover {
-            background-color: #540aa8;
+            background-color: var(--theme-accent-strong);
         }
 
         /* Floating Widgets (Messages/Notifications) */
@@ -361,7 +361,7 @@
 
         .message-btn,
         .notification-float-btn {
-            background-color: #333;
+            background-color: var(--theme-sidebar-bg);
             color: #fff;
             padding: 10px 15px;
             border: none;
@@ -377,7 +377,7 @@
 
         .message-btn:hover,
         .notification-float-btn:hover {
-            background-color: #555;
+            background-color: var(--theme-sidebar-hover);
         }
 
         .notification-float-btn {
@@ -390,7 +390,7 @@
             position: absolute;
             top: -5px;
             right: -5px;
-            background-color: red;
+            background-color: var(--theme-danger);
             color: white;
             border-radius: 50%;
             width: 15px;
@@ -399,7 +399,7 @@
             justify-content: center;
             align-items: center;
             font-size: 0.7em;
-            border: 1px solid #333;
+            border: 1px solid var(--theme-sidebar-bg);
             /* To stand out */
         }
 

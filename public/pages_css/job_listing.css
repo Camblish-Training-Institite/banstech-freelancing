@@ -64,7 +64,7 @@ body {
     font-size: 16px;
 }
 .filters button {
-    background-color: #6a51ae;
+    background-color: var(--theme-sidebar-hover);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -73,7 +73,7 @@ body {
     cursor: pointer;
 }
 .filters button:hover {
-    background-color: #5b419e;
+    background-color: var(--theme-sidebar-bg);
 }
 
 /* Tabs Section */
@@ -91,7 +91,7 @@ body {
     transition: border-bottom-color 0.3s ease;
 }
 .tabs button.active {
-    border-bottom: 3px solid #6a51ae;
+    border-bottom: 3px solid var(--theme-nav-active-surface);
 }
 
 /* Opportunity Cards */
@@ -106,7 +106,7 @@ body {
 }
 .opportunity-card h2 {
     font-size: 20px;
-    color: #6a51ae;
+    color:var(--theme-accent);
     margin-bottom: 10px;
     font-weight: bold;
 }
@@ -123,7 +123,7 @@ body {
     gap: 10px;
 }
 .opportunity-card .tags span {
-    background-color: rgba(81, 174, 106, 0.2);
+    background-color: var(--theme-border);
     padding: 3px 8px;
     border-radius: 1rem;
     font-size: 14px;
@@ -139,8 +139,8 @@ body {
     margin-bottom: 10px;
 }
 .send-proposal {
-    /* border: solid #6a51ae 2px; */
-    background-color: #516aae;
+    /* border: solidvar(--theme-accent) 2px; */
+    background-color: var(--theme-accent-secondary);
     color: white;
     margin-top: 0.25rem 0;
     padding: 0.25rem 0.75rem;
@@ -149,11 +149,11 @@ body {
     cursor: pointer;
 }
 .send-proposal:hover {
-    background-color: #303e66;
+    background-color: var(--theme-accent-secondary-strong);
     color: white;
 }
 .view-job {
-    background-color: #6a51ae;
+    background-color: var(--theme-accent);
     color: #fff;
     margin-top: 0.25rem 0;
     padding: 0.25rem 0.75rem;
@@ -162,7 +162,7 @@ body {
     cursor: pointer;
 }
 .view-job:hover {
-    background-color: #402c70;
+    background-color: var(--theme-accent-strong);
     color: white;
 }
 
@@ -174,7 +174,7 @@ body {
 }
 .pagination button {
     background-color: #fff;
-    color: #6a51ae;
+    color:var(--theme-accent);
     border: 1px solid #ccc;
     padding: 5px 10px;
     border-radius: 4px;
@@ -182,7 +182,7 @@ body {
     cursor: pointer;
 }
 .pagination button.active {
-    background-color: #6a51ae;
+    background-color:var(--theme-accent);
     color: white;
     border: none;
 }

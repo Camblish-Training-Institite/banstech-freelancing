@@ -1,5 +1,6 @@
+@php($activeTheme = auth('admin')->check() ? (auth('admin')->user()->theme ?? 'default') : (auth()->check() ? (auth()->user()->theme ?? 'default') : 'default'))
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ $activeTheme }}">
 
 <head>
     <meta charset="utf-8">
@@ -21,6 +22,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('theme.css') }}">
 </head>
 
 <body class="font-sans antialiased">

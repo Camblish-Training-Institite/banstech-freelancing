@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Freelancer\JobController;
 use App\Http\Controllers\Freelancer\ProposalController;
@@ -11,9 +12,48 @@ use App\Http\Controllers\Freelancer\NewOffersController;
 use App\Http\Controllers\Freelancer\ViewOffersController;
 use App\Http\Controllers\Freelancer\EarningsController;
 
+if (env('SESSION_DIAGNOSTICS', false)) {
+    Route::get('/__session-debug', function (Request $request) {
+        $response = response()->json([
+            'app_env' => config('app.env'),
+            'app_url' => config('app.url'),
+            'app_key_present' => filled(config('app.key')),
+            'session_driver' => config('session.driver'),
+            'session_domain' => config('session.domain'),
+            'session_secure' => config('session.secure'),
+            'session_same_site' => config('session.same_site'),
+            'request_host' => $request->getHost(),
+            'request_scheme' => $request->getScheme(),
+            'request_is_secure' => $request->isSecure(),
+            'has_session_cookie_in_request' => $request->hasCookie(config('session.cookie')),
+            'has_xsrf_cookie_in_request' => $request->hasCookie('XSRF-TOKEN'),
+            'session_cookie_name' => config('session.cookie'),
+            'session_id' => $request->session()->getId(),
+            'csrf_token_prefix' => substr(csrf_token(), 0, 12),
+            'cache_control' => $request->headers->get('cache-control'),
+        ]);
+
+        return $response->cookie(
+            'banstech_diag',
+            'ok',
+            10,
+            config('session.path'),
+            config('session.domain'),
+            (bool) config('session.secure'),
+            false,
+            false,
+            config('session.same_site')
+        );
+    })->name('session.debug');
+}
+
 Route::get('/', function () {
-    return view('welcome');
+    return view('landing');
 })->name('welcome');
+
+Route::get('/freelancer-hub', function () {
+    return view('welcome');
+})->name('freelance.home');
 
 Route::get('/freelancer/dashboard', function () {
     return redirect()->route('freelancer.projects.list');
@@ -70,4 +110,3 @@ require __DIR__.'/admin/admin-routes.php';
 require __DIR__.'/Freelancer-Client/freelancer.php';
 require __DIR__.'/Freelancer-Client/client.php';
 require __DIR__.'/api.php';
-

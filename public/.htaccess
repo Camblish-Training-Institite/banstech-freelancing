@@ -5,6 +5,15 @@
 
     RewriteEngine On
 
+    # Keep production on one HTTPS host so Laravel session cookies remain valid.
+    RewriteCond %{HTTP_HOST} ^www\.banstech\.co\.za$ [NC]
+    RewriteRule ^ https://banstech.co.za%{REQUEST_URI} [L,R=301]
+
+    RewriteCond %{HTTP_HOST} ^banstech\.co\.za$ [NC]
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+    RewriteRule ^ https://banstech.co.za%{REQUEST_URI} [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

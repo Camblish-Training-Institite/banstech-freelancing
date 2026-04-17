@@ -1,5 +1,6 @@
+@php($activeTheme = auth('admin')->check() ? (auth('admin')->user()->theme ?? 'default') : (auth()->check() ? (auth()->user()->theme ?? 'default') : 'default'))
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ $activeTheme }}">
 
 <head>
     <meta charset="utf-8">
@@ -21,11 +22,12 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('theme.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased" data-nav-context="admin">
     <div class="flex flex-col min-h-screen bg-gray-100 " style="min-width:100vw;">
         @include('admin.components.navigation')
 

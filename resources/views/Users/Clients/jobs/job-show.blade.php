@@ -20,6 +20,35 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
+    .btn{
+        @apply flex items-center justify-center px-4 py-2 border rounded-md;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background-color: var(--theme-accent);
+    }
+
+    .btn.edit {
+        background-color: var(--theme-accent);
+        color: white;
+    }
+
+    .btn.edit:hover {
+        background-color: var(--theme-accent-strong);
+    }
+
+    .btn.delete {
+        background-color: var(--theme-danger);
+        color: white;
+    }
+
+    .btn.delete:hover {
+        background-color: var(--theme-danger-strong);
+    }
+
     /* Header-title */
     .header-title {
         display: flex;
@@ -139,30 +168,31 @@
     }
 
     .send-proposal {
-        background-color: #6a51ae;
-        color: white;
+        background-color: var(--theme-accent);
+        color: #fff;
     }
 
     .send-proposal:hover {
-        background-color: #5b419e;
+        background-color: var(--theme-accent-strong);
     }
 
     .save-job {
-        background-color: #e0e0e0;
+        background-color: var(--theme-accent-soft);
         color: #333;
     }
 
     .save-job:hover {
-        background-color: #d0d0d0;
+        background-color: var(--theme-accent-soft-strong);
+        color: #333;
     }
 
     .report-job {
-        background-color: #f44336;
+        background-color: var(--theme-danger);
         color: white;
     }
 
     .report-job:hover {
-        background-color: #d32f2f;
+        background-color: var(--theme-danger-strong);
     }
 
     /* Responsive */
@@ -186,8 +216,8 @@
 <div class="flex w-full justify-between items-center mb-6 px-2">
     <a href="{{ url()->previous() }}" class="back-link">← Back</a>
     <div class="flex space-x-2 ">
-        <a href="{{ route('client.jobs.edit', $job->id) }}" class="flex items-center justify-center px-4 py-2 border rounded-md">Edit</a>
-        <a href="{{ route('client.jobs.destroy', $job->id) }}" class="flex items-center justify-center px-4 py-2 border rounded-md">Delete</a>
+        <a href="{{ route('client.jobs.edit', $job->id) }}" class="btn edit">Edit</a>
+        <a href="{{ route('client.jobs.destroy', $job->id) }}" class="btn delete">Delete</a>
     </div>
 </div>
  
@@ -243,14 +273,14 @@
                 <!-- Action Buttons -->
                 <div class="pt-6 mt-6 text-right border-t border-gray-200 justify-between flex">
                     <a href="{{route('freelancer.proposal.create', $job->id)}}"
-                        class="send-proposal inline-flex items-center px-4 py-2 border border-blue-600 text-sm font-medium text-blue-600 hover:text-blue-800 rounded-2">Send
+                        class="send-proposal inline-flex items-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-2">Send
                         Proposal
                     </a>
                     <div>
-                        <button class="save-job inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 rounded-lg">
+                        <button class="save-job inline-flex items-center px-4 py-2 text-sm font-medium hover:text-gray-800 rounded-lg">
                             Save Job
                         </button>
-                        <a href="#" class="report-job inline-flex items-center px-4 py-2 text-sm font-medium text-red-600 hover:text-red-800 rounded-lg">
+                        <a href="#" class="report-job inline-flex items-center px-4 py-2 text-sm font-medium  rounded-lg">
                             Report Job
                         </a>
                     </div>
@@ -266,7 +296,7 @@
                 {{-- <a href="{{route('freelancer.job.map', $job->id)}}" style="display: block; text-decoration: none; color: inherit;">
                     @include('geo_location.mini_map')
                 </a> --}}
-                <a href="{{ route('client.job.map', $job->id) }}" class="flex px-4 py-2 items-center justify-center bg-blue-600 text-white rounded-md hover:bg-blue-900">View on Map</a>
+                <a href="{{ route('client.job.map', $job->id) }}" class="btn edit text-white">View on Map</a>
             </div> 
         </div> 
     </div>

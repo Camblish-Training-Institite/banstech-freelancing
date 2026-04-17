@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ManagementRequestController;
 use App\Http\Controllers\ProjectManager\ProfileController;
 use App\Http\Controllers\ProjectManager\ContractController;
 use App\Http\Controllers\ProjectManager\MilestoneController;
+use App\Http\Controllers\SettingsController;
 
 // routes/admin.php
 Route::prefix('project-manager')->name('pm.')->group(function () {
@@ -32,6 +33,8 @@ Route::prefix('project-manager')->name('pm.')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
 })->middleware('auth');
 

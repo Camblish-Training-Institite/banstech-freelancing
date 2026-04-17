@@ -2,11 +2,25 @@
 <style>
     /* Custom complimentary color for the navigation bar */
     .bg-complimentary-nav {
-        background-color: #28a745; /* Complimentary color #68E4AD adjusted for nav */
+        background-color: var(--theme-nav-surface); /* Complimentary color #68E4AD adjusted for nav */
     }
     /* Darker shade for the active link background */
     .bg-complimentary-nav-darker {
-        background-color: #125b23; /* A darker shade of #E4AD68 */
+        background-color: var(--theme-nav-active-surface); /* A darker shade of #E4AD68 */
+    }
+
+    .admin-nav-link {
+        color: var(--theme-nav-text);
+    }
+
+    .admin-nav-link:hover {
+        background-color: var(--theme-nav-hover);
+        color: var(--theme-nav-text);
+    }
+
+    .admin-nav-link-active {
+        background-color: var(--theme-nav-active-surface);
+        color: var(--theme-nav-active-text);
     }
 </style>
 
@@ -27,8 +41,8 @@
                 <div class="hidden space-x-4 sm:-my-px sm:ms-10 sm:flex">
                     @php
                         // Define classes for active and inactive links to keep the template clean
-                        $activeLinkClasses = 'inline-flex items-center px-3 py-2 rounded-md text-sm font-medium text-white bg-complimentary-nav-darker transition duration-150 ease-in-out';
-                        $inactiveLinkClasses = 'inline-flex items-center px-3 py-2 rounded-md text-sm font-medium text-black hover:bg-green-200 hover:text-gray-900 transition duration-150 ease-in-out';
+                        $activeLinkClasses = 'admin-nav-link admin-nav-link-active inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out';
+                        $inactiveLinkClasses = 'admin-nav-link inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out';
                     @endphp
                     <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? $activeLinkClasses : $inactiveLinkClasses }}">
                         {{ __('Dashboard') }}
@@ -44,6 +58,9 @@
                     </a>
                     <a href="{{ route('admin.projects.index') }}" class="{{ request()->routeIs('admin.projects*') || request()->routeIs('admin.projects.show') ? $activeLinkClasses : $inactiveLinkClasses }}">
                         {{ __('Projects') }}
+                    </a>
+                    <a href="{{ route('admin.milestones.index') }}" class="{{ request()->routeIs('admin.milestones*') ? $activeLinkClasses : $inactiveLinkClasses }}">
+                        {{ __('Milestones') }}
                     </a>
                     {{-- <a href="{{ route('admin.provider-users.index') }}" class="{{ request()->routeIs('admin.provider-users.index*') || request()->routeIs('admin.provider-users.show') ? $activeLinkClasses : $inactiveLinkClasses }}">
                         {{ __('Provider Users') }}
@@ -64,7 +81,7 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-black bg-transparent hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                        <button style="color: var(--theme-nav-text);" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md bg-transparent focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::guard('admin')->user()->name}}</div>
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -75,6 +92,10 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <x-dropdown-link :href="route('admin.settings.edit')">
+                            {{ __('Settings') }}
+                        </x-dropdown-link>
+
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('admin.logout') }}">
                             @csrf
@@ -114,6 +135,12 @@
             <x-responsive-nav-link :href="route('admin.jobs.index')" :active="request()->routeIs('admin.jobs.index*')">
                 {{ __('Jobs') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.projects.index')" :active="request()->routeIs('admin.projects*')">
+                {{ __('Projects') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.milestones.index')" :active="request()->routeIs('admin.milestones*')">
+                {{ __('Milestones') }}
+            </x-responsive-nav-link>
             {{-- <x-responsive-nav-link :href="route('providers.index')" :active="request()->routeIs('providers.index*')">
                 {{ __('Providers') }}
             </x-responsive-nav-link> --}}
@@ -136,6 +163,10 @@
             </div>
 
             <div class="mt-3 space-y-1">
+                <x-responsive-nav-link :href="route('admin.settings.edit')">
+                    {{ __('Settings') }}
+                </x-responsive-nav-link>
+
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
@@ -148,4 +179,3 @@
         </div>
     </div>
 </nav>
-
