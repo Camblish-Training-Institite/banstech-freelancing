@@ -67,7 +67,7 @@
             <!-- Right Column: Summary & Actions -->
             <div class="mt-8 lg:mt-0">
 
-                @include('Users.Freelancers.components.about-client')
+                @include('Users.Freelancers.components.about-client', ['job' => $contest])
 
                 <div class="bg-white shadow-sm rounded-lg p-6 sticky top-6">
                     <h3

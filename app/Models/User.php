@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Backpack\CRUD\app\Models\Traits\CrudTrait; // Add this line
 use Backpack\CRUD\app\Models\Traits\HasBackpackUser;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -149,4 +151,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(ContestEntry::class, 'freelancer_id');
     }
+
+    public function qualification()
+{
+    return $this->hasOne(Qualification::class, 'user_id');
+}
 }

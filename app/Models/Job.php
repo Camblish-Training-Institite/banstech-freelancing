@@ -71,7 +71,7 @@ class Job extends Model
     //     return $this->proposals()->latest('created_at')->first();
     // }
     
-    
+
     public function contract()
     {
         return $this->hasOne(Contract::class, 'job_id');
