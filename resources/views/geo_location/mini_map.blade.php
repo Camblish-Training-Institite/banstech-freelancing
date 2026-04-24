@@ -1,77 +1,182 @@
-<!doctype html>
+@php
+    $miniMapId = 'mini-map-' . ($job->id ?? uniqid());
+@endphp
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Jobs Map — Physical & Remote</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-  <style>
-    /* Basic responsive layout */
-    body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; }
-    .app { display:flex; flex-direction:column; height:100%; }
-    .topbar { display:flex; align-items:center; gap:12px; padding:10px; border-bottom:1px solid #eee; background:#fff; }
-    .title { font-weight:600; font-size:1rem; }
-    .controls { margin-left:auto; display:flex; gap:8px; align-items:center; }
-    .map-and-list { display:flex; flex:1; overflow:hidden; flex-direction: column; }
-    .map { flex:1; min-height:0; } /* allow flex to shrink on mobile */
-    .side { width:360px; max-width:40%; border-left:1px solid #eee; overflow:auto; background:#fafafa; }
-    .container {width: 100%; height: 100%; position: relative;}
-    /* Mobile layout */
-    @media (max-width:900px){
-      .map-and-list{ flex-direction:column; }
-      .side{ width:100%; max-width:100%; border-left:0; border-top:1px solid #eee; height:40vh; }
+<style>
+    .mini-map-shell {
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        overflow: hidden;
+        background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
     }
-.map-widget-container {
-    width: 100%; /* Fill the available sidebar width */
-    height: 300px; /* Option 1: A fixed height */
-    /* OR, a better option for maintaining shape: */
-    aspect-ratio: 16 / 9; /* Keeps a widescreen shape */
-    
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden; /* Clips the map to the rounded corners */
-}
-    #map { width:100%; height:100%; }
 
-    .controls .btn { padding:8px 10px; border-radius:8px; border:1px solid #ddd; background:#fff; cursor:pointer; }
-    .controls .btn.primary{ background:#0b74de; color:#fff; border-color:transparent; }
+    .mini-map-canvas {
+        width: 100%;
+        height: 260px;
+    }
 
-    .filter-row{ display:flex; gap:10px; align-items:center; padding:8px; }
-    .job-item{ padding:10px; border-bottom:1px solid #eee; cursor:pointer; }
-    .job-item:hover{ background:#fff; }
-    .badge { display:inline-block; padding:3px 6px; border-radius:6px; font-size:12px; }
-    .badge.physical{ background:#e6f4ff; color:#0366d6; }
-    .badge.remote{ background:#f3e8ff; color:#6b21a8; }
+    .mini-map-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-top: 1px solid #e5e7eb;
+    }
 
-    /* .range-label{ font-size:13px; } */
-  </style>
-</head>
-<body>
-  <div id="app">
-    <div class="map-widget-container">
-        <div id="map" style="height: 300px; border-radius: 8px;"></div>
-    </div>
-    
-    <div class="flex justify-between items-center mt-2">
-        <button @click="findMe" class="btn primary" style="font-size: 12px; padding: 5px 10px;">
-            📍 Distance from me
-        </button>
-        <span v-if="userLocation" class="text-xs text-gray-500">
-            Map updated with your location
-        </span>
+    .mini-map-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .mini-map-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .mini-map-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .mini-map-btn {
+        border: 1px solid #d1d5db;
+        background: white;
+        color: #374151;
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .mini-map-btn.primary {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+    }
+</style>
+
+<div class="mini-map-shell">
+    <div id="{{ $miniMapId }}" class="mini-map-canvas"></div>
+
+    <div class="mini-map-toolbar">
+        <div class="mini-map-meta">
+            <span class="mini-map-badge">On-site job</span>
+            @if ($job->freelancer_radius)
+                <span class="mini-map-badge">{{ (int) $job->freelancer_radius }} km radius</span>
+            @endif
+        </div>
+
+        <div class="mini-map-actions">
+            <button type="button" class="mini-map-btn primary" onclick="window.freelanceMiniMaps['{{ $miniMapId }}']?.findMe()">
+                Distance from me
+            </button>
+            <button type="button" class="mini-map-btn" onclick="window.freelanceMiniMaps['{{ $miniMapId }}']?.focusJob()">
+                Recenter
+            </button>
+        </div>
     </div>
 </div>
 
-        
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    window.freelanceMiniMaps = window.freelanceMiniMaps || {};
 
-  <!-- Vue (CDN) -->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    (function () {
+        const mapId = @json($miniMapId);
+        const job = {
+            id: @json($job->id),
+            title: @json($job->title),
+            lat: @json($job->location ? (float) $job->location->latitude : 0),
+            lng: @json($job->location ? (float) $job->location->longitude : 0),
+            budget: @json((float) $job->budget),
+            radiusKm: @json((int) ($job->freelancer_radius ?? 0)),
+        };
 
- @include('geo_location/mapScript', ['job' => $job ?? null])
-</body>
-</html>
+        if (!job.lat || !job.lng) {
+            return;
+        }
+
+        const map = L.map(mapId, {
+            zoomControl: true,
+            scrollWheelZoom: false,
+        }).setView([job.lat, job.lng], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap',
+        }).addTo(map);
+
+        const jobMarker = L.marker([job.lat, job.lng]).addTo(map);
+        jobMarker.bindPopup(`<strong>${job.title}</strong><br>Budget: R${job.budget.toFixed(2)}`).openPopup();
+
+        let jobCircle = null;
+        if (job.radiusKm > 0) {
+            jobCircle = L.circle([job.lat, job.lng], {
+                radius: job.radiusKm * 1000,
+                color: '#2563eb',
+                fillColor: '#93c5fd',
+                fillOpacity: 0.15,
+            }).addTo(map);
+        }
+
+        let userMarker = null;
+
+        const focusJob = () => {
+            if (jobCircle) {
+                map.fitBounds(jobCircle.getBounds(), { padding: [20, 20] });
+                return;
+            }
+
+            map.setView([job.lat, job.lng], 13);
+        };
+
+        const findMe = () => {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported on this device.');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(position => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                if (userMarker) {
+                    map.removeLayer(userMarker);
+                }
+
+                userMarker = L.circleMarker([latitude, longitude], {
+                    radius: 8,
+                    fillColor: '#7c3aed',
+                    color: '#fff',
+                    weight: 2,
+                    fillOpacity: 1,
+                }).addTo(map).bindPopup('You are here').openPopup();
+
+                const bounds = L.latLngBounds([[job.lat, job.lng], [latitude, longitude]]);
+                map.fitBounds(bounds, { padding: [40, 40] });
+            }, () => {
+                alert('We could not access your location.');
+            });
+        };
+
+        window.freelanceMiniMaps[mapId] = {
+            findMe,
+            focusJob,
+        };
+
+        setTimeout(() => map.invalidateSize(), 250);
+    })();
+</script>

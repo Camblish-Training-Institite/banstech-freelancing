@@ -4,9 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\belongsToMany;
-
-
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Profile extends Model
 {
@@ -25,6 +24,7 @@ class Profile extends Model
         'location',
         'timezone',
         'avatar',
+        'hourly_rate',
     ];
 
     public function user(): BelongsTo
@@ -38,12 +38,12 @@ class Profile extends Model
         return trim("{$this->first_name} {$this->last_name}");
     }
 
-    public function skills(): belongsToMany
+    public function skills(): BelongsToMany
     {
-        return $this->belongsToMany(Skill::class, '[profile_skill');
+        return $this->belongsToMany(Skill::class, 'profile_skill');
     }
 
-    public function qualifications(): hasMany
+    public function qualifications(): HasMany
     {
         return $this->hasMany(Qualification::class);
     }

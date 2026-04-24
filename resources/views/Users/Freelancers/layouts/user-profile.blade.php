@@ -35,16 +35,66 @@
         .accent-purple-border {
             border-color: #7A4D8B;
         }
+
+        .profile-header-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .profile-header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1rem;
+            margin-top: 0.35rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header-shell {
+                padding: 1rem;
+            }
+
+            .profile-header-card {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-top: 1rem;
+                padding: 1rem;
+            }
+
+            .profile-header-copy {
+                width: 100%;
+                margin-left: 0 !important;
+            }
+
+            .profile-header-meta {
+                flex-direction: column;
+                gap: 0.35rem;
+                align-items: flex-start;
+            }
+
+            .profile-header-actions {
+                width: 100%;
+                margin-left: 0 !important;
+            }
+
+            .profile-header-actions button,
+            button.profile-header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 
     @php
         $user = Auth::user();
     @endphp
-    <main class="flex-1 overflow-y-auto p-8">
+    <main class="profile-header-shell flex-1 overflow-y-auto p-8">
         <h1 class="text-3xl font-bold text-gray-800 mb-8">Profile Management</h1>
 
         <!-- Profile Header -->
-        <div class="bg-white w-full rounded-lg shadow-md p-6 mb-8 flex items-center mt-20">
+        <div class="profile-header-card bg-white w-full rounded-lg shadow-md p-6 mb-8 mt-20">
 
             <div class="relative">
                 <img class="h-32 w-32 rounded-full object-cover border-4 border-white"
@@ -110,16 +160,20 @@
             </script>
 
 
-            <div class="ml-6">
+            <div class="profile-header-copy ml-6">
                 <h2 class="text-2xl font-bold text-gray-800">{{ $user->name }}</h2>
                 <p class="text-gray-600">{{ $user->profile ? $user->profile->title : 'N/A' }}</p>
-                <p class="text-sm text-gray-500 mt-1"><i
-                        class="fas fa-map-marker-alt mr-2"></i>{{ $user->profile ? $user->profile->location : 'N/A' }}<button
-                        id="editLocationBtn" class="text-gray-500 hover:text-gray-800 ml-2"><i
-                            class="fas fa-pencil-alt"></i></button></p>
+                <div class="profile-header-meta">
+                    <span><i
+                        class="fas fa-map-marker-alt mr-2"></i>{{ $user->profile ? $user->profile->location : 'N/A' }}</span>
+                    <span>Member since {{ $user->created_at->diffForHumans() }}</span>
+                    <button
+                        id="editLocationBtn" class="text-gray-500 hover:text-gray-800"><i
+                            class="fas fa-pencil-alt mr-1"></i>Edit location</button>
+                </div>
             </div>
             <button id="editProfileBtn"
-                class="ml-auto bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg text-sm transition-all duration-300">
+                class="profile-header-actions ml-auto bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg text-sm transition-all duration-300 inline-flex items-center">
                 <i class="fas fa-edit mr-2"></i>Edit Profile
             </button>
         </div>
@@ -210,6 +264,27 @@
                 </div>
 
                 @include('Users.Freelancers.profile.components.editAddress')
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Bank Details</h3>
+                        <button id="editBankDetailsBtn" class="text-gray-500 hover:text-gray-800"><i
+                                class="fas fa-pencil-alt"></i></button>
+                    </div>
+
+                    @if ($user->bankDetail)
+                        <p class="text-gray-600">Bank: {{ $user->bankDetail->bank_name }}</p>
+                        <p class="text-gray-600 mt-2">Account Holder: {{ $user->bankDetail->account_holder_name }}</p>
+                        <p class="text-gray-600 mt-2">Account Number: {{ $user->bankDetail->masked_account_number }}</p>
+                        <p class="text-gray-600 mt-2">Account Type: {{ $user->bankDetail->account_type ? ucfirst($user->bankDetail->account_type) : 'N/A' }}</p>
+                        <p class="text-gray-600 mt-2">Branch Code: {{ $user->bankDetail->branch_code ?: 'N/A' }}</p>
+                        <p class="text-gray-600 mt-2">SWIFT Code: {{ $user->bankDetail->swift_code ?: 'N/A' }}</p>
+                    @else
+                        <p class="text-gray-500">No bank details added yet.</p>
+                    @endif
+                </div>
+
+                @include('Users.Freelancers.profile.components.editBankDetails')
             </div>
 
             <!-- Right Column -->
@@ -222,16 +297,7 @@
                                 class="fas fa-plus-circle"></i></button>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        {{-- @foreach ($user->skills as $skill)
-                            <span
-                                class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center space-x-2">
-                                <span>{{ $skill->name }}</span>
-                                <button class="text-gray-500 hover:text-gray-800"><i
-                                        class="fas fa-times text-xs"></i></button>
-                            </span>
-                        @endforeach --}}
-
-                        {{-- @if ($user->profile && $user->profile->skill->count())
+                        @if ($user->profile && $user->profile->skills->count())
                             @foreach ($user->profile->skills as $skill)
                                 <span class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm">
                                     {{ $skill->name }}
@@ -239,10 +305,7 @@
                             @endforeach
                         @else
                             <p class="text-gray-500">No skills added yet.</p>
-                        @endif --}}
-
-
-
+                        @endif
                     </div>
                 </div>
 
@@ -261,14 +324,13 @@
                             <i class="fas fa-graduation-cap text-gray-400 mt-1 mr-4"></i>
                             <div>
                                     <p class="font-semibold text-gray-800">
-                                        {{-- {{dd($user->qualificaiton)}} --}}
-                                        Qualification:{{$user->qualificaiton ? $user->qualification->degree : 'N/A' }}
+                                        Qualification: {{ $user->qualification ? $user->qualification->degree : 'N/A' }}
                                     </p>
                                     <p class="text-sm text-gray-600">
-                                        Institution: {{ $user->qualificaiton ? $user->qualification->institution : 'N/A' }}
+                                        Institution: {{ $user->qualification ? $user->qualification->institution : 'N/A' }}
                                     </p>
                                     <p class="text-xs text-gray-400">
-                                        Completed: {{ $user->qualificaiton ? $user->qualification->year_of_completion : 'N/A' }}
+                                        Completed: {{ $user->qualification ? $user->qualification->year_of_completion : 'N/A' }}
                                     </p>
                                 
                             </div>
@@ -295,11 +357,18 @@
                         <li class="flex items-start group">
                             <i class="fas fa-certificate text-gray-400 mt-1 mr-4"></i>
                             <div>
-                                <p class="font-semibold text-gray-800">Laravel Certified Developer</p>
-                                <p class="text-sm text-gray-600">Laravel</p>
-                                <p class="text-xs text-gray-400">Issued 2018</p>
-                                <p class="text-xs text-gray-400">Expires 2023</p>
-                                <p class="text-xs text-gray-400">Certificate ID: LAR-123456</p>
+                                <p class="font-semibold text-gray-800">
+                                    {{ $user->certificate ? $user->certificate->certificate_name : 'No certificate added yet.' }}
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    {{ $user->certificate ? ($user->certificate->issuing_organization ?: 'Issuing organization not provided') : '' }}
+                                </p>
+                                @if ($user->certificate?->issue_date)
+                                    <p class="text-xs text-gray-400">Issued {{ $user->certificate->issue_date->format('Y-m-d') }}</p>
+                                @endif
+                                @if ($user->certificate?->expiration_date)
+                                    <p class="text-xs text-gray-400">Expires {{ $user->certificate->expiration_date->format('Y-m-d') }}</p>
+                                @endif
                             </div>
                             <div class="ml-auto flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <button class="text-gray-400 hover:text-gray-700"><i

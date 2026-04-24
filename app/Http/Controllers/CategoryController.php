@@ -42,14 +42,14 @@ class CategoryController extends Controller
 
     }
 
-    public function getSubcategories(Request $request)
+    public function getSubcategories(Request $request, $category = null)
     {
         // \Log::info('Subcategory request received', [
         //     'mainCategory_id' => $request->input('mainCategory_id'),
         //     'all_input' => $request->all(),
         // ]);
 
-        $mainCategoryId = $request->input('mainCategory_id');
+        $mainCategoryId = $request->input('mainCategory_id', $category);
 
         $query = SubCategory::query()->select('*');
         if ($mainCategoryId) {

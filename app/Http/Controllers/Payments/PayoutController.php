@@ -4,30 +4,94 @@ namespace App\Http\Controllers\Payments;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payout;
+use App\Models\WithdrawalRequest;
+use App\Services\Payments\PayPalPayoutSyncService;
+use App\Services\Payments\WithdrawalProcessingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class PayoutController extends Controller
 {
+    public function __construct(
+        protected PayPalPayoutSyncService $payPalPayoutSyncService,
+        protected WithdrawalProcessingService $withdrawalProcessingService
+    )
+    {
+    }
 
     public function index()   {
-        $userId = Auth::user();
+        $user = Auth::user();
 
-        $payouts = Payout::where('freelancer_id', $userId->id)->get();
-        // dd($payouts);
-        
-//This is for Recent Payouts
-        $latestPayout = Payout::where('freelancer_id', $userId->id)->where('status','processed')->latest()->first();
- 
-        $TotalEarnings =  $payouts->where('status','processed')->sum('amount'); 
-        $PendingPayouts = $payouts ->where('status','pending')->sum('amount');
-        $AvailableWithdrawals = $payouts->where('status','processed')->sum('amount');
-        
-        return view('dashboards.freelancer.earnings',compact('payouts','PendingPayouts','AvailableWithdrawals','TotalEarnings'));        
-    
+        $this->payPalPayoutSyncService->syncPendingPayoutsForUser($user->id);
+        $this->withdrawalProcessingService->syncPayPalRequestsForUser($user->id);
+
+        $payouts = Payout::with(['contract.job.user', 'milestone'])
+            ->where('freelancer_id', $user->id)
+            ->latest('requested_at')
+            ->get();
+
+        $withdrawalRequests = WithdrawalRequest::where('user_id', $user->id)
+            ->latest('requested_at')
+            ->get();
+
+        $latestPayout = Payout::where('freelancer_id', $user->id)
+            ->where('status', 'processed')
+            ->latest()
+            ->first();
+
+        $TotalEarnings = (float) $payouts->where('status', 'processed')->sum('amount');
+        $PendingPayouts = (float) $payouts->where('status', 'pending')->sum('amount');
+        $PendingWithdrawals = (float) $withdrawalRequests->whereIn('status', ['pending', 'confirmed'])->sum('amount');
+        $CompletedWithdrawals = (float) $withdrawalRequests->where('status', 'processed')->sum('amount');
+        $AvailableWithdrawals = $this->calculateAvailableWithdrawals($user->id, $payouts, $withdrawalRequests);
+
+        return view('dashboards.freelancer.earnings', compact(
+            'payouts',
+            'withdrawalRequests',
+            'PendingPayouts',
+            'PendingWithdrawals',
+            'CompletedWithdrawals',
+            'AvailableWithdrawals',
+            'TotalEarnings',
+            'latestPayout'
+        ));
     }
 
     public function transection(){
+    }
+
+    public function storeWithdrawal(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'method' => ['required', Rule::in(['paypal', 'bank'])],
+        ]);
+
+        $availableWithdrawals = $this->calculateAvailableWithdrawals($user->id);
+        $amount = round((float) $validated['amount'], 2);
+
+        if ($amount > $availableWithdrawals) {
+            return back()->withErrors([
+                'amount' => 'Withdrawal amount cannot exceed your available balance.',
+            ])->withInput();
+        }
+
+        $withdrawalRequest = $this->withdrawalProcessingService->submit(
+            $user,
+            $amount,
+            $validated['method']
+        );
+
+        $statusMessage = match ($withdrawalRequest->status) {
+            'processed' => 'Withdrawal request submitted and completed successfully.',
+            'confirmed' => 'Withdrawal request submitted and confirmed. Payment is now in progress.',
+            default => 'Withdrawal request submitted successfully.',
+        };
+
+        return back()->with('status', $statusMessage);
     }
     
     // This function updates the payout status, typically called after a payout request is made
@@ -94,4 +158,17 @@ class PayoutController extends Controller
         'payout'  => $payout
     ]);
  }
+
+    protected function calculateAvailableWithdrawals(int $userId, $payouts = null, $withdrawalRequests = null): float
+    {
+        $payouts = $payouts ?? Payout::where('freelancer_id', $userId)->get();
+        $withdrawalRequests = $withdrawalRequests ?? WithdrawalRequest::where('user_id', $userId)->get();
+
+        $processedEarnings = (float) $payouts->where('status', 'processed')->sum('amount');
+        $reservedOrPaidOut = (float) $withdrawalRequests
+            ->whereIn('status', ['pending', 'confirmed', 'processed'])
+            ->sum('amount');
+
+        return round(max($processedEarnings - $reservedOrPaidOut, 0), 2);
+    }
 }

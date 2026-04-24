@@ -62,6 +62,9 @@
                     <a href="{{ route('admin.milestones.index') }}" class="{{ request()->routeIs('admin.milestones*') ? $activeLinkClasses : $inactiveLinkClasses }}">
                         {{ __('Milestones') }}
                     </a>
+                    <a href="{{ route('admin.withdrawals.index') }}" class="{{ request()->routeIs('admin.withdrawals*') ? $activeLinkClasses : $inactiveLinkClasses }}">
+                        {{ __('Withdrawals') }}
+                    </a>
                     {{-- <a href="{{ route('admin.provider-users.index') }}" class="{{ request()->routeIs('admin.provider-users.index*') || request()->routeIs('admin.provider-users.show') ? $activeLinkClasses : $inactiveLinkClasses }}">
                         {{ __('Provider Users') }}
                     </a> --}}
@@ -140,6 +143,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.milestones.index')" :active="request()->routeIs('admin.milestones*')">
                 {{ __('Milestones') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.withdrawals.index')" :active="request()->routeIs('admin.withdrawals*')">
+                {{ __('Withdrawals') }}
             </x-responsive-nav-link>
             {{-- <x-responsive-nav-link :href="route('providers.index')" :active="request()->routeIs('providers.index*')">
                 {{ __('Providers') }}

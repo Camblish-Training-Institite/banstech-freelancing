@@ -37,20 +37,12 @@
                     <p class="text-gray-600">Upcoming Bookings</p>
                 </div>
                 <div class="bg-gray-50 p-6 rounded-lg shadow-sm text-center">
-                    {{-- @if ($upcomingBookings->payouts)
-                        <p class="text-5xl font-bold text-complimentary mb-2">R {{ $upcomingBookings->payouts }}</p>
-                    @else
-                        <p class="text-3xl font-bold text-complimentary mb-2">No upcoming payouts</p>
-                    @endif --}}
-                    <p class="text-gray-600">Pending Payouts</p>
+                    <p class="text-5xl font-bold text-complimentary mb-2">{{ $pendingWithdrawals ?? 0 }}</p>
+                    <p class="text-gray-600">Pending Withdrawals</p>
                 </div>
                 <div class="bg-gray-50 p-6 rounded-lg shadow-sm text-center">
-                    {{-- @if ($totalProfits->profits)
-                        <p class="text-5xl font-bold text-blue-500 mb-2">R {{ $totalProfits->profits }}</p>
-                    @else
-                        <p class="text-3xl font-bold text-blue-500 mb-2">No money made yet</p>
-                    @endif --}}
-                    <p class="text-gray-600">Total profits made</p>
+                    <p class="text-5xl font-bold text-blue-500 mb-2">{{ $confirmedWithdrawals ?? 0 }}</p>
+                    <p class="text-gray-600">Confirmed Withdrawals</p>
                 </div>
                 {{-- <div class="bg-gray-50 p-6 rounded-lg shadow-sm text-center">
                     
@@ -66,18 +58,18 @@
                     <p class="text-gray-600">Average Rating</p>
                 </div> --}}
                 <div class="bg-gray-50 p-6 rounded-lg shadow-sm text-center">
-                    {{-- <p class="text-5xl font-bold text-purple-500 mb-2">{{ $activeRooms->num_rooms }}</p> --}}
-                    <p class="text-gray-600">Active Listings</p>
+                    <p class="text-5xl font-bold text-purple-500 mb-2">{{ $processedWithdrawals ?? 0 }}</p>
+                    <p class="text-gray-600">Processed Withdrawals</p>
                 </div>
             </div>
 
             <h3 class="text-2xl font-bold mb-4 text-dark-bg">Quick Links</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {{-- Tip: Use the route() helper for cleaner links --}}
-                <a href="" class="bg-primary-p text-white font-semibold py-3 px-6 rounded-lg hover:bg-primary-p-darker transition duration-300 text-center">Manage Listings</a>
-                <a href="" class="bg-complimentary text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-600 transition duration-300 text-center">View All Bookings</a>
-                <a href="#" class="bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-600 transition duration-300 text-center">Payment History</a>
-                <a href="#" class="bg-red-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 transition duration-300 text-center">Performance Reports</a>
+                <a href="{{ route('admin.projects.index') }}" class="bg-primary-p text-white font-semibold py-3 px-6 rounded-lg hover:bg-primary-p-darker transition duration-300 text-center">Manage Projects</a>
+                <a href="{{ route('admin.users.index') }}" class="bg-complimentary text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-600 transition duration-300 text-center">Manage Users</a>
+                <a href="{{ route('admin.withdrawals.index') }}" class="bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-600 transition duration-300 text-center">Withdrawal Queue</a>
+                <a href="{{ route('admin.milestones.index') }}" class="bg-red-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 transition duration-300 text-center">Milestones</a>
                 {{-- <a href="{{url('/help#partner')}}" class="bg-gray-300 text-dark-bg font-semibold py-3 px-6 rounded-lg hover:bg-gray-400 transition duration-300 text-center">Help Articles</a> --}}
                 {{-- <a href="/community-forum" class="bg-orange-400 text-white font-semibold py-3 px-6 rounded-lg hover:bg-orange-500 transition duration-300 text-center">Community Forum</a> --}}
             </div>

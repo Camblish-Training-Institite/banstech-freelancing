@@ -1,6 +1,9 @@
 @extends('dashboards.freelancer.dashboard')
 
 @section('body')
+@php
+    $isSavedJob = Auth::user()?->hasSavedJob($job->id);
+@endphp
 <style>
     /* General Styles */
     body {
@@ -140,30 +143,31 @@
     }
 
     .send-proposal {
-        background-color: #6a51ae;
-        color: white;
+        background-color: var(--theme-accent);
+        color: #fff;
     }
 
     .send-proposal:hover {
-        background-color: #5b419e;
+        background-color: var(--theme-accent-strong);
     }
 
     .save-job {
-        background-color: #e0e0e0;
+        background-color: var(--theme-accent-soft);
         color: #333;
     }
 
     .save-job:hover {
-        background-color: #d0d0d0;
+        background-color: var(--theme-accent-soft-strong);
+        color: #333;
     }
 
     .report-job {
-        background-color: #f44336;
+        background-color: var(--theme-danger);
         color: white;
     }
 
     .report-job:hover {
-        background-color: #d32f2f;
+        background-color: var(--theme-danger-strong);
     }
 
     /* Responsive */
@@ -259,7 +263,19 @@
     <!-- header section -->
     <header class="mb-8">
         <div class="flex flex-wrap items-center pt-2 justify-between gap-4">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">{{ $job->title ?? 'Job Title Not Available' }}</h1>
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800">{{ $job->title ?? 'Job Title Not Available' }}</h1>
+                <div class="mt-3 flex flex-wrap gap-2">
+                    <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                        {{ ucfirst($job->job_type ?? 'online') }}
+                    </span>
+                    @if ($job->job_type === 'physical' && $job->freelancer_radius)
+                        <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                            {{ (int) $job->freelancer_radius }} km service radius
+                        </span>
+                    @endif
+                </div>
+            </div>
             <div class="flex items-center gap-4">
                 <span
                     class="inline-flex items-center px-3 py-1 text-sm font-medium text-green-700 bg-green-100 rounded-full">
@@ -303,17 +319,40 @@
                     </div>
                 </div>
 
+                @if ($job->job_type === 'physical' && $job->location)
+                    <div class="mt-6 rounded-xl border border-blue-100 bg-blue-50 p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Location & Access</h3>
+                        <p class="mt-2 text-sm text-gray-700">
+                            This is an on-site job with a pinned map location.
+                            @if ($job->freelancer_radius)
+                                The client is accepting freelancers within {{ (int) $job->freelancer_radius }} km.
+                            @endif
+                        </p>
+                        <div class="mt-3 flex flex-wrap gap-2 text-xs text-gray-600">
+                            <span class="rounded-full bg-white px-3 py-1 shadow-sm">
+                                Lat: {{ number_format((float) $job->location->latitude, 5) }}
+                            </span>
+                            <span class="rounded-full bg-white px-3 py-1 shadow-sm">
+                                Lng: {{ number_format((float) $job->location->longitude, 5) }}
+                            </span>
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Action Buttons -->
                 <div class="pt-6 mt-6 text-right border-t border-gray-200 justify-between flex">
                     <a href="{{route('freelancer.proposal.create', $job->id)}}"
-                        class="send-proposal inline-flex items-center px-4 py-2 border border-blue-600 text-sm font-medium text-blue-600 hover:text-blue-800 rounded-2">Send
+                        class="send-proposal inline-flex items-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-2">Send
                         Proposal
                     </a>
-                    <div>
-                        <button class="save-job inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 rounded-lg">
-                            Save Job
-                        </button>
-                        <a href="#" class="report-job inline-flex items-center px-4 py-2 text-sm font-medium text-red-600 hover:text-red-800 rounded-lg">
+                    <div class="flex flex-wrap justify-end gap-2">
+                        <form method="POST" action="{{ route('freelancer.jobs.save', $job) }}">
+                            @csrf
+                            <button type="submit" class="save-job inline-flex items-center px-4 py-2 text-sm font-medium hover:text-gray-800 rounded-lg">
+                                {{ $isSavedJob ? 'Remove From Saved' : 'Save Job' }}
+                            </button>
+                        </form>
+                        <a href="#" class="report-job inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg">
                             Report Job
                         </a>
                     </div>
@@ -371,16 +410,25 @@
         </main>
         
         <!-- about the client -->
-        @include('Users.Freelancers.components.about-client', [$job, $user])
+        <div class="flex flex-col gap-6 mb-6 mt-8 md:mt-0">
+            @include('Users.Freelancers.components.about-client', ['user' => $job->user ?? null, 'job' => $job ?? null])
+            @if ($job->job_type === 'physical' && $job->location)
+                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">Job Location</h3>
+                            <p class="mt-1 text-sm text-gray-500">Use the mini-map to preview the site before opening the full map.</p>
+                        </div>
+                        <a href="{{ route('freelancer.job.map', $job->id) }}" class="inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+                            Open Full Map
+                        </a>
+                    </div>
 
-
-        <div class="flex flex-col gap-6 mb-6 mt-8 lg:mt-0">
-            @include('Users.Freelancers.components.about-client')
-            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-                <a href="{{route('freelancer.job.map', $job->id)}}" style="display: block; text-decoration: none; color: inherit;">
-                    @include('geo_location.mini_map', ['job' => $job ?? null])
-                </a>
-            </div> 
+                    <div class="mt-4">
+                        @include('geo_location.mini_map', ['job' => $job ?? null])
+                    </div>
+                </div>
+            @endif
         </div> 
     </div>
 </div>

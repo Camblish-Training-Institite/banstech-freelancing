@@ -7,10 +7,16 @@ use App\Http\Controllers\BanstechAdmin\JobController;
 use App\Http\Controllers\BanstechAdmin\UserController; 
 use App\Http\Controllers\BanstechAdmin\ContractController;
 use App\Http\Controllers\BanstechAdmin\MilestoneController;
+use App\Http\Controllers\BanstechAdmin\WithdrawalRequestController;
 use App\Http\Controllers\SettingsController;
+use App\Models\WithdrawalRequest;
 
 Route::get('/banstech-admin/dashboard', function() {
-    return view('admin.dashboard');
+    $pendingWithdrawals = WithdrawalRequest::where('status', 'pending')->count();
+    $confirmedWithdrawals = WithdrawalRequest::where('status', 'confirmed')->count();
+    $processedWithdrawals = WithdrawalRequest::where('status', 'processed')->count();
+
+    return view('admin.dashboard', compact('pendingWithdrawals', 'confirmedWithdrawals', 'processedWithdrawals'));
 })->name('admin.dashboard');
 
 //Admin Authentication routes
@@ -59,3 +65,12 @@ Route::patch('/banstech-admin/profile', [ProfileController::class, 'update'])->n
 Route::delete('/banstech-admin/profile', [ProfileController::class, 'destroy'])->name('admin.profile.destroy');
 Route::get('/banstech-admin/settings', [SettingsController::class, 'edit'])->name('admin.settings.edit');
 Route::patch('/banstech-admin/settings', [SettingsController::class, 'update'])->name('admin.settings.update');
+
+Route::middleware('auth:admin')->group(function () {
+    Route::get('/banstech-admin/withdrawals', [WithdrawalRequestController::class, 'index'])->name('admin.withdrawals.index');
+    Route::get('/banstech-admin/withdrawals/{withdrawal}', [WithdrawalRequestController::class, 'show'])->name('admin.withdrawals.show');
+    Route::patch('/banstech-admin/withdrawals/{withdrawal}/confirm', [WithdrawalRequestController::class, 'confirm'])->name('admin.withdrawals.confirm');
+    Route::patch('/banstech-admin/withdrawals/{withdrawal}/process', [WithdrawalRequestController::class, 'process'])->name('admin.withdrawals.process');
+    Route::patch('/banstech-admin/withdrawals/{withdrawal}/fail', [WithdrawalRequestController::class, 'fail'])->name('admin.withdrawals.fail');
+    Route::post('/banstech-admin/withdrawals/{withdrawal}/retry-paypal', [WithdrawalRequestController::class, 'retryPayPal'])->name('admin.withdrawals.retry-paypal');
+});

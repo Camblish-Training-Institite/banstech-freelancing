@@ -1,9 +1,34 @@
 @extends($layout)
 
-@php($activeThemeKey = old('theme', $user->theme ?? 'default'))
+@php
+    $activeThemeKey = old('theme', $user->theme ?? 'default');
+    $isDashboardContext = in_array($layout, ['layouts.client', 'layouts.freelancer'], true);
+@endphp
 
 @section('content')
-<div class="w-full max-w-5xl px-6 py-10">
+@if ($isDashboardContext)
+    <div class="dashboard-container">
+        <div class="main-content">
+            <header class="header">
+                <div class="dashboard-title-row header-title-group">
+                    <button type="button" class="mobile-sidebar-toggle" onclick="toggleDashboardSidebar(true)">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="dashboard-title">{{ $pageTitle }}</div>
+                </div>
+                <div class="header-right">
+                    <a href="{{ route($dashboardRouteName) }}" class="become-client">
+                        <span>Back to Dashboard</span>
+                    </a>
+                </div>
+            </header>
+
+            <div class="dashboard-body">
+                <div class="dashboard-content-shell">
+                    <section class="dashboard-section-body">
+@endif
+
+<div class="w-full max-w-5xl {{ $isDashboardContext ? '' : 'px-6 py-10' }}">
     <div class="mx-auto overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl">
         <div class="border-b border-gray-200 bg-gray-50 px-8 py-8">
             <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -54,7 +79,7 @@
                                 {{ $activeThemeKey === $theme['key'] ? 'checked' : '' }}
                             >
                             <div class="theme-option rounded-3xl border border-gray-200 bg-white p-5 shadow-sm transition duration-200 group-hover:-translate-y-1 group-hover:shadow-lg">
-                                <div class="mb-5 flex items-center justify-between">
+                                <div class="mb-5 flex items-center justify-between gap-3">
                                     <div>
                                         <h3 class="text-lg font-semibold text-gray-900">{{ $theme['name'] }}</h3>
                                         <p class="mt-1 text-sm text-gray-600">{{ $theme['description'] }}</p>
@@ -95,6 +120,20 @@
         </div>
     </div>
 </div>
+
+@if ($isDashboardContext)
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
+@push('styles')
+    @if ($isDashboardContext)
+        <link rel="stylesheet" href="{{ asset('pages_css/dashboards.css') }}">
+    @endif
+@endpush
 
 <style>
     input[type="radio"]:checked + .theme-option {

@@ -54,5 +54,21 @@
                 @yield('content')
             </main>
         </div>
+
+        <script>
+            function toggleDashboardSidebar(forceOpen = null) {
+                const shouldOpen = forceOpen === null
+                    ? !document.body.classList.contains('sidebar-open')
+                    : forceOpen;
+
+                document.body.classList.toggle('sidebar-open', shouldOpen);
+            }
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 992) {
+                    document.body.classList.remove('sidebar-open');
+                }
+            });
+        </script>
     </body>
 </html>

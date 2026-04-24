@@ -47,11 +47,22 @@ class Contract extends Model
     public function milestones(){
         return $this->hasMany(Milestone::class, 'project_id');
     }
+
+    public function escrowFunding()
+    {
+        return $this->hasOne(ProjectFunding::class, 'job_id', 'job_id')
+            ->where('status', 'pending');
+    }
   
     public function sumReleased(){
         return $this->milestones()
         ->where('status', '=', 'released')
         ->sum('amount');
+    }
+
+    public function remainingEscrowAmount(): float
+    {
+        return (float) optional($this->escrowFunding)->amount;
     }
 
     public function files()

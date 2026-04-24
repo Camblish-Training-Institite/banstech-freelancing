@@ -60,7 +60,7 @@
             <div class="proposals">{{$projectManager->proposals->count()}} Proposals</div> --}}
             <div class="buttons-block">
                 <a href="{{ route('client.freelancer.profile', $projectManager->id) }}" class="view-job">Request to Manage Project</a>
-                <a href="{{ route('user', $projectManager->id) }}" class="send-proposal">Message</a>
+                <span class="send-proposal" style="display:inline-flex; align-items:center; justify-content:center; opacity:0.6; cursor:not-allowed;">Messaging via freelancer inbox only</span>
             </div>
         </div>
     </div>

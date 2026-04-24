@@ -4,15 +4,22 @@ namespace App\Http\Controllers\Freelancer;
 
 use App\Models\Milestone;
 use App\Models\Contract;
-use App\Models\Payout;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Notifications\MilestoneReleased;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\EndProjecetReminder;
+use App\Models\User;
+use App\Services\Payments\EscrowPayoutService;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class MilestoneController extends Controller
 {
+    public function __construct(protected EscrowPayoutService $escrowPayoutService)
+    {
+    }
+
     public function index()
     {
         $user = Auth::user();
@@ -88,29 +95,33 @@ class MilestoneController extends Controller
     }
 
     public function releasePayment(Contract $project, Milestone $milestone){
-        $milestone->status = "released";
-        $milestone->save();
+        try {
+            abort_unless($project->job->user_id === Auth::id(), 403);
+            abort_unless($milestone->project_id === $project->id, 404);
 
- 
-        $freelancer = $milestone->project->user;
-        $freelancer->notify(new MilestoneReleased($milestone->id));
- 
-        Payout::create([
-            'freelancer_id'=> $project->user->id,           
-            'contract_id' => $project->id,
-            'amount' => $milestone->amount,
-            'requested_at' => now(),
-            // 'processed_at' => null,
-        ]);
+            $this->escrowPayoutService->releaseMilestone($milestone);
 
-        if($project->milestones->count() == $project->milestones->where('status', 'released')->count())
-        {
-            $client = User::find($project->job->user->id);
-            $client->notify(new EndProjecetReminder($project));
+            $freelancer = $milestone->project->user;
+            $freelancer->notify(new MilestoneReleased($milestone->id));
+
+            if($project->milestones->count() == $project->milestones->where('status', 'released')->count())
+            {
+                $client = User::find($project->job->user->id);
+                $client->notify(new EndProjecetReminder($project));
+            }
+
+            return back()->with('status', 'Milestone payment released successfully.');
+        } catch (Throwable $e) {
+            Log::error('Milestone payment release failed', [
+                'project_id' => $project->id,
+                'milestone_id' => $milestone->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()->withErrors([
+                'payment' => $e->getMessage(),
+            ]);
         }
- 
-
-        return back()->with('status', 'milestone payment released successfully');
     }
 
     public function request(Milestone $milestone)

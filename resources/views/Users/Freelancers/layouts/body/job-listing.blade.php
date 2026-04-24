@@ -1,20 +1,28 @@
 @extends('dashboards.freelancer.dashboard')
 
 @section('body')
-
     <div class="container">
-        <!-- Header -->
         <div class="header">
-
-            
             <h1>Browse Opportunities</h1>
-
-
             <div class="search-bar">
-                {{-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                </svg> --}}
-                <input type="text" placeholder="Search..." style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;"/>
+                <form method="GET" action="{{ route('jobs.listing') }}">
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ $filters['search'] ?? '' }}"
+                        placeholder="Search by job title or client"
+                    />
+                    @if (!empty($filters['type']))
+                        <input type="hidden" name="type" value="{{ $filters['type'] }}">
+                    @endif
+                    @if (!empty($filters['category_id']))
+                        <input type="hidden" name="category_id" value="{{ $filters['category_id'] }}">
+                    @endif
+                    @if (!empty($filters['funded']))
+                        <input type="hidden" name="funded" value="{{ $filters['funded'] }}">
+                    @endif
+                    <button type="submit">Search Jobs</button>
+                </form>
             </div>
             <span class="notification-icon">&#9881;</span>
         </div>
@@ -23,54 +31,70 @@
             $currentTab = 'jobs';
         @endphp
 
-        <!-- Filters -->
-        <div class="filters">
+        <form method="GET" action="{{ route('jobs.listing') }}" class="filters">
             <div>
-                <label>Keywords</label>
-                <input type="text" placeholder="e.g., UI/UX Design" />
+                <label for="search">Keywords</label>
+                <input
+                    id="search"
+                    type="text"
+                    name="search"
+                    value="{{ $filters['search'] ?? '' }}"
+                    placeholder="e.g., UI/UX Design or client name"
+                />
             </div>
+
             <div>
-                <label>Categories</label>
-                <select>
-                    <option value="all" disabled>All Categories</option>
-                    @php
-                    $categories = \App\Models\Category::all();
-                    @endphp
-                    
-                    @forelse ($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @empty
-                        
-                    @endforelse
+                <label for="type">Job Type</label>
+                <select id="type" name="type">
+                    <option value="">All job types</option>
+                    <option value="online" {{ ($filters['type'] ?? '') === 'online' ? 'selected' : '' }}>Online</option>
+                    <option value="physical" {{ ($filters['type'] ?? '') === 'physical' ? 'selected' : '' }}>Physical</option>
                 </select>
             </div>
-            <div>
-                <label>Skills</label>
-                <input type="text" placeholder="e.g., Figma, HTML" />
-            </div>
-            <div>
-                <label>Budget (USD)</label>
-                <input type="text" placeholder="Min amount" />
-            </div>
-            <button style=" grid-column: span 4; justify-self: end;">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-filter" style="color: rgb(255, 255, 255);"></i>
-                    Apply Filters
-                </div>
-            </button>
-        </div>
 
-        <!-- Tabs -->
+            <div>
+                <label for="category_id">Category</label>
+                <select id="category_id" name="category_id">
+                    <option value="">All categories</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" {{ (string) ($filters['category_id'] ?? '') === (string) $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label for="funded">Funding Status</label>
+                <select id="funded" name="funded">
+                    <option value="">All jobs</option>
+                    <option value="funded" {{ ($filters['funded'] ?? '') === 'funded' ? 'selected' : '' }}>Funded only</option>
+                    <option value="not_funded" {{ ($filters['funded'] ?? '') === 'not_funded' ? 'selected' : '' }}>Not funded</option>
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <a href="{{ route('jobs.listing') }}" class="clear-link">
+                    Clear
+                </a>
+                <button type="submit">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-filter" style="color: rgb(255, 255, 255);"></i>
+                        Apply Filters
+                    </div>
+                </button>
+            </div>
+        </form>
+
         <div class="tabs">
-            <button onclick="switchTab('jobs')" id="jobs-tab"  class="{{ $currentTab === 'jobs' ? 'active' : '' }}" onclick="switchTab('jobs')">
-                <i class="fas fa-list"></i> Jobs ({{ count($jobs) }})
+            <button onclick="switchTab('jobs')" id="jobs-tab" class="{{ $currentTab === 'jobs' ? 'active' : '' }}">
+                <i class="fas fa-list"></i> Jobs ({{ $jobs->total() }})
             </button>
-            <button onclick="switchTab('contests')" id="contests-tab" class="{{ $currentTab === 'contests' ? 'active' : '' }}" onclick="switchTab('contests')">
+            <button onclick="switchTab('contests')" id="contests-tab" class="{{ $currentTab === 'contests' ? 'active' : '' }}">
                 <i class="fas fa-trophy"></i> Contests ({{ count($contests) }})
             </button>
         </div>
 
-        <!-- Tab Contents -->
         <div id="jobs-content">
             @include('Users.Freelancers.listing-components._jobs', ['jobs' => $jobs])
         </div>
@@ -82,15 +106,12 @@
 
     <script>
         function switchTab(tabName) {
-            // Step 1: Hide both contents
             document.getElementById('jobs-content').style.display = 'none';
             document.getElementById('contests-content').style.display = 'none';
 
-            // Step 2: Remove 'active' class from both buttons
             document.getElementById('jobs-tab').classList.remove('active');
             document.getElementById('contests-tab').classList.remove('active');
 
-            // Step 3: Show selected content and highlight button
             if (tabName === 'jobs') {
                 document.getElementById('jobs-content').style.display = 'block';
                 document.getElementById('jobs-tab').classList.add('active');
@@ -99,7 +120,6 @@
                 document.getElementById('contests-tab').classList.add('active');
             }
 
-            // Optional: Update URL hash
             window.location.hash = '#' + tabName;
         }
     </script>

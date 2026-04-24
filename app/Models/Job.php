@@ -5,6 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 
@@ -16,6 +17,8 @@ class Job extends Model
 
     protected $fillable = [ 
         'user_id',
+        'category_id',
+        'subcategory_id',
         'title',
         'description',
         'budget',
@@ -23,7 +26,9 @@ class Job extends Model
         'deadline',
         'skills',
         'job_funded',
-        'location'
+        'job_type',
+        'location',
+        'freelancer_radius',
     ];
 
     protected $casts = [
@@ -36,6 +41,16 @@ class Job extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(SubCategory::class, 'subcategory_id');
     }
 
     public function proposals()
@@ -75,5 +90,10 @@ class Job extends Model
     public function contract()
     {
         return $this->hasOne(Contract::class, 'job_id');
+    }
+
+    public function invites(): HasMany
+    {
+        return $this->hasMany(JobInvite::class);
     }
 }

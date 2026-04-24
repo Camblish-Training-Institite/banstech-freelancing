@@ -11,6 +11,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait; // Add this line
 use Backpack\CRUD\app\Models\Traits\HasBackpackUser;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\Certificate;
 
 class User extends Authenticatable
 {
@@ -95,6 +96,7 @@ class User extends Authenticatable
         'messengerColor',
         'dark_mode',
         'theme',
+        'saved_jobs',
     ];
 
     /**
@@ -119,12 +121,23 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'saved_jobs' => 'array',
         ];
     }
 
     public function profile()
     {
         return $this->hasOne(Profile::class);
+    }
+
+    public function bankDetail(): HasOne
+    {
+        return $this->hasOne(BankDetail::class);
+    }
+
+    public function withdrawalRequests(): HasMany
+    {
+        return $this->hasMany(WithdrawalRequest::class);
     }
 
     public function canAccessBackpack(): bool
@@ -147,6 +160,31 @@ class User extends Authenticatable
         return $this->hasManyThrough(Contest::class, ContestEntry::class, 'freelancer_id', 'id', 'id', 'contest_id');
     }
 
+    public function clientConversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'client_id');
+    }
+
+    public function freelancerConversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'freelancer_id');
+    }
+
+    public function sentConversationMessages(): HasMany
+    {
+        return $this->hasMany(ConversationMessage::class, 'sender_id');
+    }
+
+    public function sentJobInvites(): HasMany
+    {
+        return $this->hasMany(JobInvite::class, 'client_id');
+    }
+
+    public function receivedJobInvites(): HasMany
+    {
+        return $this->hasMany(JobInvite::class, 'freelancer_id');
+    }
+
     public function entries()
     {
         return $this->hasMany(ContestEntry::class, 'freelancer_id');
@@ -156,4 +194,37 @@ class User extends Authenticatable
 {
     return $this->hasOne(Qualification::class, 'user_id');
 }
+
+    public function certificate(): HasOne
+    {
+        return $this->hasOne(Certificate::class, 'user_id');
+    }
+
+    public function hasSavedJob(int $jobId): bool
+    {
+        return in_array($jobId, $this->saved_jobs ?? [], true);
+    }
+
+    public function saveJob(int $jobId): void
+    {
+        $savedJobs = collect($this->saved_jobs ?? [])
+            ->map(fn ($id) => (int) $id)
+            ->push($jobId)
+            ->unique()
+            ->values()
+            ->all();
+
+        $this->forceFill(['saved_jobs' => $savedJobs])->save();
+    }
+
+    public function unsaveJob(int $jobId): void
+    {
+        $savedJobs = collect($this->saved_jobs ?? [])
+            ->map(fn ($id) => (int) $id)
+            ->reject(fn ($id) => $id === $jobId)
+            ->values()
+            ->all();
+
+        $this->forceFill(['saved_jobs' => $savedJobs])->save();
+    }
 }

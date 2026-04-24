@@ -12,6 +12,7 @@ body {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 
 /* Header Section */
@@ -20,13 +21,45 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    gap: 16px;
 }
 .header h1 {
     font-size: 24px;
     color: #333;
+    margin: 0;
 }
 .header .search-bar {
     position: relative;
+    flex: 1;
+    max-width: 420px;
+}
+.header .search-bar form {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+.header .search-bar input[type="text"] {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #d1d5db;
+    border-radius: 0.6rem;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+    background: #f8fafc;
+}
+.header .search-bar button {
+    border: none;
+    background: var(--theme-accent);
+    color: #fff;
+    border-radius: 0.55rem;
+    padding: 0.85rem 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.header .search-bar button:hover {
+    background: var(--theme-accent-strong);
 }
 /* .header .search-bar input {
     border: none;
@@ -54,6 +87,7 @@ body {
 .filters label {
     font-weight: bold;
     margin-bottom: 5px;
+    display: block;
 }
 .filters input[type="text"],
 .filters select {
@@ -75,12 +109,35 @@ body {
 .filters button:hover {
     background-color: var(--theme-sidebar-bg);
 }
+.filter-actions {
+    grid-column: span 4;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    align-items: flex-end;
+}
+.filter-actions .clear-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    background: #fff;
+    text-decoration: none;
+}
+.filter-actions .clear-link:hover {
+    background: #f8fafc;
+}
 
 /* Tabs Section */
 .tabs {
     display: flex;
     gap: 20px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 .tabs button {
     padding: 10px 20px;
@@ -89,9 +146,12 @@ body {
     font-size: 16px;
     cursor: pointer;
     transition: border-bottom-color 0.3s ease;
+    background: #f8fafc;
+    border-radius: 0.45rem 0.45rem 0 0;
 }
 .tabs button.active {
     border-bottom: 3px solid var(--theme-nav-active-surface);
+    background: #eef2ff;
 }
 
 /* Opportunity Cards */
@@ -103,6 +163,7 @@ body {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
+    gap: 24px;
 }
 .opportunity-card h2 {
     font-size: 20px;
@@ -113,14 +174,18 @@ body {
 .opportunity-card p {
     font-size: 16px;
     color: #666;
-    max-height: 20px;
+    max-height: 4.5rem;
     margin-bottom: 15px;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 .opportunity-card .tags {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 .opportunity-card .tags span {
     background-color: var(--theme-border);
@@ -192,6 +257,7 @@ body {
     flex-direction: column;
     flex: 2;
     align-items: flex-start;
+    min-width: 0;
 }
 
 .price-and-proposals-block{
@@ -200,9 +266,256 @@ body {
     flex: 1;
     align-items: flex-end;
     justify-content:space-evenly;
+    min-width: 220px;
+    gap: 12px;
 }
 
 .buttons-block {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.buttons-block form {
+    display: contents;
+}
+
+.opportunity-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+}
+
+.opportunity-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.9rem;
+    color: #6b7280;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.opportunity-meta span {
+    display: inline-flex;
+    align-items: center;
+}
+
+.opportunity-excerpt {
+    max-width: 100%;
+}
+
+.listing-person {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    width: 100%;
+}
+
+.listing-person-details {
+    min-width: 0;
+    flex: 1;
+}
+
+.listing-person-details h2 {
+    margin-bottom: 0.15rem;
+}
+
+.listing-side-note {
+    font-size: 0.78rem;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.listing-actions {
+    width: 100%;
+}
+
+.listing-actions .buttons-block a,
+.listing-actions .buttons-block button {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+@media (max-width: 992px) {
+    .container {
+        margin: 12px auto;
+        padding: 16px;
+    }
+
+    .filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .filters button,
+    .filters a {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filter-actions {
+        grid-column: span 2;
+    }
+
+    .opportunity-card {
+        gap: 18px;
+    }
+
+    .price-and-proposals-block {
+        min-width: 190px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 14px;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header .search-bar {
+        max-width: none;
+        width: 100%;
+    }
+
+    .header .search-bar form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header .search-bar input,
+    .header .search-bar button {
+        width: 100%;
+    }
+
+    .header .notification-icon {
+        display: none;
+    }
+
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    .tabs {
+        gap: 10px;
+    }
+
+    .tabs button {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 0;
+        border-radius: 0.45rem;
+    }
+
+    .opportunity-card {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+        border-radius: 0.75rem;
+    }
+
+    .opportunity-card h2 {
+        font-size: 18px;
+    }
+
+    .opportunity-card .tags {
+        flex-wrap: wrap;
+    }
+
+    .content-block,
+    .price-and-proposals-block {
+        width: 100%;
+    }
+
+    .price-and-proposals-block {
+        align-items: stretch;
+        gap: 10px;
+        min-width: 0;
+    }
+
+    .buttons-block {
+        width: 100%;
+        flex-direction: column;
+        justify-content: stretch;
+    }
+
+    .buttons-block a,
+    .buttons-block button,
+    .buttons-block span {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .filter-actions {
+        grid-column: auto;
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .opportunity-meta {
+        flex-direction: column;
+        gap: 0.3rem;
+        align-items: flex-start;
+    }
+
+    .listing-person {
+        align-items: flex-start;
+    }
+
+    .listing-person img {
+        flex-shrink: 0;
+    }
+
+    .pagination {
+        width: 100%;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 0.35rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 12px;
+    }
+
+    .header h1 {
+        font-size: 20px;
+        line-height: 1.3;
+    }
+
+    .tabs button {
+        flex-basis: 100%;
+        font-size: 0.95rem;
+        padding: 0.85rem 1rem;
+    }
+
+    .opportunity-card {
+        padding: 14px;
+    }
+
+    .opportunity-card .tags span {
+        width: 100%;
+        border-radius: 0.6rem;
+        padding: 0.45rem 0.65rem;
+    }
+
+    .listing-person {
+        gap: 0.7rem;
+    }
+
+    .listing-person img {
+        width: 2.75rem !important;
+        height: 2.75rem !important;
+    }
 }

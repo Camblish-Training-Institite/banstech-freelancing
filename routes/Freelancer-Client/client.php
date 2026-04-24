@@ -11,6 +11,7 @@ use App\Http\Controllers\Jobs\ProposalController;
 use App\Http\Controllers\Payments\ProjectFundingController;
 use App\Http\Controllers\Client\ProjectController;
 use App\Http\Controllers\Client\ReviewController;
+use App\Http\Controllers\Messaging\InboxController;
 use App\Http\Controllers\SettingsController;
 use App\Models\Contract;
 use App\Models\ProjectFunding;
@@ -41,21 +42,22 @@ Route::prefix('client')->name('client.')->group(function () {
     Route::get('/project/{project}/milestones/edit/{milestone}', [MilestoneController::class, 'edit'])->name('project.milestone.edit');
     Route::post('/project/{project}/milestones/store/{milestone}', [MilestoneController::class, 'update'])->name('project.milestone.update');
     Route::get('/project/{project}/milestones/destroy/{milestone}', [MilestoneController::class, 'destroy'])->name('project.milestone.destroy');
-    Route::get('/project/{project}/milestones/destroy/{milestone}', [MilestoneController::class, 'releasePayment'])->name('project.milestone.release');
+    Route::get('/project/{project}/milestones/release/{milestone}', [MilestoneController::class, 'releasePayment'])->name('project.milestone.release');
   
     //Proposal Routes
     Route::get('/proposals-list', [ProposalController::class, 'index_client'])->name('proposals.list');
     Route::resource('/proposals', ProposalController::class);
     Route::get('/proposal/{job}/show', [ProposalController::class, 'job_show'])->name('proposals.job.show');
     Route::get('/proposal/{proposal}/accept', [ProposalController::class, 'acceptProposal'])->name('proposals.accept');
+    Route::post('/proposal/{proposal}/accept', [ProposalController::class, 'storeAcceptedProposal'])->name('proposals.accept.store');
     Route::get('/proposal/{proposal}/reject', [ProposalController::class, 'rejectProposal'])->name('proposals.reject');
 
     //Freelacner Profile Routes
     Route::get('/freelancer/{freelancerId}/profile', [ProfileController::class, 'viewFreelancerProfile'])->name('freelancer.profile');
 
     //client profile routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'editClient'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'updateClient'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
     Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
@@ -66,9 +68,11 @@ Route::prefix('client')->name('client.')->group(function () {
     })->name('services');
 
     //Message or Inbox routes
-    Route::get('/inbox', function(){
-        return view('Users.Clients.pages.inbox');
-    })->name('inbox');
+    Route::get('/inbox', [InboxController::class, 'indexClient'])->name('inbox');
+    Route::get('/inbox/{conversation}', [InboxController::class, 'indexClient'])->name('inbox.show');
+    Route::post('/inbox/start/{freelancer}', [InboxController::class, 'startClientConversation'])->name('inbox.start');
+    Route::post('/inbox/{conversation}/messages', [InboxController::class, 'sendClientMessage'])->name('inbox.messages.store');
+    Route::post('/inbox/{conversation}/invites', [InboxController::class, 'sendInvite'])->name('inbox.invites.store');
 
     //Earnings routes
     Route::get('/earnings',function(){
@@ -113,6 +117,10 @@ Route::prefix('client/reviews')->name('client.reviews.')->group(function () {
 
 //testing route for billing page
 Route::get('client/billing', [ProjectFundingController::class, 'index'])->name('billing')->middleware('auth');
+Route::post('client/billing/deposits', [ProjectFundingController::class, 'storeDeposit'])->name('billing.deposits.store')->middleware('auth');
+Route::get('client/billing/deposits/{deposit}/approve', [ProjectFundingController::class, 'approveDeposit'])->name('billing.deposits.approve')->middleware('auth');
+Route::get('client/billing/deposits/{deposit}/cancel', [ProjectFundingController::class, 'cancelDeposit'])->name('billing.deposits.cancel')->middleware('auth');
+Route::post('client/billing/jobs/{job}/fund', [ProjectFundingController::class, 'fundJob'])->name('billing.jobs.fund')->middleware('auth');
 
 // Show project page (with file upload form)
 // Route::get('/Users/Clients/project/{project}/show', [ContractController::class, 'show'])->name('client.project.show')->middleware('auth');

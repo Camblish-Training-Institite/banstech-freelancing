@@ -7,8 +7,8 @@
         margin: 1rem 0;
     }
     .tags span {
-        background-color: #f0eaff;
-        color: #516aae;
+        background-color: var(--theme-surface-muted);
+        color: var(--theme-text-primary);
         padding: 6px 12px;
         border-radius: 20px;
         font-size: 14px;

@@ -1,14 +1,13 @@
 <style>
-    /* Sidebar Styles */
     .sidebar {
-        background-color: var(--theme-sidebar-bg); /* Dark background */
+        background-color: var(--theme-sidebar-bg);
         color: #f0f0f0;
-        padding: 20px 1rem;;
+        padding: 20px 1rem;
         display: flex;
         flex-direction: column;
-        justify-content: space-between; /* Re-added to push content to top/bottom */
-        flex-shrink: 0; /* Prevent sidebar from shrinking */
-        overflow-y: auto; /* Allow sidebar to scroll if content overflows */
+        justify-content: space-between;
+        flex-shrink: 0;
+        overflow-y: auto;
     }
 
     .sidebar-header {
@@ -32,6 +31,7 @@
         color: #f0f0f0;
         text-decoration: none;
         transition: background-color 0.3s ease;
+        border-radius: 12px;
     }
 
     .sidebar-nav ul li a:hover {
@@ -43,79 +43,13 @@
         font-size: 1.1em;
     }
 
-    /* New styles for the pushed-down Logout link */
     .sidebar-logout {
-        padding: 20px; /* Matches previous footer padding, creates space */
-        border-top: 1px solid var(--theme-sidebar-border); /* Optional: Adds a separator line */
-        margin-bottom: 40px; /* Pushes it up further from the very bottom */
+        padding: 20px;
+        border-top: 1px solid var(--theme-sidebar-border);
+        margin-bottom: 40px;
     }
 
-    .sidebar-logout a {
-        display: flex;
-        align-items: center;
-        padding: 12px 0px; /* Adjusted padding to fit into new container */
-        color: #f0f0f0;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-    }
-
-    .sidebar-logout a:hover {
-        background-color: var(--theme-sidebar-hover); /* Match hover of other menu items */
-    }
-
-    .sidebar-logout a i {
-        margin-right: 10px;
-        font-size: 1.1em;
-    }
-
-    /* Basic Responsiveness - adjust values as needed */
-    @media (max-width: 992px) {
-        .sidebar {
-            /* width: 100%; */
-            border-radius: 0; /* No border-radius when stacked */
-            box-shadow: none; /* No shadow when stacked */
-        }
-
-        .sidebar-logout {
-            margin-top: 15px; /* Adjust margin for mobile */
-            padding: 10px 20px; /* Adjust padding for mobile */
-            border-top: none; /* No top border when stacked on mobile */
-        }
-        .sidebar-logout a {
-            justify-content: center; /* Center content when stacked */
-        }
-        .sidebar-logout a span {
-            display: none; /* Hide text on small screens if desired */
-        }
-    }
-
-    @media (max-width: 768px) {
-        .sidebar-nav ul li a {
-            justify-content: center;
-            padding: 10px 0;
-        }
-        .sidebar-nav ul li a span {
-            display: none;
-        }
-        .sidebar-header {
-            text-align: center;
-        }
-
-        .sidebar-logout button {
-            justify-content: center;
-        }
-
-        .sidebar-logout:hover {
-            background-color: var(--theme-sidebar-hover)
-        }
-        .sidebar-logout button span {
-            display: none;
-        }
-
-        
-    }
-
-    .user-details{
+    .user-details {
         display: flex;
         font-size: 0.8em;
         color: var(--theme-sidebar-muted);
@@ -124,40 +58,38 @@
         align-items: center;
         justify-content: space-evenly;
     }
-
-    .user-avatar{
-        max-height: 3rem;
-        max-width: 3rem;
-        margin-right:0.5rem;
-        overflow: hidden;
-    }
 </style>
 
-@php
-    $user = Auth::user();
-@endphp
+@php($user = Auth::user())
 
-<aside class="sidebar">
-    <div> {{-- This div now wraps all top content to be pushed up --}}
+<div class="sidebar-overlay" onclick="toggleDashboardSidebar(false)"></div>
+
+<aside class="sidebar dashboard-sidebar" id="freelancer-sidebar">
+    <div>
+        <div class="mobile-sidebar-header">
+            <span class="text-sm uppercase tracking-wide text-gray-300">Freelancer Menu</span>
+            <button type="button" class="mobile-sidebar-close" onclick="toggleDashboardSidebar(false)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
         <div class="user-details">
-            <div class="user-avatar rounded-full bg-white ">
-                <img width="100%" src="{{ $user->profile ? asset('storage/' . $user->profile->avatar) : 'https://ui-avatars.com/api/?name='. $user->name .'&background=random&size=128' }}" alt="{{$user->name}}">
-            </div>
+            @include('components.user-avatar', ['user' => $user, 'width' => '3rem', 'height' => '3rem'])
             <div>
                 <div class="font-medium text-base text-gray-200">{{ $user->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ $user->email }}</div>
             </div>
         </div>
+
         <div class="sidebar-header">Main Menu</div>
         <nav class="sidebar-nav">
             <ul>
-
-                <li><a href="{{route('freelancer.dashboard') }}"><i class="fas fa-briefcase"></i> <span>Dashboard</span></a></li>
-
-                <li><a href="{{route('freelancer.services') }}"><i class="fas fa-briefcase"></i> <span>Services</span></a></li>
+                <li><a href="{{ route('freelancer.dashboard') }}"><i class="fas fa-briefcase"></i> <span>Dashboard</span></a></li>
+                <li><a href="{{ route('freelancer.services') }}"><i class="fas fa-briefcase"></i> <span>Services</span></a></li>
                 <li><a href="{{ route('jobs.listing') }}"><i class="fas fa-tasks"></i> <span>Browse Available Jobs</span></a></li>
-                <li><a href="{{route(config('chatify.routes.prefix'), ['userType' => 'freelancer'])}}"><i class="fas fa-inbox"></i> <span>Inbox</span></a></li>
-                <li><a href="{{route('freelancer.earnings')}}"><i class="fas fa-dollar-sign"></i> <span>Earnings</span></a></li>
+                <li><a href="{{ route('freelancer.jobs.saved') }}"><i class="fas fa-bookmark"></i> <span>Saved Jobs</span></a></li>
+                <li><a href="{{ route('freelancer.inbox') }}"><i class="fas fa-inbox"></i> <span>Inbox</span></a></li>
+                <li><a href="{{ route('freelancer.earnings') }}"><i class="fas fa-dollar-sign"></i> <span>Earnings</span></a></li>
             </ul>
             <div class="sidebar-header">Preference</div>
             <ul>
@@ -167,13 +99,11 @@
             </ul>
         </nav>
     </div>
-    {{-- NEW: Log Out button now in its own div, pushed to bottom --}}
+
     <div class="sidebar-logout">
-        {{-- <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Log Out</span></a> --}}
         <form method="POST" action="{{ route('logout') }}" class="w-full">
             @csrf
-
-            <button type="submit" class="fas fa-sign-out-alt w-full">Log out</button>
+            <button type="submit" class="fas fa-sign-out-alt w-full"> Log out</button>
         </form>
     </div>
 </aside>

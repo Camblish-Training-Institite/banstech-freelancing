@@ -21,7 +21,7 @@
 
     <!-- Project Details -->
     <div class="my-1 px-1 w-full">
-        <div class="rounded-lg shadow-md p-6 pt-2" style="background-color:#2c2c2c;">
+        <div class="rounded-lg shadow-md p-6 pt-2" style="background-color: var(--theme-sidebar-bg);">
             <div class="flex items-center justify-between w-full">
                 <!-- Left side (avatar + text) -->
                 <div class="flex items-center space-x-2">
@@ -50,16 +50,10 @@
                         </form> --}}
 
                         <!-- logic to check if all milestones are completed -->
-                        @php
-                            $total = $project->milestones->count();
-                            $completed = $project->milestones->where('status', 'released')
-                                ->count();
-                        @endphp 
-                    
                         <!-- End Project Button -->
                         <form action="{{ route('client.projects.completed', $project->id) }}" method="POST">
                             @csrf
-                            <button type="submit" class="{{ ($total == $completed) ? 'bg-green-600 hover:bg-green-300' : 'hidden' }} text-white px-3 py-1 rounded">
+                            <button type="submit" class="bg-green-600 hover:bg-green-300 text-white px-3 py-1 rounded">
                                 End Project
                             </button>
                         </form>

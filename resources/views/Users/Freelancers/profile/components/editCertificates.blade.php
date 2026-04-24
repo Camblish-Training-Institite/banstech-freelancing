@@ -7,30 +7,30 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Certificates</label>
-                <input type="text" name="certificates" id="certificatesInput"
-                       value="{{ $user->profile->certificates ?? '' }}"
+                <input type="text" name="certificate_name" id="certificatesInput"
+                       value="{{ old('certificate_name', optional($user->certificate)->certificate_name) }}"
                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
                               focus:border-blue-500 focus:ring-blue-200 focus:ring-opacity-50">
             </div>
 
-            <div class mb-4>
+            <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Issuing Organization</label>
                 <input type="text" name="issuing_organization" id="issuingOrganizationInput"
-                       value="{{ $user->profile->issuing_organization ?? '' }}"
+                       value="{{ old('issuing_organization', optional($user->certificate)->issuing_organization) }}"
                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
                               focus:border-blue-500 focus:ring-blue-200 focus:ring-opacity-50">
             </div>
 
-            <div class mb-4>
+            <div class="mb-4">
                 <label for="issue_date" class="block text-sm font-medium text-gray-700">Issue Date</label>
-                <input type="text" name="issue_date" id="issueDateInput"
-                       value="{{ $user->profile->issue_date ?? '' }}"
+                <input type="date" name="issue_date" id="issueDateInput"
+                       value="{{ old('issue_date', optional($user->certificate?->issue_date)->format('Y-m-d')) }}"
                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
                               focus:border-blue-500 focus:ring-blue-200 focus:ring-opacity-50">
 
-                <label for="expiry_date" class="block text-sm font-medium text-gray-700 mt-4">Expiry Date</label>
-                <input type="text" name="expiry_date" id="expiryDateInput"
-                       value="{{ $user->profile->expiry_date ?? '' }}"
+                <label for="expiration_date" class="block text-sm font-medium text-gray-700 mt-4">Expiry Date</label>
+                <input type="date" name="expiration_date" id="expiryDateInput"
+                       value="{{ old('expiration_date', optional($user->certificate?->expiration_date)->format('Y-m-d')) }}"
                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
                               focus:border-blue-500 focus:ring-blue-200 focus:ring-opacity-50">
             </div>

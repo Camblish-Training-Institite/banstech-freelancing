@@ -11,9 +11,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\File;
 use App\Models\Task;
+use App\Services\Payments\EscrowPayoutService;
+use Throwable;
 
 class ContractController extends Controller
 {
+    public function __construct(protected EscrowPayoutService $escrowPayoutService)
+    {
+    }
+
     public function index_client(){
         if(!Auth::check()){
 
@@ -90,13 +96,21 @@ class ContractController extends Controller
     public function completeContract(Request $request, int $id){
         $project = Contract::find($id);
         if ($project && $project->job->user->id == Auth::id()) {
-            $project->status = 'completed';
-            $project->save();
+            try {
+                $this->escrowPayoutService->releaseRemainingEscrow($project);
 
-            $client = User::find($project->user_id);
-            $client->notify(new ReviewFreelancerReminder($project));
+                $project->status = 'completed';
+                $project->save();
 
-            return redirect()->back()->with('success', 'Contract completed successfully.');
+                $client = User::find($project->user_id);
+                $client->notify(new ReviewFreelancerReminder($project));
+
+                return redirect()->back()->with('success', 'Contract completed successfully and remaining escrow was sent to the freelancer.');
+            } catch (Throwable $e) {
+                return redirect()->back()->withErrors([
+                    'payment' => $e->getMessage(),
+                ]);
+            }
         }
         return redirect()->back()->with('error', 'Contract not found or you do not have permission to complete it.');
     }

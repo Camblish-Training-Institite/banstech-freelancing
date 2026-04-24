@@ -1,6 +1,59 @@
-<!-- Main Content -->
-<main class="flex-1 overflow-y-auto p-8">
+@php
+    $payoutHeaders = ['Date Requested', 'Project', 'Milestone', 'Amount', 'Status'];
+    $payoutRows = [
+        fn ($payout) => optional($payout->requested_at)->format('d M Y H:i') ?? 'N/A',
+        fn ($payout) => e(optional($payout->contract?->job)->title ?? 'N/A'),
+        fn ($payout) => e(optional($payout->milestone)->title ?? 'Final contract release'),
+        fn ($payout) => 'R ' . number_format($payout->amount, 2),
+        fn ($payout) => '<span class="text-xs font-medium px-2.5 py-0.5 rounded-full ' . ($payout->status === 'processed' ? 'bg-green-100 text-green-800' : ($payout->status === 'failed' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800')) . '">' . e($payout->status) . '</span>',
+    ];
+
+    $payoutMobile = [
+        'titleIndex' => 1,
+        'subtitleIndex' => 2,
+        'primaryIndex' => 3,
+        'statusIndex' => 4,
+        'excludeIndices' => [],
+    ];
+
+    $withdrawalHeaders = ['Date Requested', 'Method', 'Destination', 'Amount', 'Status'];
+    $withdrawalRows = [
+        fn ($withdrawalRequest) => optional($withdrawalRequest->requested_at)->format('d M Y H:i') ?? 'N/A',
+        fn ($withdrawalRequest) => $withdrawalRequest->method === 'paypal' ? 'PayPal payout' : 'Bank transfer (manual)',
+        fn ($withdrawalRequest) => $withdrawalRequest->method === 'paypal'
+            ? e(data_get($withdrawalRequest->destination_details, 'email', 'N/A'))
+            : e(data_get($withdrawalRequest->destination_details, 'bank_name', 'N/A')) . ' (...' . (substr((string) data_get($withdrawalRequest->destination_details, 'account_number', ''), -4) ?: 'N/A') . ')',
+        fn ($withdrawalRequest) => 'R ' . number_format($withdrawalRequest->amount, 2),
+        fn ($withdrawalRequest) => '<span class="text-xs font-medium px-2.5 py-0.5 rounded-full ' . ($withdrawalRequest->status === 'processed' ? 'bg-green-100 text-green-800' : ($withdrawalRequest->status === 'failed' ? 'bg-red-100 text-red-800' : ($withdrawalRequest->status === 'confirmed' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'))) . '">' . e($withdrawalRequest->status) . '</span>',
+    ];
+
+    $withdrawalMobile = [
+        'titleIndex' => 1,
+        'subtitleIndex' => 2,
+        'primaryIndex' => 3,
+        'statusIndex' => 4,
+        'excludeIndices' => [],
+    ];
+@endphp
+
+<main class="flex-1 overflow-y-auto p-4 md:p-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-8">Billing & Payouts</h1>
+
+    @if (session('status'))
+        <div class="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+            {{ session('status') }}
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+            <ul class="list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <!-- Financial Overview -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -22,9 +75,8 @@
                     <i class="fas fa-hourglass-half fa-lg text-yellow-600"></i>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm text-gray-500">Pending Payouts</p>
-                    {{-- <p class="text-2xl font-bold text-gray-800">R 4,500.00</p> --}}
-                    <p class="text-2xl font-bold text-gray-800">R{{ number_format($PendingPayouts) ?? 0, 2 }} </p>
+                    <p class="text-sm text-gray-500">Pending Withdrawals</p>
+                    <p class="text-2xl font-bold text-gray-800">R{{ number_format($PendingWithdrawals ?? 0, 2) }} </p>
                 </div>
             </div>
         </div>
@@ -45,44 +97,38 @@
         <!-- Left Column -->
         <div class="lg:col-span-2 space-y-8">
            
-            <!-- Pending Payouts Table -->
-            <div class="bg-white rounded-lg shadow-md">
+            <!-- Incoming Payouts Table -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
                 <div class="p-6 border-b">
-                    <h3 class="text-xl font-bold text-gray-800">Pending Payouts</h3>
+                    <h3 class="text-xl font-bold text-gray-800">Incoming Payouts</h3>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-500">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3">Date Requested</th>
-                                <th class="px-6 py-3">Project</th>
-                                <th class="px-6 py-3">Milestone</th>
-                                <th class="px-6 py-3">Amount</th>
-                                <th class="px-6 py-3">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($payouts as $payout)
-                                <tr class="bg-white border-b hover:bg-gray-50">
-                                    <td class="px-6 py-4">{{ $payout->requested_at }}</td>
-                                    <td class="px-6 py-4">{{ $payout->contract->job->title }}</td>
-                                    <td class="px-6 py-4">Frontpage</td>
-                                    <td class="px-6 py-4 font-semibold">R {{ number_format($payout->amount, 2) }}</td>
-                                    <td class="px-6 py-4">
-                                        <span
-                                            class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">
-                                            {{ $payout->status }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">No pending payouts
-                                        found.</td>
-                                </tr>
-                            @endforelse
-                    </table>
-                    </tbody>
+                <div class="p-4 md:p-6">
+                    <x-dashboard-table
+                        :headers="$payoutHeaders"
+                        :items="$payouts"
+                        :rows="$payoutRows"
+                        :mobile-config="$payoutMobile"
+                        :show-id="false"
+                    >
+                        <x-slot:empty>No payouts found.</x-slot:empty>
+                    </x-dashboard-table>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-6 border-b">
+                    <h3 class="text-xl font-bold text-gray-800">Withdrawal Requests</h3>
+                </div>
+                <div class="p-4 md:p-6">
+                    <x-dashboard-table
+                        :headers="$withdrawalHeaders"
+                        :items="$withdrawalRequests"
+                        :rows="$withdrawalRows"
+                        :mobile-config="$withdrawalMobile"
+                        :show-id="false"
+                    >
+                        <x-slot:empty>No withdrawal requests yet.</x-slot:empty>
+                    </x-dashboard-table>
                 </div>
             </div>
         </div>
@@ -92,55 +138,65 @@
             <!-- Withdraw Funds -->
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h3 class="text-xl font-bold text-gray-800 mb-4">Withdraw Funds</h3>
-                <div class="mb-4">
-                    <label for="amount" class="block mb-2 text-sm font-medium text-gray-900">Amount to
-                        withdraw</label>
-                    <input type="text" id="amount"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+                <form method="POST" action="{{ route('freelancer.withdrawals.store') }}" class="space-y-4">
+                    @csrf
+                    <div class="mb-4">
+                        <label for="amount" class="block mb-2 text-sm font-medium text-gray-900">Amount to
+                            withdraw</label>
+                        <input type="number" step="0.01" min="0.01" max="{{ number_format($AvailableWithdrawals, 2, '.', '') }}"
+                            id="amount" name="amount" value="{{ old('amount') }}"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
                          focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-                        placeholder="R 0.00" required />
-                </div>
-                <div class="mb-4">
-                    <label for="method" class="block mb-2 text-sm font-medium text-gray-900">Withdrawal Method</label>
-                    <select id="method"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+                            placeholder="0.00" required />
+                    </div>
+                    <div class="mb-4">
+                        <label for="method" class="block mb-2 text-sm font-medium text-gray-900">Withdrawal Method</label>
+                        <select id="method"
+                            name="method"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
                          focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
-                        <option selected>Choose a method</option>
-                        <option value="bank">Bank Transfer - FNB (...1234)</option>
-                        <option value="paypal">PayPal - bobby@omen.co.za</option>
-                    </select>
-                </div>
-                <button
+                            <option value="">Choose a method</option>
+                            <option value="bank" {{ old('method') === 'bank' ? 'selected' : '' }}>
+                                {{ Auth::user()->bankDetail ? 'Bank Transfer - ' . Auth::user()->bankDetail->bank_name . ' (' . Auth::user()->bankDetail->masked_account_number . ')' : 'Bank Transfer - add bank details in profile' }}
+                            </option>
+                            <option value="paypal" {{ old('method') === 'paypal' ? 'selected' : '' }}>PayPal - {{ Auth::user()->email }}</option>
+                        </select>
+                    </div>
+                    <p class="text-sm text-gray-500">
+                        Available now: R{{ number_format($AvailableWithdrawals, 2) }}.
+                        Pending and confirmed withdrawal requests are deducted from this balance immediately.
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        PayPal withdrawals are sent through PayPal. Bank withdrawals are approved in the platform and then paid manually by admin.
+                    </p>
+                    <button type="submit"
                     class="w-full accent-purple hover:opacity-90 text-black font-bold py-2.5 px-4 
                     rounded-lg text-sm transition-all duration-300">
-                    <i class="fas fa-paper-plane mr-2"></i>Request Withdrawal
-                </button>
+                        <i class="fas fa-paper-plane mr-2"></i>Request Withdrawal
+                    </button>
+                </form>
             </div>
 
             <!-- Recent Transactions -->
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Transactions</h3>
                 <ul class="space-y-4">
-                    <li class="flex items-center">
-                        <div class="p-2 bg-green-100 rounded-full mr-4">
-                            <i class="fas fa-arrow-down text-green-600"></i>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-800">Milestone Payout</p>
-                            <p class="text-sm text-gray-500">Aug 28, 2025</p>
-                        </div>
-                        <p class="ml-auto font-bold text-green-600">+ R 1,500.00</p>
-                    </li>
-                    <li class="flex items-center">
-                        <div class="p-2 bg-red-100 rounded-full mr-4">
-                            <i class="fas fa-arrow-up text-red-600"></i>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-800">Withdrawal</p>
-                            <p class="text-sm text-gray-500">Aug 25, 2025</p>
-                        </div>
-                        <p class="ml-auto font-bold text-red-600">- R 5,000.00</p>
-                    </li>
+                    @forelse ($payouts->take(5) as $payout)
+                        <li class="flex items-center">
+                            <div class="p-2 {{ $payout->status === 'failed' ? 'bg-red-100' : 'bg-green-100' }} rounded-full mr-4">
+                                <i class="fas {{ $payout->status === 'failed' ? 'fa-times text-red-600' : 'fa-arrow-down text-green-600' }}"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">{{ optional($payout->milestone)->title ?? 'Contract payout' }}</p>
+                                <p class="text-sm text-gray-500">{{ optional($payout->requested_at)->format('d M Y H:i') ?? 'N/A' }}</p>
+                            </div>
+                            <p class="ml-auto font-bold {{ $payout->status === 'failed' ? 'text-red-600' : 'text-green-600' }}">
+                                {{ $payout->status === 'failed' ? '-' : '+' }} R {{ number_format($payout->amount, 2) }}
+                            </p>
+                        </li>
+                    @empty
+                        <li class="text-sm text-gray-500">No payout activity yet.</li>
+                    @endforelse
                 </ul>
             </div>
         </div>

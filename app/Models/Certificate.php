@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Certificate extends Model
 {
@@ -11,15 +12,21 @@ class Certificate extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'file_path',
-        'issued_by',
-        'issue_date',
-        'expiry_date',
         'user_id',
+        'certificate_name',
+        'issuing_organization',
+        'issue_date',
+        'expiration_date',
+        'credential_id',
+        'credential_url',
     ];
 
-    public function user()
+    protected $casts = [
+        'issue_date' => 'date',
+        'expiration_date' => 'date',
+    ];
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

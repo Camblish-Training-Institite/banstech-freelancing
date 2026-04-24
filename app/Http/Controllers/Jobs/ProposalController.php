@@ -8,11 +8,16 @@ use App\Models\Proposal;
 use App\Models\Job;
 use App\Notifications\NewProposalNotification;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Contract;
 use App\Notifications\ProposalAcceptedNotification;
+use Illuminate\Support\Facades\DB;
+use App\Services\Contracts\AssignFreelancerToJobService;
 
 class ProposalController extends Controller
 {
+    public function __construct(
+        protected AssignFreelancerToJobService $assignFreelancerToJob
+    ) {
+    }
 
     public function index_client(){
         if(!Auth::check()){
@@ -61,7 +66,7 @@ class ProposalController extends Controller
 
     public function job_show(int $job_id){
         $job = Job::findOrFail($job_id); // Fetch the job by ID
-        return view('Users.Clients.layouts.proposal-section', ['job' => $job]);
+        return redirect()->route('client.jobs.show', $job);
     }
 
     public function show(Proposal $proposal){
@@ -131,36 +136,64 @@ class ProposalController extends Controller
         return redirect()->route('freelancer.proposals.index')->with('success', 'Proposal updated successfully.');
     }
 
-    public function acceptProposal(Proposal $proposal){
-        $user_id = Auth::user()->id; // Get the authenticated user's ID
-
+    public function acceptProposal(Proposal $proposal)
+    {
         if (!$proposal || !$proposal->job || !$proposal->user) {
             return redirect()->back()->with('error', 'Invalid proposal data.');
         }
-        
+
+        abort_unless($proposal->job->user_id === Auth::id(), 403);
+
         if($proposal->job->status == "assigned" || $proposal->job->status == "in_progress"){
             return redirect()->back()->with('error', 'cannot accept freelancer to a project that is already assigned');
         }
 
-        $proposal->status = 'accepted'; // Update the proposal status to accepted
-        $proposal->save();
-
-        $proposal->job->proposals()
-        ->where('id', '!=', $proposal->id)
-        ->where('status', '!=', 'accepted') // Optional: avoid updating if already accepted
-        ->update(['status' => 'rejected']);
-
-        $job = $proposal->job; // Get the job associated with the proposal
-        $job->status = 'assigned'; // Update the job status to in progress
-        $job->save();
-
-        Contract::create([
-            'job_id' => $job->id,
-            'user_id' => $proposal->user_id,
-            'agreed_amount' => $proposal->bid_amount,
-            'status' => 'active', // Set the initial status of the contract
-            'end_date' => $job->deadline,
+        return view('Users.Clients.proposals.accept-proposal', [
+            'proposal' => $proposal,
         ]);
+    }
+
+    public function storeAcceptedProposal(Request $request, Proposal $proposal)
+    {
+        if (!$proposal || !$proposal->job || !$proposal->user) {
+            return redirect()->back()->with('error', 'Invalid proposal data.');
+        }
+
+        abort_unless($proposal->job->user_id === Auth::id(), 403);
+
+        if($proposal->job->status == "assigned" || $proposal->job->status == "in_progress"){
+            return redirect()->route('client.proposals.list')->with('error', 'This job is already assigned.');
+        }
+
+        $validated = $request->validate([
+            'milestone_count' => 'nullable|integer|min:1|max:50',
+        ]);
+
+        $milestoneCount = (int) ($validated['milestone_count'] ?? 1);
+        if ($milestoneCount <= 0) {
+            $milestoneCount = 1;
+        }
+
+        try {
+            DB::transaction(function () use ($proposal, $milestoneCount) {
+                $proposal->status = 'accepted';
+                $proposal->save();
+
+                $proposal->job->proposals()
+                    ->where('id', '!=', $proposal->id)
+                    ->where('status', '!=', 'accepted')
+                    ->update(['status' => 'rejected']);
+
+                $this->assignFreelancerToJob->handle(
+                    $proposal->job,
+                    $proposal->user,
+                    (float) $proposal->bid_amount,
+                    $milestoneCount
+                );
+            });
+        } catch (\RuntimeException $exception) {
+            return redirect()->route('client.proposals.list')->with('error', $exception->getMessage());
+        }
 
         $freelancer = $proposal->user; // Assumes a 'user' relationship on the Proposal model
         $client = $proposal->job->user;
@@ -170,7 +203,7 @@ class ProposalController extends Controller
             $client->notify(new ProposalAcceptedNotification($proposal->id));
         }
 
-        return redirect()->route('billing')->with('success', 'Proposal rejected successfully.');
+        return redirect()->route('billing')->with('success', 'Proposal accepted and project milestones were created successfully.');
         
     }
 

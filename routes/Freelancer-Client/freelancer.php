@@ -8,6 +8,7 @@ use App\Http\Controllers\Freelancer\FreelancerContestController;
 use App\Http\Controllers\Freelancer\MilestoneController;
 use App\Http\Controllers\Jobs\JobsController;
 use App\Http\Controllers\Jobs\ProposalController;
+use App\Http\Controllers\Messaging\InboxController;
 use App\Http\Controllers\Payments\PayoutController; 
 use App\Http\Controllers\SettingsController;
 
@@ -16,6 +17,8 @@ Route::prefix('freelancer')->name('freelancer.')->group(function () {
 
     //freelancer job routes
     Route::get('/job/{id}/show', [JobsController::class, 'show_freelancer'])->name('jobs.show');
+    Route::get('/saved-jobs', [JobsController::class, 'savedJobs'])->name('jobs.saved');
+    Route::post('/jobs/{job}/save', [JobsController::class, 'toggleSavedJob'])->name('jobs.save');
 
     //freelancer project routes
     Route::get('/my-projects', [ContractController::class, 'index'])->name('projects.list');
@@ -37,7 +40,8 @@ Route::prefix('freelancer')->name('freelancer.')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::patch('/profile', [ProfileController::class, 'updateProfile'])->name('profile.updateProfile');
     Route::patch('/profile/address', [ProfileController::class, 'updateAddress'])->name('profile.updateAddress');
-    // Route::patch('/profile/skills', [ProfileController::class, 'updateSkills'])->name('profile.updateSkills');
+    Route::patch('/profile/bank-details', [ProfileController::class, 'updateBankDetails'])->name('profile.updateBankDetails');
+    Route::patch('/profile/skills', [ProfileController::class, 'updateSkills'])->name('profile.updateSkills');
     Route::patch('/profile/qualifications', [ProfileController::class, 'updateQualifications'])->name('profile.updateQualifications');
     Route::patch('/profile/certificates', [ProfileController::class, 'updateCertifications'])->name('profile.updateCertificates');
     Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
@@ -51,9 +55,10 @@ Route::prefix('freelancer')->name('freelancer.')->group(function () {
     })->name('services');
 
     //Message or Inbox
-    Route::get('/inbox', function(){
-        return view('Users.Freelancers.pages.inbox');
-    })->name('inbox');
+    Route::get('/inbox', [InboxController::class, 'indexFreelancer'])->name('inbox');
+    Route::get('/inbox/{conversation}', [InboxController::class, 'indexFreelancer'])->name('inbox.show');
+    Route::post('/inbox/{conversation}/messages', [InboxController::class, 'sendFreelancerMessage'])->name('inbox.messages.store');
+    Route::post('/inbox/invites/{invite}/respond', [InboxController::class, 'respondToInvite'])->name('inbox.invites.respond');
     
 });
 
@@ -90,6 +95,8 @@ Route::prefix('freelancer/contests')->name('freelancer.contests.')->group(functi
 
 Route::get('/earnings',[PayoutController::class, 'index'])
 ->name('freelancer.earnings')->middleware('auth');
+Route::post('/earnings/withdrawals', [PayoutController::class, 'storeWithdrawal'])
+->name('freelancer.withdrawals.store')->middleware('auth');
 
 //Myprofile
 Route::get('/freelancer/myprofile',function(){

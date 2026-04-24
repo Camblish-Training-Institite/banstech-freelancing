@@ -6,6 +6,7 @@
       'lat' => $job->location ? (float)$job->location->latitude : 0,
       'lng' => $job->location ? (float)$job->location->longitude : 0,
       'budget' => $job->budget,
+      'radius_km' => (int) ($job->freelancer_radius ?? 0),
   ];
 @endphp
 
@@ -17,6 +18,7 @@
       return {
         map: null,
         userMarker: null,
+        jobCircle: null,
         job: @json($jobData)
       }
     },
@@ -29,7 +31,9 @@
         }
 
         // 2. Initialize Map
-        this.map = L.map('map').setView([this.job.lat, this.job.lng], 13);
+        this.map = L.map('map', {
+            zoomControl: true,
+        }).setView([this.job.lat, this.job.lng], 13);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
@@ -38,8 +42,25 @@
         // 3. Add Job Marker
         L.marker([this.job.lat, this.job.lng])
             .addTo(this.map)
-            .bindPopup(`<b>${this.job.title}</b><br>Budget: R${this.job.budget}`)
+            .bindPopup(`
+              <b>${this.job.title}</b><br>
+              Budget: R${this.job.budget}<br>
+              <a href="https://www.google.com/maps/search/?api=1&query=${this.job.lat},${this.job.lng}" target="_blank" rel="noopener noreferrer">
+                Open in Google Maps
+              </a>
+            `)
             .openPopup();
+
+        if (this.job.radius_km > 0) {
+          this.jobCircle = L.circle([this.job.lat, this.job.lng], {
+            radius: this.job.radius_km * 1000,
+            color: '#2563eb',
+            fillColor: '#93c5fd',
+            fillOpacity: 0.15,
+          }).addTo(this.map);
+
+          this.map.fitBounds(this.jobCircle.getBounds(), { padding: [30, 30] });
+        }
 
         // 4. THE FIX: Force Leaflet to recalculate size after the DOM settles
         setTimeout(() => {
@@ -60,7 +81,7 @@
           }).addTo(this.map).bindPopup("You are here").openPopup();
 
           // Compare both: Fit both markers in view
-          const bounds = L.latLngBounds([this.job.lat, this.job.lng], [latitude, longitude]);
+          const bounds = L.latLngBounds([[this.job.lat, this.job.lng], [latitude, longitude]]);
           this.map.fitBounds(bounds, { padding: [50, 50] });
         });
       }

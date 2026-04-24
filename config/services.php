@@ -47,4 +47,17 @@ return [
         'redirect' => env('FACEBOOK_REDIRECT_URI'),
     ],
 
+    'paypal' => [
+        'client_id' => env('PAYPAL_CLIENT_ID'),
+        'client_secret' => env('PAYPAL_CLIENT_SECRET'),
+        'base_url' => env('PAYPAL_BASE_URL', 'https://api-m.sandbox.paypal.com'),
+        'currency' => env('PAYPAL_CURRENCY', 'USD'),
+        'fallback_currency' => env('PAYPAL_FALLBACK_CURRENCY', 'USD'),
+        'default_local_currency' => env('DEFAULT_LOCAL_CURRENCY', 'USD'),
+    ],
+
+    'fx' => [
+        'base_url' => env('FX_BASE_URL', 'https://api.frankfurter.dev'),
+    ],
+
 ];

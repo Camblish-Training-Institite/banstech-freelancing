@@ -28,9 +28,12 @@
                         <a href="{{ route('client.freelancer.profile', $proposal->user->id) }}" class="btn btn-view">
                             <i class="fas fa-user"></i> View Profile
                         </a>
-                        <a href="" class="btn btn-message">
-                            <i class="fas fa-paper-plane"></i> Send Message
-                        </a>
+                        <form method="POST" action="{{ route('client.inbox.start', $proposal->user) }}">
+                            @csrf
+                            <button type="submit" class="btn btn-message">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                        </form>
                     </div>
                 </div>
 

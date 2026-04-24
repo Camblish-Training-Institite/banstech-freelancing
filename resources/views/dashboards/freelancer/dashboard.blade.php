@@ -28,7 +28,12 @@
     <div class="dashboard-container">
         <div class="main-content">
             <header class="header">
-                <div class="dashboard-title">Freelancer Dashboard</div>
+                <div class="dashboard-title-row header-title-group">
+                    <button type="button" class="mobile-sidebar-toggle" onclick="toggleDashboardSidebar(true)">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="dashboard-title">Freelancer Dashboard</div>
+                </div>
                 <div class="header-right">
                     <div class="become-client" onclick="window.location.href='{{ route('client.dashboard') }}'">
                         <span>Become Client</span>
@@ -37,7 +42,7 @@
                             <span class="slider round"></span>
                         </label>
                     </div>
-                    <div class="search-bar">
+                    <div class="search-bar header-search-bar">
                         <div class="flex w-full items-center search-bar space-x-2 rounded-full px-3 py-2 bg-gray-100">
                             <i class="fas fa-search"></i>
                             <input type="text" placeholder="Search" class="ml-4 border-none bg-transparent rounded-full w-full focus:ring-gray-200">
@@ -58,7 +63,7 @@
         {{-- The entire <div class="profile-card"> block was previously here and has been removed. --}}
 
         <div class="floating-widgets">
-            <button class="message-btn">Messages</button>
+            <button class="message-btn" onclick="window.location.href='{{ route('freelancer.inbox') }}'">Messages</button>
             <button class="notification-float-btn">
                 <i class="fas fa-bell"></i>
                 <span class="badge"></span>

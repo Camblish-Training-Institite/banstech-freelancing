@@ -1,42 +1,36 @@
 <div id="editSkillsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 mx-3">
     <div class="bg-white rounded-lg shadow-lg w-96 p-6" style="width:60rem;">
-
-        
-            <h2 class="text-xl font-bold mb-4">Edit Skills</h2>
-
-            {{-- <form method="POST" action="{{ route('freelancer.profile.updateSkills') }}">
+        <h2 class="text-xl font-bold mb-4">Edit Skills</h2>
+        <form method="POST" action="{{ route('freelancer.profile.updateSkills') }}">
             @csrf
-            @method('PATCH') --}}
+            @method('PATCH')
             <div>
-                <h3 class="text-lg font-medium text-gray-900">Facilities</h3>
-                <p class="text-sm text-gray-500">Select the facilities available in this room.</p>
+                <h3 class="text-lg font-medium text-gray-900">Skills</h3>
+                <p class="text-sm text-gray-500">Search and select the skills you want shown on your profile.</p>
                 <div class="mt-2">
-                    <input type="text" id="facility-input" placeholder="Search for a facility..."
+                    <input type="text" id="facility-input" placeholder="Search for a skill..."
                         class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                     <ul id="suggestions"
                         class="hidden mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10"></ul>
                 </div>
                 <div id="selected-facilities" class="mt-2 space-x-2 space-y-2">
-                    {{-- Selected facilities will appear here --}}
+                    {{-- Selected skills will appear here --}}
                 </div>
 
+                <input type="hidden" name="skills" id="required_skills"
+                    value='@json(old('skills', optional($user->profile)->skills ? $user->profile->skills->pluck('name')->values()->all() : []))'>
 
-                <input type="hidden" name="skills[]" id="required_skills"
-                    value="{{ old('skills', is_array($job->skills ?? null) ? implode(', ', $job->skills) : $job->skills ?? '') }}">
-                <!--  old('required_skills', $contest->required_skills)  -->
-
-                <button id="submit-button" type="button"
+                <button id="submit-button" type="submit"
                     class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save</button>
 
                 <button type="button" id="cancelSkillsBtn"
                     class="mt-4 ml-2 px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
             </div>
-        {{-- </form> --}}
+        </form>
     </div>
 </div>
 
 <script>
-    // This script for the facilities selector is preserved and slightly adapted
     document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('facility-input')) {
             const editSkillsBtn = document.getElementById('editSkillsBtn');
@@ -48,7 +42,6 @@
             const suggestionsList = document.getElementById('suggestions');
             const selectedContainer = document.getElementById('selected-facilities');
             const facilitiesHiddenInput = document.getElementById('required_skills');
-            const submitButton = document.getElementById('submit-button');
 
             editSkillsBtn.addEventListener('click', () => {
                 modal.classList.remove('hidden');
@@ -119,7 +112,16 @@
                 'Fitness Training',
                 'Nutrition Consulting', 'Interior Design', 'Architectural Design', 'CAD Design',
             ];
-            let selectedFacilities = facilitiesHiddenInput.value ? facilitiesHiddenInput.value.split(',') : [];
+            let selectedFacilities = [];
+
+            try {
+                const parsedSkills = JSON.parse(facilitiesHiddenInput.value || '[]');
+                selectedFacilities = Array.isArray(parsedSkills) ? parsedSkills : [];
+            } catch (error) {
+                selectedFacilities = facilitiesHiddenInput.value
+                    ? facilitiesHiddenInput.value.split(',').map(item => item.trim()).filter(Boolean)
+                    : [];
+            }
 
             const renderSelected = () => {
                 selectedContainer.innerHTML = '';
@@ -168,7 +170,7 @@
                         li.textContent = facility;
                         li.onclick = () => {
                             selectedFacilities.push(facility);
-                            facilitiesHiddenInput.value = selectedFacilities.join(',');
+                            facilitiesHiddenInput.value = JSON.stringify(selectedFacilities);
                             renderSelected();
                             inputField.value = '';
                             suggestionsList.classList.add('hidden');
@@ -198,12 +200,7 @@
                 }
             });
 
-            // The original save button logic is now handled by the main form submit
-            // so we remove the standalone save button's event listener to avoid conflicts.
-            // We also hide the original save button if it exists.
-            const oldSaveButton = document.getElementById('save-button');
-            if (oldSaveButton) oldSaveButton.style.display = 'none';
-
+            facilitiesHiddenInput.value = JSON.stringify(selectedFacilities);
             renderSelected();
         }
     });

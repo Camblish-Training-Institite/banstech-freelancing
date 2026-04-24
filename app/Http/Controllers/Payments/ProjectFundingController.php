@@ -1,129 +1,188 @@
 <?php
 
 namespace App\Http\Controllers\Payments;
-use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Job;
+use App\Models\Payout;
 use App\Models\ProjectFunding;
+use App\Services\Payments\CurrencyConversionService;
+use App\Services\Payments\EscrowPayoutService;
+use App\Services\Payments\PayPalCheckoutService;
+use Throwable;
 
 class ProjectFundingController extends Controller
 {
+    public function __construct(
+        protected EscrowPayoutService $escrowPayoutService,
+        protected PayPalCheckoutService $payPalCheckoutService,
+        protected CurrencyConversionService $currencyConversionService
+    ) {}
 
-public function index(){
+    public function index()
+    {
+        $clientId = Auth::id();
+        $fundings = ProjectFunding::with(['job.contract.user'])
+            ->where('client_id', $clientId)
+            ->latest()
+            ->get();
 
-$clientId = Auth::id();
-$fundings = ProjectFunding::where('client_id', $clientId)->get();
+        $walletDeposits = (float) $fundings
+            ->where('status', 'deposited')
+            ->sum('amount');
 
-//Available balance
-$availableBalance = $fundings
-->where('status', 'deposited')
-->sum('amount');
+        $fundsInEscrow = (float) $fundings
+            ->where('status', 'pending')
+            ->sum('amount');
 
-//Escrowed funds
- $fundsInEscrow = $fundings
- ->where('status', 'pending')
- ->sum('amount');
+        $totalSpent = (float) Payout::whereHas('contract.job', function ($query) use ($clientId) {
+            $query->where('user_id', $clientId);
+        })
+            ->whereIn('status', ['pending', 'processed'])
+            ->sum('amount');
 
- //Total Spent
- $totalSpent = $fundings
-//  ->where('status','deposited') released
- ->sum('amount');  //TotalSpent = TotalSpent - AvailableBalance
+        $availableBalance = $this->escrowPayoutService->getAvailableBalanceForClient($clientId);
 
+        $jobs = Job::with(['contract.user', 'contract.escrowFunding', 'contract.milestones'])
+            ->where('user_id', $clientId)
+            ->whereHas('contract')
+            ->latest()
+            ->get();
 
- return view('dashboards.client.billing', compact('totalSpent', 'fundsInEscrow', 'availableBalance'));
-    
-    }
-    // this is handles deposits and refunds for project funding
-  public function createDeposit(Request $request)
-{
-    $request->validate([
-        'project_id' => 'required|exists:projects,id',
-        'user_id' => 'required|exists:users,id',
-        'amount' => 'required|numeric|min:1',
-    ]);
+        $currencyContext = $this->currencyConversionService->currencyContextForUser(Auth::user());
 
-    $deposit = new ProjectFunding();
-    $deposit->project_id = $request->project_id;
-    $deposit->user_id = $request->user_id;
-    $deposit->amount = $request->amount;
-    $deposit->status = 'pending';
-    $deposit->save();
-
-    return response()->json([
-        'message' => 'Deposit created successfully. Awaiting payment processing.',
-        'deposit' => $deposit
-    ]);
-}
-
-// This is for updating the deposit status after payment confirmation
-public function updateDeposit($id)
-{
-    $deposit = ProjectFunding::findOrFail($id);
-
-    // Only pending deposits can be updated to completed
-    if ($deposit->status !== 'pending') {
-        return response()->json([
-            'message' => 'Only pending deposits can be updated.'
-        ], 400);
+        return view('dashboards.client.billing', compact(
+            'totalSpent',
+            'fundsInEscrow',
+            'availableBalance',
+            'walletDeposits',
+            'jobs',
+            'fundings',
+            'currencyContext'
+        ));
     }
 
-    try {
-        // payment gateway to confirm payment
-        // $this->processPayment($deposit);
-
-        $deposit->status = 'completed';
-        $deposit->processed_at = now();
-        $deposit->save();
-
-        return response()->json([
-            'message' => 'Deposit marked as completed.',
-            'deposit' => $deposit
+    public function storeDeposit(Request $request)
+    {
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:1',
         ]);
 
-    } catch (\Exception $e) {
-        $deposit->status = 'failed';
-        $deposit->processed_at = null;
-        $deposit->save();
-
-        return response()->json([
-            'message' => 'Deposit failed: ' . $e->getMessage(),
-            'deposit' => $deposit
-        ], 500);
-    }
-}
-//  This stands for a refund request
-public function requestRefund($id)
-{
-    $deposit = ProjectFunding::findOrFail($id);
-
-    // Only completed deposits can be refunded
-    if ($deposit->status !== 'completed') {
-        return response()->json([
-            'message' => 'Only completed deposits can be refunded.'
-        ], 400);
-    }
-
-    try {
-        // refund gateway
-        // $this->processRefund($deposit);
-
-        $deposit->status = 'refunded';
-        $deposit->processed_at = now(); 
-        
-        $deposit->save();
-
-        return response()->json([
-            'message' => 'Deposit refunded successfully.',
-            'deposit' => $deposit
+        $deposit = ProjectFunding::create([
+            'client_id' => Auth::id(),
+            'amount' => $validated['amount'],
+            'source_currency' => $this->currencyConversionService->currencyContextForUser(Auth::user())['local_currency'],
+            'payment_gateway' => 'paypal',
+            'status' => 'pending',
         ]);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Refund failed: ' . $e->getMessage(),
-            'deposit' => $deposit
-        ], 500);
-    }
-}
+        try {
+            $currencyContext = $this->currencyConversionService->currencyContextForUser(Auth::user());
+            $conversion = $this->currencyConversionService->convert(
+                (float) $validated['amount'],
+                $currencyContext['local_currency'],
+                $currencyContext['paypal_currency']
+            );
 
+            $order = $this->payPalCheckoutService->createOrder(
+                (float) $conversion['target_amount'],
+                $conversion['target_currency'],
+                route('billing.deposits.approve', $deposit),
+                route('billing.deposits.cancel', $deposit),
+                'Wallet top-up for client balance'
+            );
+
+            $deposit->paypal_order_id = $order['order_id'];
+            $deposit->paypal_currency = $conversion['target_currency'];
+            $deposit->paypal_amount = $conversion['target_amount'];
+            $deposit->exchange_rate = $conversion['exchange_rate'];
+            $deposit->save();
+
+            return redirect()->away($order['approve_url']);
+        } catch (Throwable $e) {
+            $deposit->status = 'failed';
+            $deposit->save();
+
+            return back()->withErrors([
+                'payment' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function approveDeposit(Request $request, ProjectFunding $deposit)
+    {
+        abort_unless($deposit->client_id === Auth::id(), 403);
+
+        if ($deposit->status === 'deposited') {
+            return redirect()->route('billing')->with('status', 'This PayPal deposit has already been captured.');
+        }
+
+        $token = $request->string('token')->value();
+        $orderId = $deposit->paypal_order_id ?: $token;
+
+        if (! $orderId || ($token && $deposit->paypal_order_id && $token !== $deposit->paypal_order_id)) {
+            return redirect()->route('billing')->withErrors([
+                'payment' => 'The returned PayPal order did not match the expected wallet top-up.',
+            ]);
+        }
+
+        try {
+            $capture = $this->payPalCheckoutService->captureOrder($orderId);
+
+            if (($capture['status'] ?? null) !== 'COMPLETED' && ($capture['capture_status'] ?? null) !== 'COMPLETED') {
+                $deposit->status = 'failed';
+                $deposit->save();
+
+                return redirect()->route('billing')->withErrors([
+                    'payment' => 'PayPal did not complete the wallet top-up.',
+                ]);
+            }
+
+            $deposit->paypal_order_id = $orderId;
+            $deposit->paypal_capture_id = $capture['capture_id'] ?? null;
+            $deposit->status = 'deposited';
+            $deposit->processed_at = now();
+            $deposit->save();
+
+            return redirect()->route('billing')->with('status', 'PayPal payment captured and added to your wallet.');
+        } catch (Throwable $e) {
+            $deposit->status = 'failed';
+            $deposit->save();
+
+            return redirect()->route('billing')->withErrors([
+                'payment' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function cancelDeposit(ProjectFunding $deposit)
+    {
+        abort_unless($deposit->client_id === Auth::id(), 403);
+
+        if ($deposit->status === 'pending') {
+            $deposit->status = 'failed';
+            $deposit->save();
+        }
+
+        return redirect()->route('billing')->withErrors([
+            'payment' => 'PayPal wallet top-up was cancelled.',
+        ]);
+    }
+
+    public function fundJob(Request $request, Job $job)
+    {
+        abort_unless($job->user_id === Auth::id(), 403);
+
+        $validated = $request->validate([
+            'amount' => 'nullable|numeric|min:0.01',
+        ]);
+
+        $amount = $validated['amount'] ?? null;
+
+        $this->escrowPayoutService->fundJob($job, $amount ? (float) $amount : null);
+
+        return back()->with('status', 'Funds were moved into escrow for this job.');
+    }
 }

@@ -31,12 +31,19 @@ class ProposalAcceptedNotification extends Notification
     
     public function toArray(object $notifiable)
     {
+        $isClientRecipient = (int) $notifiable->id === (int) $this->proposal->job->user_id;
+
         return [
             'proposal_id' => $this->proposal->id,
+            'job_id' => $this->proposal->job->id,
             'job_title' => $this->proposal->job->title,
             'freelancer_name' => $this->proposal->user->name,
-            'message' => 'Your proposal is ' . $this->proposal->status. ' for job: "' . ($this->proposal->job->title) . '".',
-            'url' => route('freelancer.proposal.show', $this->proposal->id),
+            'message' => $isClientRecipient
+                ? 'You accepted a proposal for job: "' . $this->proposal->job->title . '".'
+                : 'Your proposal is ' . $this->proposal->status . ' for job: "' . $this->proposal->job->title . '".',
+            'url' => $isClientRecipient
+                ? route('client.jobs.show', $this->proposal->job->id)
+                : route('freelancer.proposal.show', $this->proposal->id),
         ];
     } 
 

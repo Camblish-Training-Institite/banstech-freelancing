@@ -19,7 +19,7 @@
 <div class="container mx-auto px-2 md:px-12">
     <!-- Project Details -->
     <div class="my-1 px-1 w-full">
-        <div class="rounded-md shadow-md p-6" style="background-color:#2c2c2c;">
+        <div class="rounded-md shadow-md p-6" style="background-color:var(--theme-sidebar-bg);">
             <div class="flex items-center space-x-2">
                     <!-- Outer flex: left vs right -->
                     <div class="flex items-center justify-between w-full">

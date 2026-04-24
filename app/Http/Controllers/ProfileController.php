@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankDetail;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,13 +12,21 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Skill;
 use App\Models\Qualification;
 use App\Models\Portfolio;
+use App\Models\Certificate;
 
 class ProfileController extends Controller
 {
 
     public function viewFreelancerProfile($freelancerId)
     {
-        $freelancer = User::findOrFail($freelancerId);
+        $freelancer = User::with([
+            'profile.skills',
+            'qualification',
+            'certificate',
+            'portfolio',
+            'contractsAsFreelancer.job',
+            'reviews.job.user.profile',
+        ])->findOrFail($freelancerId);
         $profile = $freelancer->profile;
 
         return view('Users.Clients.layouts.freelancer-profile', compact('freelancer', 'profile'));
@@ -29,6 +38,58 @@ class ProfileController extends Controller
         $profile = $user->profile ?? new Profile(); // empty profile if none
 
         return view('profile.edit', compact('user', 'profile'));
+    }
+
+    public function editClient()
+    {
+        $user = Auth::user();
+        $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
+
+        return view('Users.Clients.profile.edit', compact('user', 'profile'));
+    }
+
+    public function updateClient(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
+
+            $validatedData = $request->validate([
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'bio' => 'nullable|string|max:1000',
+                'address' => 'nullable|string|max:255',
+                'city' => 'nullable|string|max:255',
+                'zip_code' => 'nullable|string|max:20',
+                'state' => 'nullable|string|max:255',
+                'country' => 'nullable|string|max:255',
+                'company' => 'nullable|string|max:255',
+                'location' => 'nullable|string|max:255',
+                'timezone' => 'nullable|string|max:50',
+                'avatar' => 'nullable|image|max:2048',
+            ]);
+
+            $profile->fill(collect($validatedData)->except('avatar')->all());
+            $profile->user_id = $user->id;
+
+            if ($request->hasFile('avatar')) {
+                if ($profile->avatar && Storage::disk('public')->exists($profile->avatar)) {
+                    Storage::disk('public')->delete($profile->avatar);
+                }
+
+                $profile->avatar = $request->file('avatar')->store('avatars', 'public');
+            }
+
+            $profile->save();
+
+            return back()->with('status', 'Profile updated successfully.');
+        } catch (\Illuminate\Validation\ValidationException $validationException) {
+            return back()->withErrors($validationException->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error updating client profile: ' . $e->getMessage());
+
+            return back()->with('error', 'An error occurred while updating your profile. Please try again later.');
+        }
     }
 
     public function updateAddress(Request $request)
@@ -53,6 +114,53 @@ class ProfileController extends Controller
         $profile->save();
 
         return back()->with('status', 'Address updated successfully.');
+    }
+
+    public function updateBankDetails(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            $validatedData = $request->validate([
+                'account_holder_name' => 'nullable|string|max:255',
+                'bank_name' => 'nullable|string|max:255',
+                'account_number' => 'nullable|string|max:50',
+                'account_type' => 'nullable|string|max:50',
+                'branch_code' => 'nullable|string|max:50',
+                'swift_code' => 'nullable|string|max:50',
+            ]);
+
+            $hasBankData = collect($validatedData)
+                ->filter(fn ($value) => filled($value))
+                ->isNotEmpty();
+
+            if (! $hasBankData) {
+                $user->bankDetail()?->delete();
+
+                return back()->with('status', 'Bank details cleared successfully.');
+            }
+
+            foreach (['account_holder_name', 'bank_name', 'account_number'] as $requiredField) {
+                if (! filled($validatedData[$requiredField] ?? null)) {
+                    return back()->withErrors([
+                        $requiredField => 'This field is required when saving bank details.',
+                    ])->withInput();
+                }
+            }
+
+            BankDetail::updateOrCreate(
+                ['user_id' => $user->id],
+                $validatedData
+            );
+
+            return back()->with('status', 'Bank details updated successfully.');
+        } catch (\Illuminate\Validation\ValidationException $validationException) {
+            return back()->withErrors($validationException->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error updating bank details: ' . $e->getMessage());
+
+            return back()->with('error', 'An error occurred while updating your bank details. Please try again later.');
+        }
     }
 
     // public function update(Request $request)
@@ -153,27 +261,34 @@ class ProfileController extends Controller
     public function updateCertifications(Request $request){
         try {
             $user = Auth::user();
-            $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
-
-            // Validate the request data
             $validatedData = $request->validate([
-                'certifications' => 'nullable|array',
-                'certifications.*' => 'string|max:255',
+                'certificate_name' => 'nullable|string|max:255',
+                'issuing_organization' => 'nullable|string|max:255',
+                'issue_date' => 'nullable|date',
+                'expiration_date' => 'nullable|date|after_or_equal:issue_date',
             ]);
 
-            // Update profile fields
-            $profile->certifications = isset($validatedData['certifications']) ? json_encode($validatedData['certifications']) : $profile->certifications;
-            $profile->save();
+            $hasCertificateData = collect($validatedData)
+                ->filter(fn ($value) => filled($value))
+                ->isNotEmpty();
 
-            return back()->with('status', 'Certifications updated successfully.');
+            if (! $hasCertificateData) {
+                $user->certificate()?->delete();
+                return back()->with('status', 'Certificate updated successfully.');
+            }
+
+            Certificate::updateOrCreate(
+                ['user_id' => $user->id],
+                $validatedData
+            );
+
+            return back()->with('status', 'Certificate updated successfully.');
 
         } catch (\Illuminate\Validation\ValidationException $validationException) {
-            // Handle validation errors
-            return response()->json(['errors' => $validationException->errors()], 422);
+            return back()->withErrors($validationException->errors())->withInput();
         } catch (\Exception $e) {
-            // Handle other unexpected errors
             Log::error('Error updating certifications: ' . $e->getMessage());
-            return response()->json(['error' => 'An error occurred while updating your certifications. Please try again later.'], 500);
+            return back()->with('error', 'An error occurred while updating your certificate. Please try again later.');
         }
     }
 
@@ -183,63 +298,61 @@ class ProfileController extends Controller
         try {
             $user = Auth::user();
             $qualification = $user->qualification ?? new Qualification(['user_id' => $user->id]);
-            // Validate the request data
             $validatedData = $request->validate([
                 'degree' => 'required|string|max:255',
                 'institution' => 'required|string|max:255',
                 'year_of_completion' => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 1),
             ]);
 
-            // Update profile fields
-            $qualification->degree = $request->input('degree');
-            $qualification->institution = $request->input('institution');
-            $qualification->year_of_completion = $request->input('year_of_completion');
+            $qualification->fill($validatedData);
             $qualification->save();
 
             return back()->with('status', 'Qualifications updated successfully.');
 
         } catch (\Illuminate\Validation\ValidationException $validationException) {
-            // Handle validation errors
             Log::error('Error updating qualifications: ' . $validationException->getMessage());
-            return response()->json(['errors' => $validationException->errors()], 422);
+            return back()->withErrors($validationException->errors())->withInput();
         } catch (\Exception $e) {
-            // Handle other unexpected errors
             Log::error('Error updating qualifications: ' . $e->getMessage());
-            return response()->json(['error' => 'An error occurred while updating your qualifications. Please try again later.'], 500);
+            return back()->with('error', 'An error occurred while updating your qualifications. Please try again later.');
         }
     }
 
     // Method to update the skills
     public function updateSkills(Request $request)
-{
-    try {
-        $user = Auth::user();
-        $profile = $user->profile ?? Profile::create(['user_id' => $user->id]);
+    {
+        try {
+            $user = Auth::user();
+            $profile = $user->profile ?? Profile::create(['user_id' => $user->id]);
 
-        $validated = $request->validate([
-            'skills' => 'nullable|string', // JSON string
-        ]);
+            $validated = $request->validate([
+                'skills' => 'nullable|string',
+            ]);
 
-        // Decode JSON
-        $skillNames = json_decode($validated['skills'], true) ?? [];
+            $rawSkills = $validated['skills'] ?? '[]';
+            $decodedSkills = json_decode($rawSkills, true);
+            $skillNames = is_array($decodedSkills)
+                ? $decodedSkills
+                : preg_split('/\s*,\s*/', $rawSkills, -1, PREG_SPLIT_NO_EMPTY);
 
-        // Create or find skills
-        $skillIds = [];
-        foreach ($skillNames as $name) {
-            $skill = Skill::firstOrCreate(['name' => trim($name)]);
-            $skillIds[] = $skill->id;
+            $skillIds = collect($skillNames)
+                ->filter(fn ($name) => filled(trim((string) $name)))
+                ->map(fn ($name) => Skill::firstOrCreate(['name' => trim((string) $name)])->id)
+                ->unique()
+                ->values()
+                ->all();
+
+            $profile->skills()->sync($skillIds);
+
+            return back()->with('status', 'Skills updated successfully.');
+
+        } catch (\Illuminate\Validation\ValidationException $validationException) {
+            return back()->withErrors($validationException->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error("Error updating skills: " . $e->getMessage());
+            return back()->with('error', 'An error occurred while updating your skills. Please try again later.');
         }
-
-        // Sync pivot table
-        $profile->skills()->sync($skillIds);
-
-        return back()->with('status', 'Skills updated successfully.');
-        
-    } catch (\Exception $e) {
-        Log::error("Error updating skills: ".$e->getMessage());
-        return back()->with('error', 'Something in skills went wrong.');
     }
-}
 
     // Method to update About me section
     public function updateAboutMe(Request $request){
