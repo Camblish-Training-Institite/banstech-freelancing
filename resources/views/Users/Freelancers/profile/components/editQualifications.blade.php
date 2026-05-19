@@ -2,7 +2,7 @@
     <div class="bg-white rounded-lg shadow-lg w-96 p-6" style="width:60rem;">
 
         <h2 class="text-xl font-bold mb-4">Edit Qualifications</h2>
-        <form method="POST" action="{{ route('freelancer.profile.updateQualifications') }}">
+        <form method="POST" action="{{ route(($profileRoutePrefix ?? 'freelancer.profile') . '.updateQualifications') }}">
             @csrf
             @method('PATCH')
             

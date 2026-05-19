@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('freelancer.profile.updateAboutMe') }}">
+<form method="POST" action="{{ route(($profileRoutePrefix ?? 'freelancer.profile') . '.updateAboutMe') }}">
     @csrf
     @method('PATCH')
 

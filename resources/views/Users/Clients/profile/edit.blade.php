@@ -1,6 +1,6 @@
-@extends('Users.Clients.layouts.body.dashboard-body')
+@extends('dashboards.client.dashboard')
 
-@section('active-tab')
+@section('body')
 <div class="max-w-5xl mx-auto px-4 py-8">
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-gray-900">Profile Management</h2>

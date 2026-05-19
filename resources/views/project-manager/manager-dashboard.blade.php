@@ -83,13 +83,13 @@
 
         /* Header Styles */
         .header {
-            background-color: var(--theme-header-bg);
+            background-color: var(--theme-nav-surface) !important;
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--theme-header-border);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--theme-nav-border) !important;
+            box-shadow: 0 10px 30px rgba(22, 51, 40, 0.16);
             flex-shrink: 0;
             /* Prevent header from shrinking */
         }
@@ -97,7 +97,7 @@
         .dashboard-title {
             font-size: 1.2em;
             font-weight: bold;
-            color: var(--theme-text-primary);
+            color: var(--theme-nav-text) !important;
         }
 
         .header-right {
@@ -190,8 +190,49 @@
 
         .notification-icon {
             font-size: 1.2em;
-            color: var(--theme-text-muted);
+            color: var(--theme-nav-muted) !important;
             cursor: pointer;
+        }
+
+        .pm-page-title {
+            width: 100%;
+            border-radius: 8px;
+            background: var(--theme-nav-surface);
+            color: var(--theme-nav-text);
+            padding: 1rem 1.25rem;
+            box-shadow: 0 10px 24px rgba(22, 51, 40, 0.12);
+        }
+
+        .card {
+            border: 1px solid var(--theme-border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+        }
+
+        .card .card-header {
+            background: var(--theme-nav-surface);
+            color: var(--theme-nav-text);
+            border-bottom: 1px solid var(--theme-nav-border);
+        }
+
+        .card .card-header h5,
+        .card .card-header h2,
+        .card .card-header h3 {
+            color: var(--theme-nav-text);
+            margin: 0;
+        }
+
+        .table thead,
+        table thead {
+            background: var(--theme-nav-surface);
+            color: var(--theme-nav-text);
+        }
+
+        .table thead th,
+        table thead th {
+            color: var(--theme-nav-text);
+            border-color: var(--theme-nav-border);
         }
 
         /* Dashboard Body */
@@ -568,7 +609,7 @@
     {{-- The entire <div class="profile-card"> block was previously here and has been removed. --}}
 
         <div class="floating-widgets">
-            <button class="message-btn">Messages</button>
+            <button class="message-btn" onclick="window.location.href='{{ route('pm.inbox') }}'">Messages</button>
             <button class="notification-float-btn">
                 <i class="fas fa-bell"></i>
                 <span class="badge"></span>

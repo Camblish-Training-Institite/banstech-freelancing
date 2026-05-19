@@ -19,11 +19,19 @@ class ClientMapController extends Controller
             $lat = null;
             $lng = null;
 
-            // Check if profile exists and has an address
-            if ($profile && $profile->address) {
+            $address = $profile ? collect([
+                $profile->address,
+                $profile->city,
+                $profile->state,
+                $profile->zip_code,
+                $profile->country,
+            ])->filter()->implode(', ') : null;
+
+            // Check if profile exists and has enough address detail
+            if ($address) {
                 try {
                     // Use the Geocoder facade to get coordinates from the string address
-                    $result = Geocoder::geocode($profile->address)->get()->first();
+                    $result = Geocoder::geocode($address)->get()->first();
                     
                     if ($result) {
                         $lat = $result->getCoordinates()->getLatitude();

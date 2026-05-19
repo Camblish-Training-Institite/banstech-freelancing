@@ -1,4 +1,5 @@
-@php($activeTheme = auth('admin')->check() ? (auth('admin')->user()->theme ?? 'default') : (auth()->check() ? (auth()->user()->theme ?? 'default') : 'default'))
+@php($activeThemeValue = auth('admin')->check() ? (auth('admin')->user()->theme ?? 'default') : (auth()->check() ? (auth()->user()->theme ?? 'default') : 'default'))
+@php($activeTheme = in_array($activeThemeValue, ['default', 'dark', 'high-contrast'], true) ? $activeThemeValue : 'default')
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ $activeTheme }}">
 
@@ -24,6 +25,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('theme.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Mapbox GL JS -->
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css'  rel='stylesheet' />
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
 
 </head>
 

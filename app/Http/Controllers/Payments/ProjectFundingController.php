@@ -47,7 +47,7 @@ class ProjectFundingController extends Controller
 
         $jobs = Job::with(['contract.user', 'contract.escrowFunding', 'contract.milestones'])
             ->where('user_id', $clientId)
-            ->whereHas('contract')
+            ->whereIn('status', ['open', 'assigned', 'in_progress'])
             ->latest()
             ->get();
 

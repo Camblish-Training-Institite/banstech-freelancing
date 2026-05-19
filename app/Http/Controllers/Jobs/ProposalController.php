@@ -84,6 +84,10 @@ class ProposalController extends Controller
     public function create(int $job_id) {
         $job = Job::findOrFail($job_id); // Fetch the job by ID
 
+        if ($redirect = $this->redirectIfPhysicalJobNeedsLocation($job)) {
+            return $redirect;
+        }
+
         return view('Users.Freelancers.proposals.form', ['job' => $job, 'actionUrl' => route('freelancer.proposals.store'), 'method' => 'POST']);
     }
 
@@ -93,6 +97,12 @@ class ProposalController extends Controller
             'bid_amount' => 'required|numeric|min:0',
             'cover_letter' => 'required|string',
         ]);
+
+        $job = Job::findOrFail($validatedData['job_id']);
+
+        if ($redirect = $this->redirectIfPhysicalJobNeedsLocation($job)) {
+            return $redirect;
+        }
 
         Proposal::create([
             'user_id' => Auth::id(), // Get the authenticated user's ID
@@ -235,6 +245,29 @@ class ProposalController extends Controller
     public function destroy(int $id){
         // This method will handle cancelling a proposal
         // Logic to update the proposal status to cancelled goes here   
+    }
+
+    protected function redirectIfPhysicalJobNeedsLocation(Job $job)
+    {
+        if ($job->job_type !== 'physical') {
+            return null;
+        }
+
+        $profile = Auth::user()?->profile;
+        $hasTrackableLocation = $profile
+            && filled($profile->address)
+            && filled($profile->city)
+            && filled($profile->country);
+
+        if ($hasTrackableLocation) {
+            return null;
+        }
+
+        return redirect()
+            ->route('freelancer.myprofile')
+            ->withErrors([
+                'location' => 'Please update your street, city and country before sending proposals for physical jobs.',
+            ]);
     }
 
 }

@@ -46,7 +46,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('freelancer.dashboard', absolute: false));
         }
         else{
-            return redirect()->back()->with('error', 'something went wrong');
+            return redirect()->intended(route('dashboard', absolute: false));
         }
     }
 

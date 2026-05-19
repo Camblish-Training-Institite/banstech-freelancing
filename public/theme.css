@@ -107,6 +107,78 @@ html[data-theme="sunset"] {
     --theme-nav-active-text: #ffffff;
 }
 
+html[data-theme="dark"] {
+    --theme-app-bg: #070b13;
+    --theme-app-bg-soft: #0f172a;
+    --theme-surface: #111827;
+    --theme-surface-soft: #1f2937;
+    --theme-surface-muted: #273449;
+    --theme-border: #334155;
+    --theme-border-strong: #64748b;
+    --theme-text-primary: #f8fafc;
+    --theme-text-muted: #cbd5e1;
+    --theme-text-subtle: #94a3b8;
+    --theme-sidebar-bg: #020617;
+    --theme-sidebar-muted: #94a3b8;
+    --theme-sidebar-hover: #172033;
+    --theme-sidebar-border: #334155;
+    --theme-header-bg: #111827;
+    --theme-header-border: #334155;
+    --theme-accent: #38bdf8;
+    --theme-accent-strong: #0ea5e9;
+    --theme-accent-soft: #0f2a3a;
+    --theme-accent-soft-strong: #16445e;
+    --theme-accent-secondary: #22c55e;
+    --theme-accent-secondary-strong: #16a34a;
+    --theme-danger: #fb7185;
+    --theme-danger-strong: #e11d48;
+    --theme-warning: #fbbf24;
+    --theme-shadow: 0 18px 42px rgba(0, 0, 0, 0.35);
+    --theme-nav-surface: #020617;
+    --theme-nav-hover: #172033;
+    --theme-nav-border: #334155;
+    --theme-nav-text: #f8fafc;
+    --theme-nav-muted: #94a3b8;
+    --theme-nav-active-surface: #0ea5e9;
+    --theme-nav-active-text: #ffffff;
+}
+
+html[data-theme="high-contrast"] {
+    --theme-app-bg: #000000;
+    --theme-app-bg-soft: #000000;
+    --theme-surface: #ffffff;
+    --theme-surface-soft: #f2f2f2;
+    --theme-surface-muted: #e6e6e6;
+    --theme-border: #000000;
+    --theme-border-strong: #000000;
+    --theme-text-primary: #000000;
+    --theme-text-muted: #111111;
+    --theme-text-subtle: #222222;
+    --theme-sidebar-bg: #000000;
+    --theme-sidebar-muted: #ffffff;
+    --theme-sidebar-hover: #333333;
+    --theme-sidebar-border: #ffffff;
+    --theme-header-bg: #000000;
+    --theme-header-border: #ffffff;
+    --theme-accent: #005fcc;
+    --theme-accent-strong: #003d80;
+    --theme-accent-soft: #ffff00;
+    --theme-accent-soft-strong: #ffd400;
+    --theme-accent-secondary: #008000;
+    --theme-accent-secondary-strong: #005a00;
+    --theme-danger: #b00020;
+    --theme-danger-strong: #7a0016;
+    --theme-warning: #ffd400;
+    --theme-shadow: 0 0 0 3px #000000;
+    --theme-nav-surface: #000000;
+    --theme-nav-hover: #333333;
+    --theme-nav-border: #ffffff;
+    --theme-nav-text: #ffffff;
+    --theme-nav-muted: #ffffff;
+    --theme-nav-active-surface: #ffd400;
+    --theme-nav-active-text: #000000;
+}
+
 body[data-nav-context="freelancer"] {
     /* --theme-nav-surface: #182340; */
     /* --theme-nav-hover: #233558; */
@@ -135,6 +207,8 @@ body[data-nav-context="project-manager"] {
     --theme-nav-muted: #a7d5c0;
     --theme-nav-active-surface: #1fa97a;
     --theme-nav-active-text: #ffffff;
+    --theme-header-bg: var(--theme-nav-surface);
+    --theme-header-border: var(--theme-nav-border);
 }
 
 body[data-nav-context="admin"] {
@@ -145,6 +219,32 @@ body[data-nav-context="admin"] {
     --theme-nav-muted: #efbfd5;
     --theme-nav-active-surface: #b83b7d;
     --theme-nav-active-text: #ffffff;
+}
+
+html[data-theme="dark"] body[data-nav-context="project-manager"],
+html[data-theme="dark"] body[data-nav-context="admin"] {
+    --theme-nav-surface: #020617;
+    --theme-nav-hover: #172033;
+    --theme-nav-border: #334155;
+    --theme-nav-text: #f8fafc;
+    --theme-nav-muted: #94a3b8;
+    --theme-nav-active-surface: #0ea5e9;
+    --theme-nav-active-text: #ffffff;
+    --theme-header-bg: #111827;
+    --theme-header-border: #334155;
+}
+
+html[data-theme="high-contrast"] body[data-nav-context="project-manager"],
+html[data-theme="high-contrast"] body[data-nav-context="admin"] {
+    --theme-nav-surface: #000000;
+    --theme-nav-hover: #333333;
+    --theme-nav-border: #ffffff;
+    --theme-nav-text: #ffffff;
+    --theme-nav-muted: #ffffff;
+    --theme-nav-active-surface: #ffd400;
+    --theme-nav-active-text: #000000;
+    --theme-header-bg: #000000;
+    --theme-header-border: #ffffff;
 }
 
 html,
@@ -271,6 +371,10 @@ a {
 
 .bg-complimentary-nav {
     background-color: var(--theme-nav-surface) !important;
+}
+
+.bg-complimentary-nav.border-green-300 {
+    border-color: var(--theme-nav-border) !important;
 }
 
 .bg-complimentary-nav-darker {

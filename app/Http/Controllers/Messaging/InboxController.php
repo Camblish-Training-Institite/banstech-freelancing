@@ -32,6 +32,11 @@ class InboxController extends Controller
         return $this->renderInbox('freelancer', $conversation);
     }
 
+    public function indexProjectManager(?Conversation $conversation = null): View
+    {
+        return $this->renderInbox('project-manager', $conversation);
+    }
+
     public function startClientConversation(Request $request, User $freelancer): RedirectResponse
     {
         $client = Auth::user();
@@ -67,6 +72,28 @@ class InboxController extends Controller
     public function sendFreelancerMessage(Request $request, Conversation $conversation): RedirectResponse
     {
         return $this->sendMessage($request, $conversation, 'freelancer');
+    }
+
+    public function sendProjectManagerMessage(Request $request, Conversation $conversation): RedirectResponse
+    {
+        return $this->sendMessage($request, $conversation, 'project-manager');
+    }
+
+    public function startProjectManagerConversation(\App\Models\Contract $project): RedirectResponse
+    {
+        $manager = Auth::user();
+
+        abort_unless((int) $project->project_manager_id === (int) $manager->id, 403);
+        abort_unless($project->job?->user_id, 404);
+
+        $conversation = Conversation::firstOrCreate([
+            'client_id' => $project->job->user_id,
+            'freelancer_id' => $manager->id,
+        ], [
+            'last_message_at' => now(),
+        ]);
+
+        return redirect()->route('pm.inbox.show', $conversation);
     }
 
     public function sendInvite(Request $request, Conversation $conversation): RedirectResponse

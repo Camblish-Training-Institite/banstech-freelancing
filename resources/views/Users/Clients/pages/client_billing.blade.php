@@ -46,61 +46,70 @@
             <!-- Active Jobs & Milestones -->
             <div class="bg-white rounded-lg shadow-md">
                 <div class="p-6 border-b">
-                    <h3 class="text-xl font-bold text-gray-800">Active Jobs & Milestones</h3>
+                    <h3 class="text-xl font-bold text-gray-800">Fund Jobs & Milestones</h3>
                 </div>
                 <div class="p-6 space-y-6">
                    @forelse ($jobs as $job)
+                    @php
+                        $fundingTarget = (float) ($job->contract?->agreed_amount ?? $job->budget ?? 0);
+                        $escrowedForJob = (float) \App\Models\ProjectFunding::where('client_id', Auth::id())
+                            ->where('job_id', $job->id)
+                            ->where('status', 'pending')
+                            ->sum('amount');
+                        $remainingToFund = max($fundingTarget - $escrowedForJob, 0);
+                    @endphp
                     <div>
                         <h4 class="font-bold text-gray-800">{{$job->title}}</h4>
                         <p class="text-sm text-gray-500">Freelancer: {{ $job->contract?->user?->name ?? 'Not assigned yet' }}</p>
-                        <p class="text-sm text-gray-500">Contract Amount: R {{ number_format($job->contract?->agreed_amount ?? 0, 2) }}</p>
-                        <p class="text-sm text-gray-500 mb-4">Escrowed: R {{ number_format($job->contract?->remainingEscrowAmount() ?? 0, 2) }}</p>
-                        <ul class="space-y-3">
-                            @forelse ($job->contract->milestones as $index => $milestone)
-                               <li class="p-4 border rounded-lg flex items-center justify-between">
-                                <div>
-                                    <p class="font-semibold">Phase {{$index+1}}: {{$milestone->title}} </p>
-                                    <p class="text-sm text-gray-500">R {{ number_format($milestone->amount, 2) }}</p>
-                                </div>
-                                <div class="flex items-center">
-                                    <span class="text-xs font-medium mr-4 px-2.5 py-0.5 rounded-full {{ $milestone->status === 'released' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                        <i class="fas {{ $milestone->status === 'released' ? 'fa-check-circle' : 'fa-hourglass-half' }} mr-1"></i>{{ ucfirst($milestone->status) }}
-                                    </span>
-                                </div>
-                            </li> 
-                            @empty
-                                <li class="text-sm text-gray-500">No milestones created yet.</li>
-                            @endforelse
-                        </ul>
+                        <p class="text-sm text-gray-500">{{ $job->contract ? 'Contract Amount' : 'Job Budget' }}: R {{ number_format($fundingTarget, 2) }}</p>
+                        <p class="text-sm text-gray-500 mb-4">Escrowed: R {{ number_format($escrowedForJob, 2) }}</p>
 
                         @if ($job->contract)
-                            @php
-                                $remainingToFund = max(($job->contract->agreed_amount ?? 0) - $job->contract->remainingEscrowAmount(), 0);
-                            @endphp
-
-                            <form method="POST" action="{{ route('billing.jobs.fund', $job) }}" class="mt-4 flex flex-col sm:flex-row gap-3">
-                                @csrf
-                                <input
-                                    type="number"
-                                    name="amount"
-                                    step="0.01"
-                                    min="0.01"
-                                    value="{{ number_format($remainingToFund, 2, '.', '') }}"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full sm:w-56 p-2.5"
-                                />
-                                <button
-                                    type="submit"
-                                    class="accent-purple hover:opacity-90 text-black font-bold py-2.5 px-4 rounded-lg text-sm transition-all duration-300 {{ $remainingToFund <= 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
-                                    @disabled($remainingToFund <= 0)
-                                >
-                                    Move To Escrow
-                                </button>
-                            </form>
+                            <ul class="space-y-3">
+                                @forelse ($job->contract->milestones as $index => $milestone)
+                                   <li class="p-4 border rounded-lg flex items-center justify-between">
+                                    <div>
+                                        <p class="font-semibold">Phase {{$index+1}}: {{$milestone->title}} </p>
+                                        <p class="text-sm text-gray-500">R {{ number_format($milestone->amount, 2) }}</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="text-xs font-medium mr-4 px-2.5 py-0.5 rounded-full {{ $milestone->status === 'released' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                            <i class="fas {{ $milestone->status === 'released' ? 'fa-check-circle' : 'fa-hourglass-half' }} mr-1"></i>{{ ucfirst($milestone->status) }}
+                                        </span>
+                                    </div>
+                                </li>
+                                @empty
+                                    <li class="text-sm text-gray-500">No milestones created yet.</li>
+                                @endforelse
+                            </ul>
+                        @else
+                            <p class="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-700">
+                                This job can be funded now. When you accept a proposal, the escrow target will adjust to the final contract amount.
+                            </p>
                         @endif
+
+                        <form method="POST" action="{{ route('billing.jobs.fund', $job) }}" class="mt-4 flex flex-col sm:flex-row gap-3">
+                            @csrf
+                            <input
+                                type="number"
+                                name="amount"
+                                step="0.01"
+                                min="0.01"
+                                value="{{ number_format($remainingToFund, 2, '.', '') }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full sm:w-56 p-2.5"
+                            />
+                            <button
+                                type="submit"
+                                class="accent-purple hover:opacity-90 text-black font-bold py-2.5 px-4 rounded-lg text-sm transition-all duration-300 {{ $remainingToFund <= 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
+                                @disabled($remainingToFund <= 0)
+                            >
+                                Move To Escrow
+                            </button>
+                        </form>
                     </div>
                     <div class="border-t border-gray-200"></div>   
                    @empty
-                       <p class="text-sm text-gray-500">No active contract funding records yet.</p>
+                       <p class="text-sm text-gray-500">No open jobs or active contract funding records yet.</p>
                    @endforelse
                     
                 </div>

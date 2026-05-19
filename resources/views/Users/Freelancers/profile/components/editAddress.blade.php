@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('freelancer.profile.updateAddress') }}">
+<form method="POST" action="{{ route(($profileRoutePrefix ?? 'freelancer.profile') . '.updateAddress') }}">
     @csrf
     @method('patch')
 
@@ -9,6 +9,15 @@
         <!-- Modal Box -->
         <div class="bg-white rounded-lg shadow-lg w-96 p-6" style="width:60rem;">
             <h2 class="text-xl font-bold mb-4">Edit Address</h2>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Full Location</label>
+                <input type="text" name="location" id="fullLocationInput"
+                       value="{{ $user->profile->location ?? '' }}"
+                       placeholder="Street, City, State ZIP, Country"
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
+                              focus:border-blue-500 focus:ring-blue-200 focus:ring-opacity-50">
+            </div>
 
             <!-- Street -->
             <div class="mb-4">
@@ -76,6 +85,26 @@
         const openBtn = document.getElementById("editAddressBtn");
         const modal = document.getElementById("addressModal");
         const cancelBtn = document.getElementById("addressCancelBtn");
+        const fullLocationInput = document.getElementById("fullLocationInput");
+
+        const applyParsedLocation = () => {
+            if (!fullLocationInput) return;
+
+            const parts = fullLocationInput.value.split(',').map(part => part.trim()).filter(Boolean);
+            if (parts.length < 4) return;
+
+            const country = parts.pop();
+            const stateZip = parts.pop();
+            const city = parts.pop();
+            const street = parts.join(', ');
+            const stateZipMatch = stateZip.match(/^(.*?)(?:\s+(\d[\d\s-]*))$/);
+
+            document.getElementById("streetInput").value = street;
+            document.getElementById("cityInput").value = city;
+            document.getElementById("stateInput").value = stateZipMatch ? stateZipMatch[1].trim() : stateZip;
+            document.getElementById("zipInput").value = stateZipMatch ? stateZipMatch[2].trim() : '';
+            document.getElementById("countryInput").value = country;
+        };
 
         // Open modal
         openBtn.addEventListener("click", () => {
@@ -88,5 +117,7 @@
             modal.classList.add("hidden");
             modal.classList.remove("flex");
         });
+
+        fullLocationInput?.addEventListener("blur", applyParsedLocation);
     });
 </script>

@@ -1,6 +1,6 @@
-@extends('dashboards.freelancer.dashboard')
+@extends($profileLayout ?? 'dashboards.freelancer.dashboard')
 
-@section('body')
+@section($profileSection ?? 'body')
 
     @if(session('status'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
@@ -88,7 +88,9 @@
     </style>
 
     @php
-        $user = Auth::user();
+        $user = $user ?? Auth::user();
+        $profileRoutePrefix = $profileRoutePrefix ?? 'freelancer.profile';
+        $profileAvatar = $user->profile?->avatar;
     @endphp
     <main class="profile-header-shell flex-1 overflow-y-auto p-8">
         <h1 class="text-3xl font-bold text-gray-800 mb-8">Profile Management</h1>
@@ -98,8 +100,8 @@
 
             <div class="relative">
                 <img class="h-32 w-32 rounded-full object-cover border-4 border-white"
-                    src="{{ $user->profile ? asset('storage/' . $user->profile->avatar) : 'https://ui-avatars.com/api/?name=' . $user->name . '&background=random&size=128' }}"
-                    alt="Bobby Drake">
+                    src="{{ $profileAvatar ? asset('storage/' . $profileAvatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=random&size=128' }}"
+                    alt="{{ $user->name }}">
                 <button id="editAvatarBtn"
                     class="absolute bottom-1 right-1 bg-white hover:bg-gray-200 text-gray-700 h-8 w-8 rounded-full flex items-center justify-center shadow-md transition-all duration-300">
                     <i class="fas fa-pencil-alt text-xs"></i>
@@ -137,10 +139,11 @@
                     const formData = new FormData();
                     formData.append('avatar', file);
 
-                    fetch("{{ route('freelancer.profile.update.avatar') }}", {
+                    fetch("{{ route($profileRoutePrefix . '.update.avatar') }}", {
                             method: "POST",
                             headers: {
-                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                "Accept": "application/json"
                             },
                             body: formData
                         })

@@ -3,7 +3,7 @@
 @section('body')
 <div class="flex flex-col w-full h-full items-start">
     <div class="col-md-12">
-        <h2 class="text-2xl mb-6 font-bold text-left"
+        <h2 class="pm-page-title text-2xl mb-6 font-bold text-left"
         >Overview</h2>
 
         <div class="card mb-4">
@@ -19,9 +19,15 @@
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <strong>{{ $req->project->title }}</strong>
                                 <small>by {{ $req->client->name }}</small>
-                                <div>
-                                    <a href="{{ route('admin.management-requests.accept', $req->id) }}" class="btn btn-success btn-sm">Accept</a>
-                                    <a href="{{ route('admin.management-requests.reject', $req->id) }}" class="btn btn-danger btn-sm">Reject</a>
+                                <div class="d-flex gap-2">
+                                    <form method="POST" action="{{ route('admin.management-requests.accept', $req->id) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                                    </form>
+                                    <form method="POST" action="{{ route('admin.management-requests.reject', $req->id) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                    </form>
                                 </div>
                             </li>
                         @endforeach
@@ -46,9 +52,12 @@
                                         <h5 class="card-title">{{ $project->job->title }}</h5>
                                         <p class="text-muted">Client: {{ $project->job->user->name }}</p>
                                         <p>Milestones: {{ $project->milestones->where('status', '=', 'released')->count() }}/{{$project->milestones->count()}}</p>
-                                        <div>
+                                        <div class="d-flex flex-wrap gap-2">
                                             <a href="{{ route('pm.project.show', $project->id) }}" class="btn btn-primary btn-sm mt-4">View Project</a> 
-                                            <a href="" class="btn btn-secondary btn-sm mt-4">Contact Client</a> 
+                                            <form method="POST" action="{{ route('pm.inbox.project.start', $project) }}" class="mt-4">
+                                                @csrf
+                                                <button type="submit" class="btn btn-secondary btn-sm">Contact Client</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

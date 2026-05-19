@@ -16,10 +16,12 @@
     .btn { padding: 10px 16px; background: #0b74de; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
     .btn.secondary { background: #475569; }
     .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .distance-pill { display: inline-flex; align-items: center; border-radius: 999px; background: #e0f2fe; color: #075985; font-size: 12px; font-weight: 700; padding: 8px 12px; }
     @media (max-width: 640px) {
       .header { padding: 12px; }
       .header-actions { width: 100%; display: grid !important; grid-template-columns: 1fr; }
       .btn { width: 100%; text-align: center; }
+      .distance-pill { justify-content: center; }
     }
   </style>
 </head>
@@ -44,6 +46,7 @@
                 Open in Google Maps
             </a>
             <button class="btn" @click="findMe">Distance from me</button>
+            <span class="distance-pill" v-if="distanceText">@{{ distanceText }}</span>
         </div>
     </div>
 

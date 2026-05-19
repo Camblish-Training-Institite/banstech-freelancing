@@ -78,6 +78,7 @@
             @if ($job->freelancer_radius)
                 <span class="mini-map-badge">{{ (int) $job->freelancer_radius }} km radius</span>
             @endif
+            <span id="{{ $miniMapId }}-distance" class="mini-map-badge" hidden></span>
         </div>
 
         <div class="mini-map-actions">
@@ -133,6 +134,27 @@
         }
 
         let userMarker = null;
+        const distanceBadge = document.getElementById(`${mapId}-distance`);
+
+        const distanceBetween = (lat1, lon1, lat2, lon2) => {
+            const earthRadiusKm = 6371;
+            const toRad = degrees => degrees * Math.PI / 180;
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2))
+                * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+            return earthRadiusKm * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+        };
+
+        const formatDistance = distanceKm => {
+            if (distanceKm < 1) {
+                return `${Math.round(distanceKm * 1000)} m from you`;
+            }
+
+            return `${distanceKm.toFixed(distanceKm < 10 ? 1 : 0)} km from you`;
+        };
 
         const focusJob = () => {
             if (jobCircle) {
@@ -164,6 +186,14 @@
                     weight: 2,
                     fillOpacity: 1,
                 }).addTo(map).bindPopup('You are here').openPopup();
+
+                const distanceText = formatDistance(distanceBetween(latitude, longitude, job.lat, job.lng));
+                if (distanceBadge) {
+                    distanceBadge.textContent = distanceText;
+                    distanceBadge.hidden = false;
+                }
+
+                jobMarker.setPopupContent(`<strong>${job.title}</strong><br>Budget: R${job.budget.toFixed(2)}<br>${distanceText}`);
 
                 const bounds = L.latLngBounds([[job.lat, job.lng], [latitude, longitude]]);
                 map.fitBounds(bounds, { padding: [40, 40] });

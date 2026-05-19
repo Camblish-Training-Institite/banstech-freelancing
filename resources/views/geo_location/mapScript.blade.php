@@ -19,6 +19,8 @@
         map: null,
         userMarker: null,
         jobCircle: null,
+        jobMarker: null,
+        distanceText: '',
         job: @json($jobData)
       }
     },
@@ -40,7 +42,7 @@
         }).addTo(this.map);
 
         // 3. Add Job Marker
-        L.marker([this.job.lat, this.job.lng])
+        this.jobMarker = L.marker([this.job.lat, this.job.lng])
             .addTo(this.map)
             .bindPopup(`
               <b>${this.job.title}</b><br>
@@ -68,6 +70,26 @@
         }, 300);
       },
 
+      calculateDistanceKm(lat1, lon1, lat2, lon2) {
+        const earthRadiusKm = 6371;
+        const toRad = degrees => degrees * Math.PI / 180;
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+          + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2))
+          * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+        return earthRadiusKm * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+      },
+
+      formatDistance(distanceKm) {
+        if (distanceKm < 1) {
+          return `${Math.round(distanceKm * 1000)} m from you`;
+        }
+
+        return `${distanceKm.toFixed(distanceKm < 10 ? 1 : 0)} km from you`;
+      },
+
       findMe() {
         if (!navigator.geolocation) return alert("Geolocation not supported");
 
@@ -79,6 +101,16 @@
           this.userMarker = L.circleMarker([latitude, longitude], {
             radius: 10, fillColor: "#740bde", color: "#fff", weight: 2, fillOpacity: 1
           }).addTo(this.map).bindPopup("You are here").openPopup();
+
+          this.distanceText = this.formatDistance(this.calculateDistanceKm(latitude, longitude, this.job.lat, this.job.lng));
+          this.jobMarker?.setPopupContent(`
+            <b>${this.job.title}</b><br>
+            Budget: R${this.job.budget}<br>
+            ${this.distanceText}<br>
+            <a href="https://www.google.com/maps/search/?api=1&query=${this.job.lat},${this.job.lng}" target="_blank" rel="noopener noreferrer">
+              Open in Google Maps
+            </a>
+          `);
 
           // Compare both: Fit both markers in view
           const bounds = L.latLngBounds([[this.job.lat, this.job.lng], [latitude, longitude]]);

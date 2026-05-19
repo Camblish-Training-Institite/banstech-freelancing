@@ -1,4 +1,4 @@
-@php($activeTheme = auth()->check() ? (auth()->user()->theme ?? 'default') : 'default')
+@php($activeTheme = auth()->check() && in_array(auth()->user()->theme ?? 'default', ['default', 'dark', 'high-contrast'], true) ? (auth()->user()->theme ?? 'default') : 'default')
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ $activeTheme }}">
     <head>
@@ -23,6 +23,10 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <link rel="stylesheet" href="{{ asset('theme.css') }}">
         <script src="https://unpkg.com/alpinejs@3.10.5/dist/cdn.min.js" defer></script>
+
+        <!-- Mapbox GL JS -->
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css'  rel='stylesheet' />
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
 
     </head>
     <body class="font-sans antialiased" data-nav-context="client">

@@ -41,14 +41,6 @@ class EscrowPayoutService
 
     public function fundJob(Job $job, ?float $amount = null): ProjectFunding
     {
-        $contract = $job->contract;
-
-        if (! $contract) {
-            throw ValidationException::withMessages([
-                'job' => 'This job does not yet have an active contract to fund.',
-            ]);
-        }
-
         $remainingRequired = $this->getRemainingAmountToFund($job);
 
         if ($remainingRequired <= 0) {
@@ -67,7 +59,7 @@ class EscrowPayoutService
 
         if ($amountToEscrow > $remainingRequired) {
             throw ValidationException::withMessages([
-                'amount' => 'Funding amount cannot exceed the remaining contract balance.',
+                'amount' => 'Funding amount cannot exceed the remaining job balance.',
             ]);
         }
 
@@ -79,7 +71,7 @@ class EscrowPayoutService
             ]);
         }
 
-        return DB::transaction(function () use ($job, $contract, $amountToEscrow) {
+        return DB::transaction(function () use ($job, $amountToEscrow) {
             $escrow = ProjectFunding::firstOrNew([
                 'client_id' => $job->user_id,
                 'job_id' => $job->id,
@@ -89,7 +81,7 @@ class EscrowPayoutService
             $escrow->amount = round(((float) $escrow->amount) + $amountToEscrow, 2);
             $escrow->save();
 
-            $job->job_funded = $escrow->amount >= (float) $contract->agreed_amount;
+            $job->job_funded = $escrow->amount >= $this->getFundingTargetForJob($job);
             $job->save();
 
             return $escrow;
@@ -250,8 +242,12 @@ class EscrowPayoutService
 
     public function getRemainingAmountToFund(Job $job): float
     {
-        $contractAmount = (float) optional($job->contract)->agreed_amount;
-        return round(max($contractAmount - $this->getEscrowAmountForJob($job), 0), 2);
+        return round(max($this->getFundingTargetForJob($job) - $this->getEscrowAmountForJob($job), 0), 2);
+    }
+
+    public function getFundingTargetForJob(Job $job): float
+    {
+        return round((float) ($job->contract?->agreed_amount ?? $job->budget ?? 0), 2);
     }
 
     protected function getEscrowRecordForJob(int $jobId): ?ProjectFunding

@@ -1,4 +1,4 @@
-@php($activeTheme = auth()->check() ? (auth()->user()->theme ?? 'default') : 'default')
+@php($activeTheme = auth()->check() && in_array(auth()->user()->theme ?? 'default', ['default', 'dark', 'high-contrast'], true) ? (auth()->user()->theme ?? 'default') : 'default')
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ $activeTheme }}">
     <head>

@@ -104,9 +104,9 @@ class ContractController extends Controller
     public function update(Request $request, Contract $project){
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'job_id' => 'required|exists:jobs,id',
+            'job_id' => 'exists:jobs,id',
             'agreed_amount' => 'required|numeric',
-            'start_date' => 'required|date',
+            'start_date' => 'date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'project_manager_id' => 'nullable|exists:users,id',
             'status' => 'required|in:pending,active,completed,cancelled',

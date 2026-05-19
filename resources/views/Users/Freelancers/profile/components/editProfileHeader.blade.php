@@ -1,10 +1,10 @@
 <!-- Profile Edit Modal -->
-<div id="profileModal" class="hidden inset-0 bg-black bg-opacity-50 items-center justify-center z-50 mx-3 w-[50%] fixed">
+<div id="profileModal" class="hidden inset-0 bg-black bg-opacity-50 items-center justify-center z-50 mx-3 w-[100%] fixed">
     <div class="bg-white rounded-lg shadow-lg w-96 p-6" style="width:60rem;"> 
 
         <h2 class="text-xl font-bold mb-4">Edit Profile</h2>
 
-        <form id="profileForm" method="POST" action="{{ route('freelancer.profile.updateProfile') }}">
+        <form id="profileForm" method="POST" action="{{ route(($profileRoutePrefix ?? 'freelancer.profile') . '.updateProfile') }}">
             @csrf
             @method('PATCH')
 
@@ -28,7 +28,7 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-medium">Location</label>
-                <input type="text" name="location" class="mt-1 block w-full rounded-md border-gray-300"
+                <input type="text" name="location" id="profileLocationInput" class="mt-1 block w-full rounded-md border-gray-300"
                        value="{{ $user->profile->location ?? '' }}">
             </div>
 
@@ -57,5 +57,37 @@
             profileModal.classList.add('hidden');
             profileModal.classList.remove('flex');
         });
+    }
+
+    const profileLocationInput = document.getElementById('profileLocationInput');
+    const parseLocation = (value) => {
+        const parts = value.split(',').map(part => part.trim()).filter(Boolean);
+        if (parts.length < 4) return;
+
+        const country = parts.pop();
+        const stateZip = parts.pop();
+        const city = parts.pop();
+        const street = parts.join(', ');
+        const stateZipMatch = stateZip.match(/^(.*?)(?:\s+(\d[\d\s-]*))$/);
+
+        const targets = {
+            streetInput: street,
+            cityInput: city,
+            stateInput: stateZipMatch ? stateZipMatch[1].trim() : stateZip,
+            zipInput: stateZipMatch ? stateZipMatch[2].trim() : '',
+            countryInput: country,
+            fullLocationInput: value,
+        };
+
+        Object.entries(targets).forEach(([id, parsedValue]) => {
+            const input = document.getElementById(id);
+            if (input && parsedValue && !input.value) {
+                input.value = parsedValue;
+            }
+        });
+    };
+
+    if (profileLocationInput) {
+        profileLocationInput.addEventListener('blur', (event) => parseLocation(event.target.value));
     }
 </script>

@@ -3,7 +3,7 @@
 @section('body')
 <div class="flex flex-col w-full h-full items-start">
     <div class="col-md-12">
-        <h2 class="text-2xl mb-6 font-bold text-left"
+        <h2 class="pm-page-title text-2xl mb-6 font-bold text-left"
         >Managed Projects</h2>
 
         {{-- <div class="card mb-4">
@@ -46,9 +46,12 @@
                                         <h5 class="card-title">{{ $project->job->title }}</h5>
                                         <p class="text-muted">Client: {{ $project->job->user->name }}</p>
                                         <p>Milestones: {{ $project->milestones->where('status', '=', 'released')->count() }}/{{$project->milestones->count()}}</p>
-                                        <div>
+                                        <div class="d-flex flex-wrap gap-2">
                                             <a href="{{ route('pm.project.show', $project->id) }}" class="btn btn-primary btn-sm mt-4">View Project</a> 
-                                            <a href="" class="btn btn-secondary btn-sm mt-4">Contact Client</a> 
+                                            <form method="POST" action="{{ route('pm.inbox.project.start', $project) }}" class="mt-4">
+                                                @csrf
+                                                <button type="submit" class="btn btn-secondary btn-sm">Contact Client</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

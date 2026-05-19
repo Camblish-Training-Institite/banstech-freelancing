@@ -3,6 +3,9 @@
 @section('body')
 @php
     $isSavedJob = Auth::user()?->hasSavedJob($job->id);
+    $freelancerProfile = Auth::user()?->profile;
+    $canProposeForPhysicalJob = $job->job_type !== 'physical'
+        || ($freelancerProfile && filled($freelancerProfile->address) && filled($freelancerProfile->city) && filled($freelancerProfile->country));
 @endphp
 <style>
     /* General Styles */
@@ -341,10 +344,17 @@
 
                 <!-- Action Buttons -->
                 <div class="pt-6 mt-6 text-right border-t border-gray-200 justify-between flex">
-                    <a href="{{route('freelancer.proposal.create', $job->id)}}"
-                        class="send-proposal inline-flex items-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-2">Send
-                        Proposal
-                    </a>
+                    @if ($canProposeForPhysicalJob)
+                        <a href="{{route('freelancer.proposal.create', $job->id)}}"
+                            class="send-proposal inline-flex items-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-2">Send
+                            Proposal
+                        </a>
+                    @else
+                        <a href="{{ route('freelancer.myprofile') }}"
+                            class="inline-flex items-center rounded-md border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-800">
+                            Update location to propose
+                        </a>
+                    @endif
                     <div class="flex flex-wrap justify-end gap-2">
                         <form method="POST" action="{{ route('freelancer.jobs.save', $job) }}">
                             @csrf

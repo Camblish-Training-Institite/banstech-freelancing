@@ -1,8 +1,9 @@
-@extends($panel === 'client' ? 'Users.Clients.layouts.body.dashboard-body' : 'Users.Freelancers.layouts.body.dashboard-body')
+@extends($panel === 'client' ? 'Users.Clients.layouts.body.dashboard-body' : ($panel === 'project-manager' ? 'project-manager.manager-dashboard' : 'Users.Freelancers.layouts.body.dashboard-body'))
 
-@section('active-tab')
+@section($panel === 'project-manager' ? 'body' : 'active-tab')
     @php
-        $isClientPanel = $panel === 'client';
+    $isClientPanel = $panel === 'client';
+    $isProjectManagerPanel = $panel === 'project-manager';
         $showInviteComposer = $isClientPanel && $activeConversation && $openJobs->isNotEmpty();
         $intent = request()->query('intent');
     @endphp
@@ -177,7 +178,9 @@
                         $isActive = $activeConversation && $activeConversation->id === $conversation->id;
                         $threadRoute = $isClientPanel
                             ? route('client.inbox.show', $conversation)
-                            : route('freelancer.inbox.show', $conversation);
+                            : ($isProjectManagerPanel
+                                ? route('pm.inbox.show', $conversation)
+                                : route('freelancer.inbox.show', $conversation));
                     @endphp
                     <a href="{{ $threadRoute }}" class="thread-link {{ $isActive ? 'active' : '' }}">
                         <div class="flex items-center gap-3">
@@ -204,7 +207,9 @@
                     $otherUser = $activeConversation->otherParticipantFor(Auth::user());
                     $messageRoute = $isClientPanel
                         ? route('client.inbox.messages.store', $activeConversation)
-                        : route('freelancer.inbox.messages.store', $activeConversation);
+                        : ($isProjectManagerPanel
+                            ? route('pm.inbox.messages.store', $activeConversation)
+                            : route('freelancer.inbox.messages.store', $activeConversation));
                 @endphp
 
                 <div class="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4">

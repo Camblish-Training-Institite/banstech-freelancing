@@ -2,6 +2,18 @@
 
 @section('body')
 <style>
+    .pm-project-header {
+        background: var(--theme-nav-surface) !important;
+        border: 1px solid var(--theme-nav-border);
+        color: var(--theme-nav-text);
+    }
+
+    .pm-project-header h2,
+    .pm-project-header p,
+    .pm-project-header span {
+        color: var(--theme-nav-text) !important;
+    }
+
     .back-link {
         color: #516aae;
         text-decoration: none;
@@ -21,7 +33,7 @@
 
         <!-- Project Details -->
         <div class="my-1 px-1 w-full">
-            <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="pm-project-header rounded-lg shadow-md p-6">
                 <div class="flex items-center space-x-2">
                     <div class="flex items-center justify-center rounded-full object-cover overflow-hidden" style="width: 4rem; height:4rem;">
                         <img class="" src="{{$project->job->user->profile? asset('storage/'.$project->job->user->profile->avatar) : "https://ui-avatars.com/api/?name=". $project->job->user->name . "&background=random&size=128" }}" alt="{{ $project->job->user->name }}">

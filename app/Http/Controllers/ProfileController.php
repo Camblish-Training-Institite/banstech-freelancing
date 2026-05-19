@@ -45,7 +45,13 @@ class ProfileController extends Controller
         $user = Auth::user();
         $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
 
-        return view('Users.Clients.profile.edit', compact('user', 'profile'));
+        return view('Users.Freelancers.layouts.user-profile', [
+            'user' => $user,
+            'profile' => $profile,
+            'profileLayout' => 'dashboards.client.dashboard',
+            'profileSection' => 'body',
+            'profileRoutePrefix' => 'client.profile',
+        ]);
     }
 
     public function updateClient(Request $request)
@@ -68,6 +74,8 @@ class ProfileController extends Controller
                 'timezone' => 'nullable|string|max:50',
                 'avatar' => 'nullable|image|max:2048',
             ]);
+
+            $validatedData = $this->mergeParsedLocation($validatedData);
 
             $profile->fill(collect($validatedData)->except('avatar')->all());
             $profile->user_id = $user->id;
@@ -98,6 +106,7 @@ class ProfileController extends Controller
         $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
 
         $request->validate([
+            'location' => 'nullable|string|max:255',
             'street' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'zip_code' => 'nullable|string|max:20',
@@ -105,12 +114,14 @@ class ProfileController extends Controller
             'country' => 'nullable|string|max:255',
         ]);
 
-        // Update profile fields
-        $profile->address = $request->input('street');
-        $profile->city = $request->input('city');
-        $profile->zip_code = $request->input('zip_code');
-        $profile->state = $request->input('state');
-        $profile->country = $request->input('country');
+        $parsedLocation = $this->parseLocationParts($request->input('location'));
+
+        $profile->location = $request->input('location') ?: $profile->location;
+        $profile->address = $request->input('street') ?: ($parsedLocation['address'] ?? null);
+        $profile->city = $request->input('city') ?: ($parsedLocation['city'] ?? null);
+        $profile->zip_code = $request->input('zip_code') ?: ($parsedLocation['zip_code'] ?? null);
+        $profile->state = $request->input('state') ?: ($parsedLocation['state'] ?? null);
+        $profile->country = $request->input('country') ?: ($parsedLocation['country'] ?? null);
         $profile->save();
 
         return back()->with('status', 'Address updated successfully.');
@@ -394,21 +405,28 @@ class ProfileController extends Controller
             'location'   => 'nullable|string|max:255',
         ]);
 
+        $parsedLocation = $this->parseLocationParts($validated['location'] ?? null);
+
         // Update Profile (not User)
         $profile->first_name = $validated['first_name'];
         $profile->last_name  = $validated['last_name'];
         $profile->title      = $validated['title'];
         $profile->location   = $validated['location'];
+        foreach ($parsedLocation as $field => $value) {
+            if (filled($value)) {
+                $profile->{$field} = $value;
+            }
+        }
 
         $profile->save();
 
         return back()->with('status', 'Profile updated successfully.');
 
     } catch (\Illuminate\Validation\ValidationException $validationException) {
-        return response()->json(['errors' => $validationException->errors()], 422);
+        return back()->withErrors($validationException->errors())->withInput();
     } catch (\Exception $e) {
         Log::error('Error updating profile: ' . $e->getMessage());
-        return response()->json(['error' => 'An error occurred.'], 500);
+        return back()->with('error', 'An error occurred while updating your profile. Please try again later.');
     }
 }
 
@@ -437,6 +455,15 @@ class ProfileController extends Controller
 
             // Save the profile
             $profile->save();
+
+            $avatarUrl = $profile->avatar ? asset('storage/' . $profile->avatar) : null;
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'avatar_url' => $avatarUrl,
+                    'message' => 'Avatar updated successfully.',
+                ]);
+            }
 
             return back()->with('status', 'Avatar updated successfully.');
 
@@ -523,5 +550,52 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Portfolio item added successfully!');
+    }
+
+    protected function mergeParsedLocation(array $validatedData): array
+    {
+        foreach ($this->parseLocationParts($validatedData['location'] ?? null) as $field => $value) {
+            if (filled($value) && blank($validatedData[$field] ?? null)) {
+                $validatedData[$field] = $value;
+            }
+        }
+
+        return $validatedData;
+    }
+
+    protected function parseLocationParts(?string $location): array
+    {
+        if (! filled($location) || ! str_contains($location, ',')) {
+            return [];
+        }
+
+        $parts = collect(explode(',', $location))
+            ->map(fn ($part) => trim($part))
+            ->filter()
+            ->values();
+
+        if ($parts->count() < 4) {
+            return [];
+        }
+
+        $country = $parts->pop();
+        $stateAndZip = $parts->pop();
+        $city = $parts->pop();
+        $address = $parts->implode(', ');
+        $zipCode = null;
+        $state = $stateAndZip;
+
+        if (preg_match('/^(.*?)(?:\s+(\d[\d\s-]*))$/', $stateAndZip, $matches)) {
+            $state = trim($matches[1]);
+            $zipCode = trim($matches[2]);
+        }
+
+        return [
+            'address' => $address,
+            'city' => $city,
+            'state' => $state,
+            'zip_code' => $zipCode,
+            'country' => $country,
+        ];
     }
 }

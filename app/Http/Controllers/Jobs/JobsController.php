@@ -261,7 +261,7 @@ class JobsController extends Controller
             'location' => $point ?? null,
         ]);
 
-    return redirect()->route('client.jobs.list')->with('success','Job added!');
+    return redirect()->route('billing')->with('success','Job added. You can fund it now from billing.');
     
 }
 

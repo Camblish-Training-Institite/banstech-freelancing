@@ -5,6 +5,7 @@ namespace App\Services\Contracts;
 use App\Models\Contract;
 use App\Models\Job;
 use App\Models\Milestone;
+use App\Models\ProjectFunding;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
@@ -36,6 +37,7 @@ class AssignFreelancerToJobService
             ]);
 
             $this->createDefaultMilestones($contract, $milestoneCount);
+            $this->reconcilePreContractEscrow($contract);
 
             return $contract;
         });
@@ -76,5 +78,32 @@ class AssignFreelancerToJobService
                 'status' => 'approved',
             ]);
         }
+    }
+
+    protected function reconcilePreContractEscrow(Contract $contract): void
+    {
+        $escrow = ProjectFunding::where('client_id', $contract->job->user_id)
+            ->where('job_id', $contract->job_id)
+            ->where('status', 'pending')
+            ->lockForUpdate()
+            ->first();
+
+        if (! $escrow) {
+            $contract->job->forceFill(['job_funded' => false])->save();
+            return;
+        }
+
+        $targetAmount = round((float) $contract->agreed_amount, 2);
+        $escrowAmount = round((float) $escrow->amount, 2);
+
+        if ($escrowAmount > $targetAmount) {
+            $escrow->amount = $targetAmount;
+            $escrow->save();
+            $escrowAmount = $targetAmount;
+        }
+
+        $contract->job->forceFill([
+            'job_funded' => $targetAmount > 0 && $escrowAmount >= $targetAmount,
+        ])->save();
     }
 }

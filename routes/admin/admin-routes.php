@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BanstechAdmin\LoginController;
 use App\Http\Controllers\BanstechAdmin\JobController;
 use App\Http\Controllers\BanstechAdmin\UserController; 
 use App\Http\Controllers\BanstechAdmin\ContractController;
 use App\Http\Controllers\BanstechAdmin\MilestoneController;
+use App\Http\Controllers\BanstechAdmin\ProfileController;
 use App\Http\Controllers\BanstechAdmin\WithdrawalRequestController;
 use App\Http\Controllers\SettingsController;
 use App\Models\WithdrawalRequest;
@@ -60,11 +60,10 @@ Route::patch('/banstech-admin/milestones/{milestone}/status', [MilestoneControll
 
 
 // Admin profile management routes
-Route::get('/banstech-admin/profile', [ProfileController::class, 'edit'])->name('admin.profile.edit');
-Route::patch('/banstech-admin/profile', [ProfileController::class, 'update'])->name('admin.profile.update');
-Route::delete('/banstech-admin/profile', [ProfileController::class, 'destroy'])->name('admin.profile.destroy');
-Route::get('/banstech-admin/settings', [SettingsController::class, 'edit'])->name('admin.settings.edit');
-Route::patch('/banstech-admin/settings', [SettingsController::class, 'update'])->name('admin.settings.update');
+Route::get('/banstech-admin/profile', [ProfileController::class, 'edit'])->name('admin.profile.edit')->middleware('auth:admin');
+Route::patch('/banstech-admin/profile', [ProfileController::class, 'update'])->name('admin.profile.update')->middleware('auth:admin');
+Route::get('/banstech-admin/settings', [SettingsController::class, 'edit'])->name('admin.settings.edit')->middleware('auth:admin');
+Route::patch('/banstech-admin/settings', [SettingsController::class, 'update'])->name('admin.settings.update')->middleware('auth:admin');
 
 Route::middleware('auth:admin')->group(function () {
     Route::get('/banstech-admin/withdrawals', [WithdrawalRequestController::class, 'index'])->name('admin.withdrawals.index');

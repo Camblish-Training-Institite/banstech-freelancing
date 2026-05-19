@@ -13,6 +13,30 @@
     }
 @endphp
 
+<style>
+    .suggestions-container{
+        max-height: 200px; /* Limit height */
+        overflow-y: auto; /* Enable scrolling if needed */
+        background-color: var(--theme-surface);
+        border: 1px solid var(--theme-nav-surface);
+        border-radius: 5px;
+    }
+
+    .suggestion{
+        padding: 0.5rem;
+        border-bottom: 1px solid var(--theme-border-muted);
+        background-color: var(--theme-surface);
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .suggestion:hover{
+        background-color: var(--theme-nav-hover);
+        color: var(--theme-nav-active-text);
+        cursor: pointer;
+    }
+</style>
+
 <h2 class="font-extrabold text-2xl mt-1">{{ isset($job) ? 'Edit Job' : 'Create Job' }}</h2>
 
 <form action="{{ isset($job) ? route('client.jobs.update', $job) : route('client.jobs.store') }}" method="POST" id="job-create-form">
@@ -81,6 +105,7 @@
                             placeholder="Enter street address"
                             value="{{ old('job_address') }}"
                         >
+                        <div class="suggestions-container" id="suggestions-container" style="display: none;"></div>
                     </div>
                     <div class="form-group">
                         <label for="freelancer_radius">Please enter the maximum distance away we should show you proposals from (km)</label>
@@ -224,6 +249,7 @@
 </form>
 
 @include('components.tag-script')
+@include('components.mapboxSearch')
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

@@ -58,6 +58,14 @@ Route::prefix('client')->name('client.')->group(function () {
     //client profile routes
     Route::get('/profile', [ProfileController::class, 'editClient'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'updateClient'])->name('profile.update');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update.avatar');
+    Route::patch('/profile/header', [ProfileController::class, 'updateProfile'])->name('profile.updateProfile');
+    Route::patch('/profile/AboutMe', [ProfileController::class, 'updateAboutMe'])->name('profile.updateAboutMe');
+    Route::patch('/profile/address', [ProfileController::class, 'updateAddress'])->name('profile.updateAddress');
+    Route::patch('/profile/bank-details', [ProfileController::class, 'updateBankDetails'])->name('profile.updateBankDetails');
+    Route::patch('/profile/skills', [ProfileController::class, 'updateSkills'])->name('profile.updateSkills');
+    Route::patch('/profile/qualifications', [ProfileController::class, 'updateQualifications'])->name('profile.updateQualifications');
+    Route::patch('/profile/certificates', [ProfileController::class, 'updateCertifications'])->name('profile.updateCertificates');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
     Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');

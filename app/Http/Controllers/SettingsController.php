@@ -28,7 +28,7 @@ class SettingsController extends Controller
         $context = $this->resolveContext($request);
 
         $validated = $request->validate([
-            'theme' => 'required|in:default,ocean,sunset',
+            'theme' => 'required|in:default,dark,high-contrast',
         ]);
 
         $context['user']->forceFill([
@@ -88,21 +88,21 @@ class SettingsController extends Controller
         return [
             [
                 'key' => 'default',
-                'name' => 'Banstech Default',
-                'description' => 'Deep indigo and green tones that match the current product identity.',
+                'name' => 'Default',
+                'description' => 'The standard Banstech workspace with bright surfaces and colored navigation.',
                 'swatches' => ['#182340', '#3f67d8', '#1fa97a', '#f5f7fb'],
             ],
             [
-                'key' => 'ocean',
-                'name' => 'Ocean Slate',
-                'description' => 'Cool teal and blue accents with a softer dashboard backdrop.',
-                'swatches' => ['#102a43', '#0f766e', '#2563eb', '#ecfeff'],
+                'key' => 'dark',
+                'name' => 'Dark Mode',
+                'description' => 'A darker interface for lower-glare project and admin work.',
+                'swatches' => ['#070b13', '#111827', '#22c55e', '#e5e7eb'],
             ],
             [
-                'key' => 'sunset',
-                'name' => 'Sunset Ember',
-                'description' => 'Warm coral and amber accents for a brighter, energetic workspace.',
-                'swatches' => ['#4a1d1f', '#dd6b20', '#c2410c', '#fff7ed'],
+                'key' => 'high-contrast',
+                'name' => 'High Contrast',
+                'description' => 'Maximum separation between text, controls, and page regions.',
+                'swatches' => ['#000000', '#ffffff', '#ffd400', '#00e5ff'],
             ],
         ];
     }

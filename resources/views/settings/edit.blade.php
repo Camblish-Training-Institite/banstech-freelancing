@@ -1,7 +1,8 @@
 @extends($layout)
 
 @php
-    $activeThemeKey = old('theme', $user->theme ?? 'default');
+    $availableThemeKeys = collect($themes)->pluck('key')->all();
+    $activeThemeKey = old('theme', in_array($user->theme ?? 'default', $availableThemeKeys, true) ? ($user->theme ?? 'default') : 'default');
     $isDashboardContext = in_array($layout, ['layouts.client', 'layouts.freelancer'], true);
 @endphp
 
@@ -36,7 +37,7 @@
                     <p class="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">Settings</p>
                     <h1 class="mt-2 text-3xl font-bold text-gray-900">{{ $pageTitle }}</h1>
                     <p class="mt-3 max-w-2xl text-sm text-gray-600">
-                        Choose the look and feel of your workspace. Your selection will follow you across the shared app layouts and dashboards.
+                        Choose the display mode for your workspace. Your selection follows you across the shared app layouts and dashboards.
                     </p>
                 </div>
                 <a href="{{ route($dashboardRouteName) }}" class="inline-flex items-center rounded-full border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
@@ -63,9 +64,9 @@
                 @method('PATCH')
 
                 <div>
-                    <h2 class="text-lg font-semibold text-gray-900">Theme Selection</h2>
-                    <p class="mt-2 text-sm text-gray-600">Pick one of the three curated themes below.</p>
-                    <p class="mt-2 text-sm font-medium text-indigo-600">Selecting a theme previews it immediately on this page before you save.</p>
+                    <h2 class="text-lg font-semibold text-gray-900">Display Mode</h2>
+                    <p class="mt-2 text-sm text-gray-600">Pick default, dark mode, or high contrast mode.</p>
+                    <p class="mt-2 text-sm font-medium text-indigo-600">Selecting a mode previews it immediately on this page before you save.</p>
                 </div>
 
                 <div class="grid grid-cols-1 gap-5 lg:grid-cols-3">

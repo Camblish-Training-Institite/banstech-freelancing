@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ManagementRequestController;
 use App\Http\Controllers\ProjectManager\ProfileController;
 use App\Http\Controllers\ProjectManager\ContractController;
 use App\Http\Controllers\ProjectManager\MilestoneController;
+use App\Http\Controllers\Messaging\InboxController;
 use App\Http\Controllers\SettingsController;
 
 // routes/admin.php
@@ -35,6 +36,11 @@ Route::prefix('project-manager')->name('pm.')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
     Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
+
+    Route::get('/inbox', [InboxController::class, 'indexProjectManager'])->name('inbox');
+    Route::get('/inbox/{conversation}', [InboxController::class, 'indexProjectManager'])->name('inbox.show');
+    Route::post('/inbox/project/{project}', [InboxController::class, 'startProjectManagerConversation'])->name('inbox.project.start');
+    Route::post('/inbox/{conversation}/messages', [InboxController::class, 'sendProjectManagerMessage'])->name('inbox.messages.store');
 
 })->middleware('auth');
 

@@ -13,9 +13,18 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('pm.profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('pm.profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
+
+        <div>
+            <x-input-label for="avatar" :value="__('Profile Photo')" />
+            <div class="mt-3 flex items-center gap-4">
+                @include('components.user-avatar', ['user' => $user, 'size' => '4rem'])
+                <input id="avatar" name="avatar" type="file" accept="image/*" class="block w-full text-sm text-gray-600 file:mr-4 file:rounded-md file:border-0 file:bg-green-50 file:px-4 file:py-2 file:font-semibold file:text-green-800 hover:file:bg-green-100" />
+            </div>
+            <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -45,6 +54,18 @@
                     @endif
                 </div>
             @endif
+        </div>
+
+        <div>
+            <x-input-label for="title" :value="__('Professional Title')" />
+            <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title', $user->profile?->title)" autocomplete="organization-title" />
+            <x-input-error class="mt-2" :messages="$errors->get('title')" />
+        </div>
+
+        <div>
+            <x-input-label for="location" :value="__('Location')" />
+            <x-text-input id="location" name="location" type="text" class="mt-1 block w-full" :value="old('location', $user->profile?->location)" autocomplete="address-level2" />
+            <x-input-error class="mt-2" :messages="$errors->get('location')" />
         </div>
 
         <div class="flex items-center gap-4">

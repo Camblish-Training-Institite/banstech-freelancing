@@ -1,7 +1,7 @@
 <div id="editCertificatesModal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 mx-3">
     <div class="bg-white rounded-lg shadow-lg w-96 p-6" style="width:60rem;">
         <h2 class="text-xl font-bold mb-4">Edit Certificates</h2>
-        <form method="POST" action="{{ route('freelancer.profile.updateCertificates') }}">
+        <form method="POST" action="{{ route(($profileRoutePrefix ?? 'freelancer.profile') . '.updateCertificates') }}">
             @csrf
             @method('PATCH')
 

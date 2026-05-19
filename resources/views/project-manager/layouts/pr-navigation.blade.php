@@ -135,13 +135,7 @@
 <aside class="sidebar">
     <div> {{-- This div now wraps all top content to be pushed up --}}
         <div class="user-details">
-            <div class="user-avatar rounded-full bg-white overflow-hidden">
-                @if (Auth::user()->profile)
-                    <img width="100%" src="{{ asset('storage/' . Auth::user()->profile->avatar) }}" alt="{{Auth::user()->name}}">
-                @else
-                    <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&background=random&size=128" alt="">
-                @endif
-            </div>
+            @include('components.user-avatar', ['user' => Auth::user(), 'size' => '3rem'])
             <div>
                 <div class="font-medium text-base text-gray-200">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
@@ -152,6 +146,7 @@
             <ul>
                 <li><a href="{{route('pm.dashboard')}}"><i class="fas fa-briefcase"></i> <span>Dashboard</span></a></li>
                 <li><a href="{{route('pm.profile.edit')}}"><i class="fas fa-briefcase"></i> <span>Profile</span></a></li>
+                <li><a href="{{route('pm.inbox')}}"><i class="fas fa-inbox"></i> <span>Inbox</span></a></li>
                 <li><a href="{{route('pm.requests')}}"><i class="fas fa-inbox"></i> <span>Management Requests</span></a></li>
                 <li><a href="{{route('pm.projects')}}"><i class="fas fa-user-circle"></i> <span>Managed Projetcs</span></a></li>
                 <li><a href="{{ route('pm.settings.edit') }}"><i class="fas fa-cog"></i> <span>Settings</span></a></li>

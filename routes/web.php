@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Freelancer\JobController;
 use App\Http\Controllers\Freelancer\ProposalController;
@@ -63,6 +64,20 @@ Route::get('/client/dashboard', function () {
     return redirect()->route('client.jobs.list');
 })->middleware(['auth'])->name('client.dashboard');
 
+Route::get('/dashboard', function () {
+    $user = Auth::user();
+
+    if ($user?->hasRole('project-manager')) {
+        return redirect()->route('pm.dashboard');
+    }
+
+    if ($user?->hasRole('admin')) {
+        return redirect()->route('admin.dashboard');
+    }
+
+    return redirect()->route('freelancer.dashboard');
+})->middleware(['auth'])->name('dashboard');
+
 Route::middleware('auth')->group(function () {
     
 
@@ -102,6 +117,8 @@ Route::get('project-manager/dashboard', function() {
 //     ->name('Components.category');
 Route::middleware(['auth'])->group(function () {
     // ... other profile routes
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'editClient'])->name('profile.edit');
+    Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'updateClient'])->name('profile.update');
     Route::post('/myprofile/portfolio', [App\Http\Controllers\ProfileController::class, 'storePortfolio'])->name('profile.portfolio.store');
 });
 
@@ -114,5 +131,3 @@ require __DIR__.'/admin/admin-routes.php';
 require __DIR__.'/Freelancer-Client/freelancer.php';
 require __DIR__.'/Freelancer-Client/client.php';
 require __DIR__.'/api.php';
-
-
